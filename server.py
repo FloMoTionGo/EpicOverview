@@ -18,27 +18,41 @@ API (JSON in and out):
                        and after every accepted change, ": ping" every 15 s
     GET  /api/export   the whole document {version, game, log} as a file download
     POST /api/import   {game, log, house?} -> 200 {version}; the replaced game can be undone
+    POST /api/new      {baseVersion, state, entry, kind: "new"|"example"} -> 200 {version, entry, gameId}
+                       -> 409 like /api/action. The current game moves to the archive (when
+                          anything happened in it); log and undo start empty.
+    GET  /api/games    {current: meta|null, past: [meta, newest first]}
+                       meta = {id, kind, started, ended, changes, round, step, phase, winner}
+    GET  /api/games/<id>/history   {id, meta, frames: [{v, t, e, g}]} every version of that game:
+                       v version, t time, e log entry (null for the first), g game; "current" = this game.
+                       Sent gzip-compressed when the client accepts it.
+    GET  /api/info     {lan: [addresses], port} so a page on localhost can show a joinable address
 
     Pages from other origins (the GitHub Pages copy of web/) may call the API when
     the origin is listed in env EPIC_ALLOW_ORIGINS (comma-separated); OPTIONS
     answers the CORS preflight.
 
     Bad JSON or missing fields -> 400 {error}; unknown /api/... -> 404 {error};
-    bodies over 5 MB -> 413 {error}.
+    bodies over 512 KB -> 413 {error} (a whole game is a few KB).
 
 Files in the data folder (default data/save next to this file), both written
 atomically (temporary file in the same folder, then os.replace):
 
-    current.json     {version, game, log}
+    current.json     {version, game, log, gameId, startedAt, kind}
     snapshots.json   up to 300 previous {version, game}, newest last, for undo
+    history.jsonl    every version of the current game, one JSON line each (replays)
+    games/<id>/      archived games: history.jsonl and meta.json
 """
 
 import argparse
 import datetime
 import errno
+import gzip
 import json
 import os
 import queue
+import re
+import secrets
 import socket
 import socketserver
 import sys
@@ -55,7 +69,8 @@ DEFAULT_WEB_DIR = HERE / "web"
 DEFAULT_DATA_DIR = HERE / "data" / "save"
 DEFAULT_PORT = 8765
 
-MAX_BODY_BYTES = 5 * 1024 * 1024
+MAX_BODY_BYTES = 512 * 1024
+GAME_ID = re.compile(r"^[0-9A-Za-z-]{1,40}$")
 MAX_SNAPSHOTS = 300
 PING_SECONDS = 15
 
@@ -218,14 +233,37 @@ def write_json_atomic(path, value, indent=None):
         raise
 
 
+def read_history(path):
+    """The frames of a history.jsonl file; a line cut short by a crash is skipped."""
+    frames = []
+    if not path.exists():
+        return frames
+    with open(path, encoding="utf-8") as file:
+        for line in file:
+            try:
+                frame = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(frame, dict) and "g" in frame:
+                frames.append(frame)
+    return frames
+
+
+def new_game_id():
+    """Sortable and unique enough for one table: 20261113-201530-a3f9."""
+    return datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + secrets.token_hex(2)
+
+
 # ---------------------------------------------------------------- state
 
 class Store:
-    """The shared game document and its undo snapshots, saved in one folder.
+    """The shared game document, its undo snapshots and its history, saved in one folder.
 
     Every public method takes the lock. The log and snapshot lists are
     replaced, never changed in place, so a document returned by state()
     stays consistent while another thread commits a change.
+    Every committed version is also appended to history.jsonl (replays);
+    a new game moves that file to games/<id>/ with a meta.json beside it.
     """
 
     def __init__(self, data_dir, on_change=None):
@@ -233,12 +271,19 @@ class Store:
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.current_path = self.data_dir / "current.json"
         self.snapshots_path = self.data_dir / "snapshots.json"
+        self.history_path = self.data_dir / "history.jsonl"
+        self.games_dir = self.data_dir / "games"
         self.on_change = on_change or (lambda version: None)
         self.lock = threading.Lock()
         self.version = 0
         self.game = None
         self.log = []
         self.snapshots = []
+        self.game_id = None       # set once a game exists
+        self.started_at = None
+        self.kind = "game"        # "game" or "example"
+        self.history_count = 0
+        self.last_time = None     # time of the newest history frame
         self._load()
 
     def _load(self):
@@ -252,27 +297,85 @@ class Store:
             self.version = doc["version"]
             self.game = doc.get("game")
             self.log = doc.get("log", [])
+            game_id = doc.get("gameId")
+            if isinstance(game_id, str) and GAME_ID.match(game_id):
+                self.game_id = game_id
+                self.started_at = doc.get("startedAt")
+                self.kind = doc.get("kind") if doc.get("kind") in ("game", "example") else "game"
         snapshots = read_json_file(self.snapshots_path)
         if snapshots is not None:
             if not isinstance(snapshots, list) or not all(isinstance(s, dict) for s in snapshots):
                 raise ValueError(f"{self.snapshots_path} is not an EPIC Overview snapshot file")
             self.snapshots = snapshots[-MAX_SNAPSHOTS:]
+        frames = read_history(self.history_path)
+        self.history_count = len(frames)
+        self.last_time = frames[-1].get("t") if frames else None
+        if self.game is not None and self.game_id is None:
+            # a save from before replays: give the game an id and record it
+            self.game_id, self.started_at = new_game_id(), now_iso()
+            write_json_atomic(self.current_path, self._saved_document(), indent=1)
+        if self.game is not None and self.history_count == 0:
+            self._append_history(self.version, self.game, None)
 
     def _document(self):
         return {"version": self.version, "game": self.game, "log": self.log}
+
+    def _saved_document(self, version=None, game=None, log=None):
+        doc = {"version": self.version, "game": self.game, "log": self.log}
+        if version is not None:
+            doc = {"version": version, "game": game, "log": log}
+        doc.update({"gameId": self.game_id, "startedAt": self.started_at, "kind": self.kind})
+        return doc
 
     def _snapshots_with_current(self):
         """The snapshot list plus the current game, capped at MAX_SNAPSHOTS."""
         current = {"version": self.version, "game": self.game}
         return (self.snapshots + [current])[-MAX_SNAPSHOTS:]
 
-    def _commit(self, version, game, log, snapshots):
+    def _commit(self, version, game, log, snapshots, entry=None):
         """Save to disk first, then switch the memory over, then notify.
-        If saving fails, nothing has changed."""
-        write_json_atomic(self.current_path, {"version": version, "game": game, "log": log}, indent=1)
+        If saving fails, nothing has changed. The history line comes last:
+        current.json is the truth, a missing history line only thins a replay."""
+        if self.game_id is None and game is not None:
+            self.game_id, self.started_at = new_game_id(), now_iso()
+        write_json_atomic(self.current_path, self._saved_document(version, game, log), indent=1)
         write_json_atomic(self.snapshots_path, snapshots)
         self.version, self.game, self.log, self.snapshots = version, game, log, snapshots
+        self._append_history(version, game, entry)
         self.on_change(version)
+
+    def _append_history(self, version, game, entry):
+        stamp = now_iso()
+        line = json.dumps({"v": version, "t": stamp, "e": entry, "g": game}, ensure_ascii=False, separators=(",", ":"))
+        try:
+            with open(self.history_path, "a", encoding="utf-8", newline="\n") as file:
+                file.write(line + "\n")
+                file.flush()
+                os.fsync(file.fileno())
+        except OSError as err:
+            sys.stderr.write(f"Could not add to {self.history_path}: {err}\n")
+            return
+        self.history_count += 1
+        self.last_time = stamp
+
+    def _meta(self):
+        """What the games list shows about the current game."""
+        game = self.game if isinstance(self.game, dict) else {}
+        winner = game.get("winner") if isinstance(game.get("winner"), dict) else None
+        return {"id": self.game_id, "kind": self.kind, "started": self.started_at, "ended": self.last_time,
+                "changes": self.history_count, "round": game.get("round"), "step": game.get("step"),
+                "phase": game.get("phase") or "playing", "winner": winner.get("house") if winner else None}
+
+    def _archive_current(self):
+        """Move the current game's history to games/<id>/ when anything happened in it."""
+        if self.game_id and self.history_count >= 2 and self.history_path.exists():
+            target = self.games_dir / self.game_id
+            target.mkdir(parents=True, exist_ok=True)
+            replace_file(self.history_path, target / "history.jsonl")
+            write_json_atomic(target / "meta.json", self._meta(), indent=1)
+        elif self.history_path.exists():
+            self.history_path.unlink()
+        self.history_count, self.last_time = 0, None
 
     def state(self):
         with self.lock:
@@ -285,7 +388,7 @@ class Store:
                 return 409, self._document()
             version = self.version + 1
             entry = make_entry(self.log, version, **fields)
-            self._commit(version, game, self.log + [entry], self._snapshots_with_current())
+            self._commit(version, game, self.log + [entry], self._snapshots_with_current(), entry)
             return 200, {"version": version, "entry": entry}
 
     def undo(self, house):
@@ -310,7 +413,7 @@ class Store:
             )
             entry["time"] = stamp
             log.append(entry)
-            self._commit(version, snapshot.get("game"), log, self.snapshots[:-1])
+            self._commit(version, snapshot.get("game"), log, self.snapshots[:-1], entry)
             return 200, self._document()
 
     def import_game(self, game, log, house=None):
@@ -318,8 +421,53 @@ class Store:
         with self.lock:
             version = self.version + 1
             entry = make_entry(log, version, "Game imported", house=house, kind="import")
-            self._commit(version, game, log + [entry], self._snapshots_with_current())
+            self._commit(version, game, log + [entry], self._snapshots_with_current(), entry)
             return 200, {"version": version}
+
+    def new_game(self, base_version, game, fields, kind="game"):
+        """Start another game: the current one goes to the archive, log and undo start empty.
+        Returns (status, payload): 200 {version, entry, gameId} or 409 {version, game, log}."""
+        with self.lock:
+            if base_version != self.version:
+                return 409, self._document()
+            self._archive_current()
+            self.game_id, self.started_at, self.kind = new_game_id(), now_iso(), kind
+            version = self.version + 1
+            entry = make_entry([], version, **fields)
+            self._commit(version, game, [entry], [], entry)
+            return 200, {"version": version, "entry": entry, "gameId": self.game_id}
+
+    def games(self):
+        """{current: meta or None, past: [meta, newest first]}."""
+        with self.lock:
+            current = self._meta() if self.game is not None and self.game_id else None
+            past = []
+            if self.games_dir.is_dir():
+                for folder in self.games_dir.iterdir():
+                    try:
+                        meta = read_json_file(folder / "meta.json")
+                    except (ValueError, OSError):
+                        continue
+                    if isinstance(meta, dict) and (folder / "history.jsonl").is_file():
+                        past.append(meta)
+            past.sort(key=lambda m: str(m.get("started") or ""), reverse=True)
+            return {"current": current, "past": past}
+
+    def history(self, game_id):
+        """{id, meta, frames} of the current game (\"current\" or its id) or an archived one; None if unknown."""
+        with self.lock:
+            if self.game_id and game_id in ("current", self.game_id):
+                return {"id": self.game_id, "meta": self._meta(), "frames": read_history(self.history_path)}
+            if not GAME_ID.match(game_id):
+                return None
+            folder = self.games_dir / game_id
+            if not (folder / "history.jsonl").is_file():
+                return None
+            try:
+                meta = read_json_file(folder / "meta.json")
+            except ValueError:
+                meta = None
+            return {"id": game_id, "meta": meta, "frames": read_history(folder / "history.jsonl")}
 
 
 class Hub:
@@ -409,8 +557,14 @@ class RequestHandler(BaseHTTPRequestHandler):
             ("POST", "/api/action"): self.post_action,
             ("POST", "/api/undo"): self.post_undo,
             ("POST", "/api/import"): self.post_import,
+            ("POST", "/api/new"): self.post_new,
+            ("GET", "/api/games"): self.get_games,
+            ("GET", "/api/info"): self.get_info,
         }
         handler = routes.get((method, path))
+        found = re.fullmatch(r"/api/games/([^/]+)/history", path)
+        if found and method == "GET":
+            handler = lambda: self.get_history(unquote(found.group(1)))  # noqa: E731
         if handler is None:
             allowed = [m for (m, p) in routes if p == path]
             if allowed:
@@ -469,6 +623,31 @@ class RequestHandler(BaseHTTPRequestHandler):
         status, payload = self.server.store.import_game(game, log, house)
         self.send_json(status, payload)
 
+    def post_new(self):
+        body = self.read_json_body()
+        base_version = require_int(body.get("baseVersion"), "baseVersion")
+        game = body.get("state")
+        if not isinstance(game, dict):
+            raise ApiError(400, "state must be an object")
+        fields = parse_entry(body.get("entry"))
+        kind = body.get("kind", "new")
+        if kind not in ("new", "example"):
+            raise ApiError(400, 'kind must be "new" or "example"')
+        status, payload = self.server.store.new_game(base_version, game, fields, "example" if kind == "example" else "game")
+        self.send_json(status, payload)
+
+    def get_games(self):
+        self.send_json(200, self.server.store.games())
+
+    def get_history(self, game_id):
+        doc = self.server.store.history(game_id)
+        if doc is None:
+            raise ApiError(404, f"no game {game_id}")
+        self.send_json(200, doc, compress=True)
+
+    def get_info(self):
+        self.send_json(200, {"lan": lan_addresses(), "port": self.server.server_port})
+
     def get_events(self):
         hub = self.server.hub
         updates = hub.subscribe()  # before reading the version, so no change slips through
@@ -510,7 +689,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             raise ApiError(400, "Content-Length must not be negative")
         if length > MAX_BODY_BYTES:
             self.close_connection = True  # the unread body must not be taken for a request
-            raise ApiError(413, "request body is larger than 5 MB")
+            raise ApiError(413, f"request body is larger than {MAX_BODY_BYTES // 1024} KB")
         if length == 0:
             if allow_empty:
                 return {}
@@ -524,10 +703,16 @@ class RequestHandler(BaseHTTPRequestHandler):
             raise ApiError(400, "request body must be a JSON object")
         return data
 
-    def send_json(self, status, payload, headers=None, indent=None):
+    def send_json(self, status, payload, headers=None, indent=None, compress=False):
         body = json.dumps(payload, ensure_ascii=False, indent=indent).encode("utf-8")
+        gzipped = compress and len(body) > 1024 and "gzip" in (self.headers.get("Accept-Encoding") or "")
+        if gzipped:
+            body = gzip.compress(body, compresslevel=6)
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
+        if gzipped:
+            self.send_header("Content-Encoding", "gzip")
+            self.send_header("Vary", "Accept-Encoding")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         for name, value in (headers or {}).items():

@@ -24,9 +24,10 @@ by Fantasy Flight Games. This is an unofficial, non-commercial fan tool.
 2. Double-click `Start-EpicOverview.cmd`. The browser opens on this computer.
 3. The window shows an address like `http://192.168.2.20:8765/`. Open it on every phone and tablet on the same Wi-Fi.
    The first time, Windows asks about the firewall: allow Python on private networks.
-4. Choose **Start a new game** (or **Load the round 4 example** to look around).
-5. Each device picks the house it plays. Several devices can play the same house; change it any time with
-   the house button in the top bar.
+4. Choose **Start a new game** (or **Load the round 4 example** to look around). A new game first gathers
+   the table: the screen shows a QR code with the address. Every device scans it, picks the house it plays and
+   taps **Play as …**; everyone sees which houses have joined. Anyone then taps **Start the game**.
+5. Several devices can play the same house; change it any time with the house button in the top bar.
 
 Stop the server by closing its window. The game is saved after every change in `data/save/` and is there
 again on the next start. **Log → Download a backup** saves the whole game as a file.
@@ -42,13 +43,21 @@ Other port: `set EPIC_PORT=8800` before starting, or `python server.py --port 88
 - **Westeros**: the four decks, the round target, shuffle buttons, Master of Laws, Grand Maester (eyes only) and the Raven.
 - **Loans**, **Market**: the Bank of Braavos and the limited stock.
 - **Log**: every change with time, step and the house that made it. **Undo** in the top bar takes back the newest change.
+- **Games and replays** (in the Log, on the start screen and after a win): every game is kept. **Replay** steps
+  through it change by change, or plays it, with every tab showing the game as it was; nothing can be changed
+  while a replay is open. **Round summary** shows VP and castles of every house after each round. A new game
+  moves the current one to this list.
 
 House rules built in: Westeros cards are revealed one after another; Master of Laws decides on each card of
 decks I–III right after it is revealed.
 
 ## For developers
 
-- `web/` is the app (plain HTML, CSS and JavaScript modules, no build step). `server.py` serves it and stores the game.
+- `web/` is the app (plain HTML, CSS and JavaScript modules, no build step). `server.py` serves it and stores the game:
+  `data/save/current.json` (the game), `snapshots.json` (Undo), `history.jsonl` (every version, for replays) and
+  `games/<id>/` (finished games). The API is described at the top of `server.py`.
+- Replays: `web/js/core/replay.js` (pure helpers), `web/js/views/replay.js` (bar, games list, round summary).
+  The QR code comes from `web/js/ui/qr.js`, a small encoder after Project Nayuki's QR Code generator (MIT).
 - Rules: `web/js/core/` (`reducer.js` holds every change; `rules.js` the checks). Screens: `web/js/views/`.
 - Tests: `node --test` and `python -I -m unittest discover -s tests -p "test_*.py"`.
 - `node tools/compare_boards.mjs` compares the screens with the canvas boards in `canvas/live/`.

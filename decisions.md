@@ -219,6 +219,24 @@ have the old wording; tell me if the canvas should follow):
   phone and tablet, decks and stock conserved, Lannister wins with 7 VP in round 7), `tests/test_server.py` (server).
 - **DECIDED** `node --test` without a folder argument: on Node 24, `node --test tests/` fails to find the files.
 
+## Gathering, games and replays (2026-11-13)
+
+- **DECIDED** One game per server stays (no lobbies or tables): the group sits at one table. A new game moves the
+  current one to the archive (`games/<id>/` on the server) when anything happened in it; Undo starts empty.
+- **DECIDED** A new game begins with **Gather at the table**: QR code with the join address, the nine houses with
+  how many devices joined each, **Play as …** for this device and **Start the game** for anyone. Nobody has to
+  join; a device that comes later picks its house with the house button, as before. On a laptop server the QR code
+  shows the laptop's Wi-Fi address (`/api/info`), on GitHub Pages the Pages address.
+- **DECIDED** Replays are read-only and local to the device: the bar under the screens steps by change or by round,
+  plays one change per 0.9 s, and has a slider; every tab shows the game at that moment, the Log as it read then
+  (Undo marks included). Buttons that would change the game are dimmed and refused with a message.
+- **DECIDED** Round summary: small multiples (one panel per house, same scale, line at 7) instead of one chart with
+  nine colours, which colour-blind players could not tell apart (Lannister/Red Targaryen, Arryn/Tully). VP blue
+  #3987e5 with dots, castles orange #d95926 with squares (checked with the dataviz palette validator on the app's
+  dark surfaces), a crosshair readout per panel, and a table with every value.
+- **DECIDED** Request bodies are capped at 512 KB (was 5 MB): a whole game is about 3 KB, and the history keeps
+  every version, so a big body would fill the Fly volume quickly.
+
 ## Not done yet
 
 - Your look on a real phone and tablet (T18) and a test evening (Checkpoint C).

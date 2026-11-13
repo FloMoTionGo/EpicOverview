@@ -544,7 +544,9 @@ function endScreen(ctx) {
     <ol style="list-style:none;margin:0;padding:0;width:100%;max-width:900px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));column-gap:32px">${list}</ol>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
       <button type="button" ${act('ui/set', { hideEnd: true })} style="${b};border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8">Back to the round</button>
-      <button type="button" ${act('game/menu')} style="${b};border:0;background:#c9a24c;color:#211710">New game or example…</button>
+      ${ctx.replay ? '' : `<button type="button" ${act('replay/open', { id: 'current', at: 0 })} style="${b};border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8">Watch the replay</button>
+      <button type="button" ${act('replay/open', { id: 'current', at: 'end', view: 'summary' })} style="${b};border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8">Round summary</button>
+      <button type="button" ${act('game/menu')} style="${b};border:0;background:#c9a24c;color:#211710">New game or example…</button>`}
     </div>
     <p style="margin:0;font-size:15px;color:#b9a88a">A wrong win? Undo in the top bar takes it back.</p></main>`;
   return frame({ game: g, house: ctx.house, tab: 'round', body: main, move: [w.house] });

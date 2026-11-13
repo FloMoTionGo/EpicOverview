@@ -104,8 +104,10 @@ export function renderLog(ctx) {
     <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><h1 class="k-dup" style="margin:0;font-size:26px">Log</h1><span style="font:500 15px ${BAR};color:#b9a88a">Every change from every phone and tablet, newest first, with the house that made it. Undo takes back the newest change and logs that too.</span></div>
     <div role="group" aria-label="Show" style="display:flex;gap:8px;flex-wrap:wrap">${chips}<span style="margin-left:auto;align-self:center;font:500 14px ${BAR};color:#b9a88a">${shown.length} ${shown.length === 1 ? 'change' : 'changes'} shown</span></div>
     <ol aria-label="Changes" style="list-style:none;margin:0;padding:0;flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;border-top:1px solid #5a4330">${rows || '<li style="padding:12px 6px;font-size:16px">No changes yet.</li>'}</ol>
-    <div style="display:flex;gap:10px;flex-wrap:wrap"><a href="${api('api/export')}" download style="min-height:44px;display:flex;align-items:center;padding:0 16px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;text-decoration:none;font:600 15px ${BAR}">Download a backup</a>
-      <button type="button" ${act('game/menu')} style="min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font:600 15px ${BAR}">New game or example…</button></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">${ctx.replay ? '' : `<button type="button" ${act('replay/open', { id: 'current', at: 0 })} style="min-height:44px;padding:0 16px;border-radius:10px;border:0;background:#c9a24c;color:#211710;font:600 15px ${BAR}">Replay this game</button>`}
+      <button type="button" ${act('games/open')} style="min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font:600 15px ${BAR}">Games and replays</button>
+      ${ctx.replay ? '' : `<a href="${api('api/export')}" download style="min-height:44px;display:flex;align-items:center;padding:0 16px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;text-decoration:none;font:600 15px ${BAR}">Download a backup</a>
+      <button type="button" ${act('game/menu')} style="min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font:600 15px ${BAR}">New game or example…</button>`}</div>
   </main>`;
   return frame({ game: g, house: ctx.house, tab: 'log', body });
 }
@@ -146,10 +148,11 @@ export function renderSetup(ctx, { menu } = {}) {
   const b = `min-height:56px;padding:0 24px;border-radius:14px;font-size:19px;font-weight:600`;
   const body = `<main class="k-main" style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px 20px;text-align:center">
     <h1 style="margin:0;font-size:34px">${menu ? 'Start over?' : 'No game yet'}</h1>
-    <p style="margin:0;max-width:560px;font-size:17px;color:#b9a88a">${menu ? 'A new game replaces the current one for every device. Undo can bring it back, and the Log keeps every change.' : 'Start a new game for the table, or load the round 4 example that the canvas boards show.'}</p>
+    <p style="margin:0;max-width:560px;font-size:17px;color:#b9a88a">${menu ? 'A new game replaces the current one for every device. The current game moves to Games and replays, where you can watch it again.' : 'Start a new game for the table, or load the round 4 example that the canvas boards show.'}</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
       <button type="button" ${act('game/new')} style="${b};border:0;background:#c9a24c;color:#211710">Start a new game</button>
       <button type="button" ${act('game/example')} style="${b};border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8">Load the round 4 example</button>
+      <button type="button" ${act('games/open')} style="${b};border:1px solid #5a4330;background:transparent;color:#eadfc8">Games and replays</button>
       ${menu ? `<button type="button" ${act('ui/set', { menu: false })} style="${b};border:1px solid #5a4330;background:transparent;color:#eadfc8">Cancel</button>` : ''}
     </div></main>`;
   return `<div class="k-root" style="box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">${header(ctx.game, ctx.house, { noUndo: !ctx.game })}${body}</div>`;

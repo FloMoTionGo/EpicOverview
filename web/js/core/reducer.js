@@ -45,6 +45,23 @@ function returnHostages(g, a, b) {
 }
 
 const handlers = {
+  // ---- before the game: devices gather and pick their houses
+  'gather/join'(g, a) {
+    if (g.phase !== 'gathering') fail('The game has already started.');
+    isHouse(a.house);
+    if (typeof a.device !== 'string' || !a.device) fail('This device has no id.');
+    const before = (g.joined || {})[a.device];
+    g.joined = { ...(g.joined || {}), [a.device]: a.house };
+    const n = Object.values(g.joined).filter((h) => h === a.house).length;
+    const what = before && before !== a.house ? `${houseName(before)} switched to ${houseName(a.house)}` : `${houseName(a.house)} joined the table`;
+    return entry(`${what}${n > 1 ? ` (${n} devices)` : ''}.`, 'gather', [a.house]);
+  },
+  'game/start'(g) {
+    if (g.phase !== 'gathering') fail('The game has already started.');
+    g.phase = 'playing';
+    const houses = HOUSE_IDS.filter((h) => Object.values(g.joined || {}).includes(h));
+    return entry(`The game starts: round 1, Planning. ${houses.length} of ${HOUSE_IDS.length} houses at the table.`, 'game', houses);
+  },
   'step/goto'(g, a) {
     stepById(a.step) || fail(`Unknown step: ${a.step}`);
     g.step = a.step;

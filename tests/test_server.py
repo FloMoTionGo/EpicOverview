@@ -6,6 +6,7 @@ Each test starts the real server in a thread on a free port, with a
 temporary data folder and a temporary web folder.
 """
 
+import gzip
 import http.client
 import importlib.util
 import json
@@ -234,16 +235,16 @@ class StateAndActionTests(ServerTestCase):
         status, reply = self.srv.json("GET", "/api/action")
         self.assertEqual(status, 405)
 
-    def test_body_over_5_mb_is_refused(self):
+    def test_body_over_the_limit_is_refused(self):
         conn = self.srv.connect()
         self.addCleanup(conn.close)
         conn.putrequest("POST", "/api/action")
         conn.putheader("Content-Type", "application/json")
-        conn.putheader("Content-Length", str(5 * 1024 * 1024 + 1))
+        conn.putheader("Content-Length", str(server.MAX_BODY_BYTES + 1))
         conn.endheaders()  # the body is never sent: the server must answer without reading it
         response = conn.getresponse()
         self.assertEqual(response.status, 413)
-        self.assertIn("5 MB", json.loads(response.read())["error"])
+        self.assertIn("512 KB", json.loads(response.read())["error"])
 
 
 class UndoTests(ServerTestCase):
@@ -307,11 +308,12 @@ class PersistenceTests(ServerTestCase):
     def test_changes_are_saved_atomically(self):
         self.act(0, {"round": 1}, summary="First")
         saved = json.loads((self.data_dir / "current.json").read_text(encoding="utf-8"))
-        self.assertEqual(saved, self.state())
+        self.assertEqual({k: saved[k] for k in ("version", "game", "log")}, self.state())
+        self.assertRegex(saved["gameId"], r"^\d{8}-\d{6}-[0-9a-f]{4}$")
         snapshots = json.loads((self.data_dir / "snapshots.json").read_text(encoding="utf-8"))
         self.assertEqual(snapshots, [{"version": 0, "game": None}])
         self.assertEqual(sorted(p.name for p in self.data_dir.iterdir()),
-                         ["current.json", "snapshots.json"])
+                         ["current.json", "history.jsonl", "snapshots.json"])
 
     def test_restart_keeps_game_log_and_snapshots(self):
         self.act(0, {"round": 1}, summary="First", house="Tully")
@@ -507,6 +509,117 @@ class CorsTests(ServerTestCase):
     def test_origins_come_from_the_environment(self):
         with mock.patch.dict("os.environ", {"EPIC_ALLOW_ORIGINS": " https://a.example/, https://b.example "}):
             self.assertEqual(server.allowed_origins_from_env(), ["https://a.example", "https://b.example"])
+
+
+class HistoryTests(ServerTestCase):
+    """Every version of a game is kept for replays; a new game archives the old one."""
+
+    def new(self, base_version, game, summary="New game", kind="new", srv=None):
+        body = {"baseVersion": base_version, "state": game, "entry": {"summary": summary, "kind": "game"}, "kind": kind}
+        return (srv or self.srv).json("POST", "/api/new", body)
+
+    def history(self, game_id="current", srv=None):
+        return (srv or self.srv).json("GET", f"/api/games/{game_id}/history")
+
+    def test_every_change_undo_and_import_become_frames(self):
+        status, body = self.new(0, {"round": 1, "phase": "gathering"})
+        self.assertEqual(status, 200)
+        self.act(1, {"round": 1, "step": "P1"}, summary="Started")
+        self.act(2, {"round": 1, "step": "P2"}, summary="Next step")
+        self.undo(house="tully")
+        status, doc = self.history()
+        self.assertEqual(status, 200)
+        self.assertEqual(doc["id"], body["gameId"])
+        self.assertEqual([f["v"] for f in doc["frames"]], [1, 2, 3, 4])
+        self.assertEqual([f["e"]["summary"] for f in doc["frames"]], ["New game", "Started", "Next step", "Undone: Next step"])
+        self.assertEqual(doc["frames"][3]["g"], {"round": 1, "step": "P1"})
+        self.assertEqual(doc["frames"][3]["e"]["house"], "tully")
+        status, _ = self.srv.json("POST", "/api/import", {"game": {"round": 9}, "log": []})
+        self.assertEqual(self.history()[1]["frames"][-1]["g"], {"round": 9})
+
+    def test_new_game_archives_the_old_one_and_starts_clean(self):
+        _, first = self.new(0, {"round": 1})
+        self.act(1, {"round": 2, "winner": {"house": "tyrell", "round": 2}}, summary="Tyrell wins")
+        status, second = self.new(2, {"round": 1, "phase": "gathering"})
+        self.assertEqual(status, 200)
+        self.assertNotEqual(first["gameId"], second["gameId"])
+        doc = self.state()
+        self.assertEqual([e["summary"] for e in doc["log"]], ["New game"])
+        self.assertEqual(self.undo()[0], 409)                   # no undo back into the old game
+        status, games = self.srv.json("GET", "/api/games")
+        self.assertEqual(games["current"]["id"], second["gameId"])
+        self.assertEqual(games["current"]["phase"], "gathering")
+        [past] = games["past"]
+        self.assertEqual((past["id"], past["changes"], past["winner"], past["round"]), (first["gameId"], 2, "tyrell", 2))
+        status, old = self.history(first["gameId"])
+        self.assertEqual(status, 200)
+        self.assertEqual([f["e"]["summary"] for f in old["frames"]], ["New game", "Tyrell wins"])
+        self.assertTrue((self.data_dir / "games" / first["gameId"] / "meta.json").is_file())
+
+    def test_a_game_where_nothing_happened_is_not_archived(self):
+        self.new(0, {"round": 1, "phase": "gathering"}, kind="example")
+        self.new(1, {"round": 1, "phase": "gathering"})
+        status, games = self.srv.json("GET", "/api/games")
+        self.assertEqual(games["past"], [])
+        self.assertEqual(games["current"]["kind"], "game")
+
+    def test_stale_new_game_is_refused(self):
+        self.new(0, {"round": 1})
+        status, doc = self.new(0, {"round": 5})
+        self.assertEqual(status, 409)
+        self.assertEqual(doc["game"], {"round": 1})
+
+    def test_unknown_and_malformed_game_ids(self):
+        self.assertEqual(self.history("current")[0], 404)       # no game yet
+        self.new(0, {"round": 1})
+        for bad in ("20990101-000000-ffff", "..%2F..%2Fsecret", "a.b"):
+            status, doc = self.history(bad)
+            self.assertEqual(status, 404, bad)
+        self.assertEqual(self.srv.json("POST", "/api/new", {"state": {}, "entry": {"summary": "x"}, "baseVersion": 1, "kind": "odd"})[0], 400)
+
+    def test_history_is_gzipped_when_the_client_accepts_it(self):
+        self.new(0, {"round": 1, "pad": "x" * 2000})
+        conn = self.srv.connect()
+        try:
+            conn.request("GET", "/api/games/current/history", headers={"Accept-Encoding": "gzip"})
+            response = conn.getresponse()
+            self.assertEqual(response.getheader("Content-Encoding"), "gzip")
+            doc = json.loads(gzip.decompress(response.read()))
+            self.assertEqual(doc["frames"][0]["g"]["pad"], "x" * 2000)
+        finally:
+            conn.close()
+
+    def test_history_and_game_id_survive_a_restart(self):
+        _, body = self.new(0, {"round": 1})
+        self.act(1, {"round": 2})
+        self.srv.stop()
+        again = self.start()
+        status, doc = self.history(srv=again)
+        self.assertEqual((doc["id"], len(doc["frames"])), (body["gameId"], 2))
+        again.json("POST", "/api/action", {"baseVersion": 2, "state": {"round": 3}, "entry": {"summary": "After restart"}})
+        self.assertEqual(len(self.history(srv=again)[1]["frames"]), 3)
+
+    def test_a_save_from_before_replays_gets_an_id_and_a_first_frame(self):
+        self.srv.stop()
+        legacy = self.root / "legacy"
+        legacy.mkdir()
+        (legacy / "current.json").write_text(json.dumps({"version": 7, "game": {"round": 4}, "log": []}), encoding="utf-8")
+        srv = self.start(legacy)
+        status, doc = self.history(srv=srv)
+        self.assertEqual(status, 200)
+        self.assertEqual([(f["v"], f["e"], f["g"]) for f in doc["frames"]], [(7, None, {"round": 4})])
+
+    def test_a_line_cut_short_by_a_crash_is_skipped(self):
+        self.new(0, {"round": 1})
+        with open(self.data_dir / "history.jsonl", "a", encoding="utf-8") as f:
+            f.write('{"v": 2, "g": {"rou')
+        self.assertEqual(len(self.history()[1]["frames"]), 1)
+
+    def test_info_names_the_port(self):
+        status, info = self.srv.json("GET", "/api/info")
+        self.assertEqual(status, 200)
+        self.assertEqual(info["port"], self.srv.port)
+        self.assertIsInstance(info["lan"], list)
 
 
 if __name__ == "__main__":

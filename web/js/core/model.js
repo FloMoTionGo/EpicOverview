@@ -25,6 +25,9 @@ export function newGame({ cards = [], seed = 20261112 } = {}) {
   const rng = { seed };
   const g = {
     schema: SCHEMA,
+    // 'gathering' until someone presses Start the game; joined: device id -> house it plays
+    phase: 'gathering',
+    joined: {},
     round: 1,
     step: 'P1',
     houses: Object.fromEntries(HOUSE_IDS.map((h) => [h, blankHouse()])),
@@ -52,6 +55,7 @@ export function newGame({ cards = [], seed = 20261112 } = {}) {
 // The state behind the canvas boards: round 4, Diplomacy step 6 (New loans), playing as Greyjoy.
 export function exampleGame({ cards = [], seed = 4 } = {}) {
   const g = newGame({ cards, seed });
+  g.phase = 'playing';
   g.round = 4;
   g.step = 'D6';
   const seats = {
