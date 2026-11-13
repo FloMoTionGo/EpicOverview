@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EPIC Overview mock</title>
+  <link rel="stylesheet" href="mock.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="seals" id="seals"></div>
+    <nav class="ribbon" aria-label="Phases"><ol id="ribbon"></ol></nav>
+    <div class="holders" id="holders"></div>
+  </header>
+
+  <nav class="views" role="tablist" aria-label="Views">
+    <button role="tab" aria-selected="true" data-view="table">Table</button>
+    <button role="tab" aria-selected="false" data-view="relations">Relations</button>
+    <button role="tab" aria-selected="false" data-view="westeros">Westeros</button>
+    <button role="tab" aria-selected="false" data-view="market">Market</button>
+    <button role="tab" aria-selected="false" data-view="log">Log</button>
+    <p class="mock-note">Mock with sample data. Nothing is saved.</p>
+  </nav>
+
+  <main>
+    <section class="view" id="view-table"></section>
+    <section class="view" id="view-relations" hidden></section>
+    <section class="view" id="view-westeros" hidden></section>
+    <section class="view" id="view-market" hidden></section>
+    <section class="view" id="view-log" hidden></section>
+  </main>
+
+  <footer class="seats" id="seats" aria-label="Houses"></footer>
+
+  <div class="overlay lightbox" id="lightbox" hidden><img alt=""></div>
+  <div class="overlay curtain" id="curtain" hidden></div>
+  <aside class="drawer" id="drawer" hidden aria-label="Edit house"></aside>
+
+  <script src="assets/assets.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

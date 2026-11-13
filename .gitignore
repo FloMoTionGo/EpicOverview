@@ -1,0 +1,6 @@
+# the saved game of a local server.py
+data/
+__pycache__/
+*.pyc
+node_modules/
+edgeprof-*/

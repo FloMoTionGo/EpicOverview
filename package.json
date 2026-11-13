@@ -1,0 +1,9 @@
+{
+  "name": "epic-overview",
+  "private": true,
+  "type": "module",
+  "description": "Companion web app for an EPIC Game of Thrones evening. No dependencies; this file only tells Node that .js files are ES modules.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

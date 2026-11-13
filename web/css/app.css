@@ -1,0 +1,91 @@
+/* EPIC Overview. The screens copy the canvas boards (inline styles in the view code);
+   this file holds the page frame and the phone / tablet-portrait rearrangements. */
+@import url('../assets/fonts/fonts.css');
+
+html, body { margin: 0; height: 100%; background: #211710; }
+body { color: #eadfc8; font-family: 'EB Garamond', Georgia, serif; -webkit-tap-highlight-color: transparent; }
+a { color: #ead08a; }
+a:hover { color: #fff1c9; }
+button { font: inherit; cursor: pointer; }
+button[aria-disabled="true"] { cursor: default; }
+:focus-visible { outline: 3px solid #ead08a; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+#app { height: 100%; }
+* { scrollbar-width: thin; scrollbar-color: #5a4330 transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #5a4330; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+.k-root { height: 100vh; height: 100dvh; width: 100%; }
+
+/* status line (errors from the rules, connection) */
+.k-status { position: fixed; left: 50%; top: 76px; transform: translateX(-50%); z-index: 40; max-width: min(640px, 92vw);
+  padding: 10px 16px; border-radius: 10px; background: #8d2a22; color: #fbe9cf; font: 600 16px 'Barlow Semi Condensed', sans-serif;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .5); }
+.k-status.k-offline { background: #47385a; }
+
+/* ---- tablet portrait and small laptops ---- */
+@media (max-width: 1100px) {
+  .k-relations { grid-template-columns: minmax(0, 1fr) !important; grid-auto-rows: max-content; align-content: start; }
+  .k-relations > section { min-height: auto !important; }
+  .k-houses { grid-template-columns: minmax(0, 1fr) !important; }
+  .k-housegrid { grid-template-rows: none !important; }
+  /* the nine seats no longer fit side by side: they keep the tablet size and scroll sideways */
+  .k-seats { display: flex !important; overflow-x: auto; }
+  .k-seats .k-seat { flex: 0 0 128px; }
+}
+
+/* ---- phones ---- */
+@media (max-width: 760px) {
+  /* header, tabs: board "A-Phone" */
+  .k-header { height: 60px !important; padding: 0 12px 0 16px !important; gap: 10px !important; }
+  .k-header:has(.k-phonetitle) .k-roundbox, .k-header:has(.k-phonetitle) .k-spacer { display: none !important; }
+  .k-phonetitle, .k-phoneround { display: block !important; }
+  .k-roundbox > div:first-child { width: 40px !important; height: 40px !important; font-size: 19px !important; }
+  .k-playing { flex: none; width: 48px; padding: 0 !important; justify-content: center; border-radius: 50% !important; }
+  .k-playing img { width: 34px !important; height: 34px !important; }
+  .k-playing-text, .k-playing svg { display: none; }
+  .k-seats { display: none !important; }
+  .k-dup { display: none; } /* the top bar already names the view */
+  /* Diplomacy 2 table: sigil only, texts wrap */
+  .k-d2row { grid-template-columns: 22px minmax(0, 1fr) 40px minmax(0, 1fr) 34px !important; gap: 6px !important; padding: 2px 0; }
+  .k-d2name { display: none; }
+  .k-d2house { visibility: hidden; }
+  .k-wrap { white-space: normal !important; }
+  /* card rows (Westeros 2, deck steps): two cards per row */
+  .k-cards > figure { flex: 0 1 calc(50% - 7px); }
+  .k-cards > figure > img { width: 100% !important; height: auto !important; }
+  .k-main { padding: 10px 12px !important; overflow: auto !important; }
+  .k-steprow { height: auto !important; }
+  .k-steprow .k-fade { display: none !important; }
+  .k-steprow > button { flex: 1 !important; min-width: 0 !important; }
+  .k-article { margin: 4px !important; padding: 12px 14px !important; overflow: visible !important; flex: none !important; }
+  .k-body { overflow: visible !important; }
+  .k-stephead { flex-direction: column; align-items: flex-start !important; }
+  .k-stephead h1 { font-size: 26px !important; }
+  .k-mode { max-width: none !important; }
+  .k-split { grid-template-columns: minmax(0, 1fr) !important; }
+  .k-cards { flex-wrap: wrap; }
+  .k-queue { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; row-gap: 6px !important; }
+  .k-substeps, .k-guidesteps { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .k-options { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .k-footer { flex-wrap: wrap; }
+  .k-footer > * { flex: 1 1 100% !important; min-width: 0 !important; }
+  .k-guidehead { flex-wrap: wrap; }
+  .k-guidehead h2 { flex: 1 1 auto; }
+  .k-kinds { order: 3; flex: 1 1 100% !important; display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .k-tabs a { font-size: 13px !important; padding: 0 1px; }
+  .k-housegrid { grid-template-columns: minmax(0, 1fr) !important; }
+  .k-decks { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .k-abilities { grid-template-columns: minmax(0, 1fr) !important; }
+  .k-bank { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .k-owerow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
+  .k-marketgrid { grid-template-columns: minmax(0, 1fr) !important; }
+  .k-logrow { grid-template-columns: 44px minmax(0, 1fr) !important; row-gap: 2px !important; padding: 6px 0 !important; }
+  .k-logrow > span:nth-child(2) { grid-column: 2; }
+  .k-logrow > span:nth-child(3) { grid-column: 1 / -1; }
+  .k-logrow > span:nth-child(4), .k-logrow > span:nth-child(5) { grid-column: 2; justify-content: flex-start !important; }
+}
+
+/* Spend Gold: ten tiles in two rows */
+.k-buy button { font-size: 14px !important; padding: 4px 7px !important; }

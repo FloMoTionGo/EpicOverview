@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Houses tab</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width:1180px;height:820px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:68px;flex:none;display:flex;align-items:center;gap:20px;padding:0 20px;border-bottom:1px solid #5a4330">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#c4473a,#8d2a22 55%,#5e1912);box-shadow:0 0 0 3px #211710,0 0 0 5px #c9a24c;font:600 22px 'Barlow Semi Condensed',sans-serif;color:#fbe9cf">4</div>
+      <div style="line-height:1.1"><div style="font-size:20px;font-weight:700">Round 4</div><div style="font-size:14px;color:#b9a88a">of 12</div></div>
+    </div>
+    <div style="flex:1"></div>
+    <a href="Choose-House.dc.html" aria-label="Playing as Greyjoy on this device. Change house" style="min-height:48px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 14px 0 6px;border-radius:24px;border:1px solid #5a4330;background:#2b1f16;color:#eadfc8;text-decoration:none"><img src="/_blob/c928f54c08f0c97af6e1e38ef5ba1339" alt="" style="width:36px;height:36px"><span style="line-height:1.05"><span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Playing as</span><span style="font-size:17px;font-weight:600">Greyjoy</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b9a88a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    <button type="button" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:16px">Undo</button>
+  </header>
+
+  <main style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;padding:14px 20px">
+
+    <section aria-label="Houses" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:10px">
+      <sc-for list="{{ houses }}" as="h" hint-placeholder-count="9">
+        <article style="{{ h.box }}">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            <img src="{{ h.sigil }}" alt="" style="width:36px;height:36px;flex:none">
+            <span style="font-size:18px;font-weight:600;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+            <sc-if value="{{ h.ring }}" hint-placeholder-val="{{ true }}">
+              <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="Ring still available" title="Ring still available" style="width:24px;height:24px;flex:none">
+            </sc-if>
+            <sc-if value="{{ h.noRing }}" hint-placeholder-val="{{ false }}">
+              <img src="/_blob/d47cecb41a5325c4d45cd0db3377f88e" alt="Ring used" title="Ring used" style="width:24px;height:24px;flex:none">
+            </sc-if>
+            <sc-if value="{{ h.move }}" hint-placeholder-val="{{ false }}">
+              <span style="margin-left:auto;flex:none;font:600 12px 'Barlow Semi Condensed',sans-serif;padding:3px 8px;border-radius:99px;background:#ead08a;color:#211710">Your move</span>
+            </sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 8px">
+            <sc-for list="{{ h.rows }}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+                <span style="font:500 13px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ r.label }}</span>
+                <span style="display:flex;align-items:center;gap:2px">
+                  <button type="button" aria-label="{{ r.less }}" style="width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1">−</button>
+                  <span style="width:28px;text-align:center;font:600 22px 'Barlow Semi Condensed',sans-serif">{{ r.value }}</span>
+                  <button type="button" aria-label="{{ r.more }}" style="{{ r.plusStyle }}">+</button>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;min-width:0">
+            <span style="flex:1;min-width:0;font:500 13px 'Barlow Semi Condensed',sans-serif;color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.badges }}</span>
+            <sc-for list="{{ h.loans }}" as="l" hint-placeholder-count="0">
+              <span role="img" aria-label="{{ l.label }}" title="{{ l.label }}" style="{{ l.style }}"></span>
+            </sc-for>
+          </div>
+        </article>
+      </sc-for>
+    </section>
+
+    <aside style="display:flex;flex-direction:column;gap:14px;min-height:0">
+      <section aria-labelledby="h-council" style="{{ councilBox }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+          <h2 id="h-council" style="margin:0;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">{{ councilTitle }}</h2>
+          <button type="button" aria-pressed="{{ editPressed }}" onClick="{{ toggleEdit }}" style="{{ editBtnStyle }}">{{ editBtnText }}</button>
+        </div>
+        <sc-if value="{{ editing }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:0 0 6px;font-size:14px;line-height:1.25;color:#b9a88a">Tap a seat, then its new house. A house that already has a seat swaps.</p>
+        </sc-if>
+        <ul style="list-style:none;margin:0;padding:0">
+          <sc-for list="{{ council }}" as="c" hint-placeholder-count="7">
+            <li style="border-top:1px solid #4a3626">
+              <sc-if value="{{ c.fixed }}" hint-placeholder-val="{{ false }}">
+                <div style="min-height:44px;display:flex;align-items:center;gap:8px">
+                  <img src="{{ c.sigil }}" alt="" style="width:28px;height:28px">
+                  <span style="flex:1;font-size:15px;line-height:1.15">{{ c.role }}<span style="display:block;font-size:13px;color:#b9a88a">{{ c.name }}</span></span>
+                  <span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ c.once }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.editable }}" hint-placeholder-val="{{ true }}">
+                <button type="button" aria-expanded="{{ c.expanded }}" onClick="{{ c.select }}" style="{{ c.rowStyle }}">
+                  <img src="{{ c.sigil }}" alt="" style="width:28px;height:28px;flex:none">
+                  <span style="flex:1;min-width:0;font-size:15px;line-height:1.15">{{ c.role }}<span style="display:block;font-size:13px;color:#b9a88a">{{ c.name }}</span></span>
+                  <span style="flex:none;font:600 13px 'Barlow Semi Condensed',sans-serif;color:#ead08a">{{ c.action }}</span>
+                </button>
+              </sc-if>
+              <sc-if value="{{ c.open }}" hint-placeholder-val="{{ false }}">
+                <div role="group" aria-label="{{ c.pickLabel }}" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px 0 8px">
+                  <sc-for list="{{ c.choices }}" as="o" hint-placeholder-count="9">
+                    <button type="button" aria-label="{{ o.label }}" onClick="{{ o.choose }}" style="{{ o.style }}">
+                      <img src="{{ o.sigil }}" alt="" style="width:22px;height:22px">
+                      <span style="max-width:100%;font:600 12px 'Barlow Semi Condensed',sans-serif;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.name }}</span>
+                      <span style="max-width:100%;font:500 11px 'Barlow Semi Condensed',sans-serif;line-height:1.1;color:#b9a88a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.seat }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </li>
+          </sc-for>
+        </ul>
+        <p style="margin:6px 0 0;font-size:14px;color:#b9a88a">{{ noSeat }}</p>
+      </section>
+    </aside>
+  </main>
+
+  <nav aria-label="Views" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+      <a href="{{ t.href }}" aria-current="{{ t.current }}" style="{{ t.style }}">{{ t.name }}</a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"reassign":{"editor":"boolean","default":true},"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const phases = ['Westeros', 'Diplomacy', 'Planning', 'Action', 'End of round'].map((name, i) => ({
+      name,
+      style: 'min-height:44px;display:flex;align-items:center;padding:0 16px;border-radius:22px;font-size:17px;' +
+        (i === 1 ? 'background:#e8d7ae;color:#2a2017;font-weight:700' : i === 0 ? 'color:#c9a24c' : 'color:#b9a88a')
+    }));
+    const data = [
+      ['lannister', '#a3262a', 5, 3, 2, 1, 'Hand of the King', false, false],
+      ['tyrell', '#4d7a2c', 4, 2, 1, 2, 'Kingsguard, Lannister’s dowry', false, true],
+      ['bolton', '#b56a73', 4, 1, 1, 0, 'Master of Laws, Arryn’s dowry', true, false],
+      ['arryn', '#5d8fc4', 3, 2, 1, 3, 'Grand Maester, Bolton’s dowry', false, true],
+      ['martell', '#d27a2c', 3, 1, 1, 1, 'Master of Coin', false, true],
+      ['greyjoy', '#8a8d91', 4, 1, 2, 0, 'Master of Ships, 1 hostage', false, true],
+      ['red', '#8a1520', 2, 1, 1, 1, 'Master of Whispers, 1 hostage', false, false],
+      ['tully', '#2c4f86', 3, 0, 0, 0, 'No council seat', false, true],
+      ['white', '#d8d2c4', 2, 1, 1, 2, 'No council seat', false, true]
+    ];
+    // Small Council seats. Reassign opens the picker; the "reassign" tweak shows it open on the canvas.
+    const ROLES = [
+      ['Hand of the King', 'Hand of the King', 'Hand', ''], ['Lord Commander of the Kingsguard', 'Kingsguard', 'Kingsguard', 'ready'],
+      ['Master of Coin', 'Master of Coin', 'Coin', ''], ['Master of Laws', 'Master of Laws', 'Laws', 'used'],
+      ['Master of Whispers', 'Master of Whispers', 'Whispers', 'used'], ['Master of Ships', 'Master of Ships', 'Ships', 'ready'],
+      ['Grand Maester', 'Grand Maester', 'Maester', 'ready']
+    ];
+    const ids = Object.keys(S);
+    const st = this.state || {};
+    const holders = st.holders || ['lannister', 'tyrell', 'martell', 'bolton', 'red', 'greyjoy', 'arryn'];
+    const editing = st.editing !== undefined ? st.editing : (this.props.reassign ?? true);
+    const pick = st.pick !== undefined ? st.pick : (editing ? 6 : null);
+    const EXTRA = { tyrell: 'Lannister’s dowry', bolton: 'Arryn’s dowry', arryn: 'Bolton’s dowry', greyjoy: '1 hostage', red: '1 hostage' };
+    const badgeOf = (k) => { const j = holders.indexOf(k); return [j >= 0 ? ROLES[j][1] : 'No council seat', EXTRA[k]].filter(Boolean).join(', '); };
+    const plus = (full) => 'width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1;' + (full ? 'opacity:.35' : '');
+    const houses = data.map(([k, color, castles, vp, obj, supply, badges, move, ring]) => ({
+      name: N[k], sigil: S[k], badges: badgeOf(k), move, ring, noRing: !ring,
+      loans: ({ lannister: [['/_blob/9d3a75c124c2cdbae8f9b755ad36bb40', 'Gold loan']], greyjoy: [['/_blob/f9a5592db4b31607076fd4a11eb7a8ff', 'Red loan: 1 Victory Point less']], white: [['/_blob/963e17d1082f3fbbe4de1642d81f2a2c', 'Red loan: 8th on Fiefdoms']] }[k] || []).map(([img, label]) => ({ img, label, style: 'display:block;flex:none;width:13px;height:18px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.6);' + (label.indexOf('Gold') === 0 ? 'background:linear-gradient(160deg,#f0d77a,#a8801f);border:1px solid #5e4a12' : 'background:linear-gradient(160deg,#d0503f,#7a1a14);border:1px solid #3a0d0a') })),
+      rows: [['Castles', castles, false], ['Victory points', vp, false], ['Objectives', obj, false], ['Supply (max 3)', supply, supply >= 3]].map(([label, value, full]) => ({
+        label, value, plusStyle: plus(full), less: label + ' for ' + N[k] + ': one less', more: label + ' for ' + N[k] + ': one more' })),
+      box: 'min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:4px;padding:8px 12px;border-radius:0 0 10px 10px;border-top:5px solid ' + color + ';' +
+        (move ? 'border-left:2px solid #ead08a;border-right:2px solid #ead08a;border-bottom:2px solid #ead08a;background:rgba(201,162,76,.14)' : 'border-left:1px solid #5a4330;border-right:1px solid #5a4330;border-bottom:1px solid #5a4330;background:rgba(59,42,29,.55)')
+    }));
+    // picking a house that already sits on the council swaps the two seats
+    const choose = (i, h) => {
+      const next = holders.slice();
+      const j = next.indexOf(h);
+      if (j !== i) {
+        if (j >= 0) next[j] = next[i];
+        next[i] = h;
+      }
+      this.setState({ holders: next, pick: null });
+    };
+    const council = ROLES.map(([role, card, short, once], i) => {
+      const k = holders[i], open = editing && pick === i;
+      return {
+        role, name: N[k], sigil: S[k], once,
+        fixed: !editing, editable: editing, open, expanded: open ? 'true' : 'false',
+        action: open ? 'Pick a house' : 'Change',
+        select: () => this.setState({ pick: open ? null : i }),
+        rowStyle: 'width:100%;min-height:44px;display:flex;align-items:center;gap:8px;padding:0 6px;text-align:left;border:0;border-radius:8px;color:#eadfc8;' +
+          (open ? 'background:rgba(201,162,76,.18);outline:2px solid #ead08a;outline-offset:-2px' : 'background:transparent'),
+        pickLabel: 'New holder for ' + role,
+        choices: open ? ids.map((h) => {
+          const j = holders.indexOf(h), cur = j === i;
+          return {
+            sigil: S[h], name: N[h], seat: cur ? 'holds it' : j >= 0 ? 'swaps ' + ROLES[j][2] : 'no seat',
+            label: N[h] + (cur ? ', already holds it' : j >= 0 ? ', swaps seats, now ' + ROLES[j][0] : ', has no seat now'),
+            choose: () => choose(i, h),
+            style: 'min-width:0;min-height:52px;padding:3px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;' +
+              (cur ? 'border:2px solid #ead08a;background:rgba(201,162,76,.18);color:#ead08a' : 'border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8')
+          };
+        }) : []
+      };
+    });
+    const seatless = ids.filter((h) => holders.indexOf(h) < 0).map((h) => N[h]);
+    const noSeat = seatless.length ? 'No seat: ' + seatless.join(' and ') : 'Every house has a seat';
+    const tabs = [['Round', 'Round-D7'], ['Houses', 'Houses'], ['Relations', 'Relations'], ['Westeros', 'Westeros'], ['Loans', 'Loans'], ['Market', 'Market'], ['Log', 'Log']].map(([name, file], i) => ({
+      name, href: file + '.dc.html', current: i === 1 ? 'page' : 'false',
+      style: 'min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;' + (i === 1 ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a')
+    }));
+    return { phases, houses, council, tabs, editing, noSeat,
+      councilTitle: editing ? 'Reassigning seats' : 'Small Council',
+      editBtnText: editing ? 'Done' : 'Reassign',
+      editPressed: editing ? 'true' : 'false',
+      toggleEdit: () => this.setState({ editing: !editing, pick: null }),
+      editBtnStyle: 'min-height:44px;padding:0 14px;border-radius:10px;font-size:15px;' + (editing ? 'border:0;background:#c9a24c;color:#211710;font-weight:600' : 'border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8'),
+      councilBox: 'padding:12px 14px;border-radius:12px;background:#2b1f16;' + (editing ? 'border:2px solid #c9a24c' : 'border:1px solid #5a4330') };
+  }
+}
+</script>
+</body>
+</html>

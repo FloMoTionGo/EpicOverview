@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Round tab, March orders with a battle guide</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width:1180px;height:820px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:68px;flex:none;display:flex;align-items:center;gap:20px;padding:0 20px;border-bottom:1px solid #5a4330">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#c4473a,#8d2a22 55%,#5e1912);box-shadow:0 0 0 3px #211710,0 0 0 5px #c9a24c;font:600 22px 'Barlow Semi Condensed',sans-serif;color:#fbe9cf">4</div>
+      <div style="line-height:1.1"><div style="font-size:20px;font-weight:700">Round 4</div><div style="font-size:14px;color:#b9a88a">of 12</div></div>
+    </div>
+    <div style="flex:1"></div>
+    <a href="Choose-House.dc.html" aria-label="Playing as Greyjoy on this device. Change house" style="min-height:48px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 14px 0 6px;border-radius:24px;border:1px solid #5a4330;background:#2b1f16;color:#eadfc8;text-decoration:none"><img src="/_blob/c928f54c08f0c97af6e1e38ef5ba1339" alt="" style="width:36px;height:36px"><span style="line-height:1.05"><span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Playing as</span><span style="font-size:17px;font-weight:600">Greyjoy</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b9a88a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    <button type="button" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:16px">Undo</button>
+  </header>
+
+  <main style="flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:12px 20px">
+
+    <div style="display:flex;align-items:center;gap:10px;height:52px;flex:none">
+      <a href="Round-A1.dc.html" style="flex:none;min-width:168px;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:17px;box-sizing:border-box;text-decoration:none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Previous step
+      </a>
+      <sc-for list="{{ before }}" as="b" hint-placeholder-count="2">
+        <div style="{{ b.box }}">
+          <span style="{{ b.chip }}">{{ b.modeName }}</span>
+          <span style="font-size:13px;color:#b9a88a;font-family:'Barlow Semi Condensed',sans-serif">{{ b.where }}</span>
+          <span style="font-size:17px">{{ b.title }}</span>
+          <span style="margin-left:auto;font:600 14px 'Barlow Semi Condensed',sans-serif;color:#c9a24c">done</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <article aria-labelledby="mb-now" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:14px 22px;border-radius:14px;color:#2a2017;background:linear-gradient(180deg,#e8d7ae,#dcc796);box-shadow:0 0 0 1px #120c08,0 0 0 7px #4a3121,0 0 0 8px rgba(201,162,76,.45),0 18px 36px rgba(0,0,0,.5);margin:8px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+        <div>
+          <p style="margin:0;font-size:15px;color:#66543d">{{ stepLabel }}</p>
+          <h1 id="mb-now" style="margin:0;font-size:34px;line-height:1.1">{{ stepTitle }}</h1>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:#2d3a45;color:#e6eef4;font-size:16px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="4" cy="12" r="2.4"/><circle cx="12" cy="12" r="2.4"/><circle cx="20" cy="12" r="2.4"/><path d="M6.8 12h2.4M14.8 12h2.4"/></svg>
+          <span><strong>In turn, Throne order.</strong> {{ stepRule }}</span>
+        </div>
+      </div>
+
+      <sc-if value="{{ isMarch }}" hint-placeholder-val="{{ true }}">
+        <p style="margin:0;font-size:15px;color:#4a3d2c">Play the March orders at the table. When one leads to a fight, walk through it here. The app doesn't know the map, the units or the orders, so nothing is filled in for you.</p>
+
+        <section aria-labelledby="mb-guide" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px 14px;border-radius:12px;background:rgba(42,32,23,.07);border:2px solid #8d2a22">
+          <div style="display:flex;align-items:center;gap:10px">
+            <h2 id="mb-guide" style="margin:0;font-size:20px">Battle guide</h2>
+            <div role="group" aria-label="Kind of battle" style="flex:1;display:flex;gap:6px">
+              <sc-for list="{{ kinds }}" as="k" hint-placeholder-count="4">
+                <button type="button" aria-pressed="{{ k.pressed }}" onClick="{{ k.pick }}" style="{{ k.style }}">{{ k.label }}</button>
+              </sc-for>
+            </div>
+            <button type="button" onClick="{{ reset }}" style="flex:none;min-height:44px;display:flex;align-items:center;gap:6px;padding:0 14px;border-radius:10px;border:1px solid rgba(42,32,23,.45);background:transparent;color:#2a2017;font:600 15px 'Barlow Semi Condensed',sans-serif">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6"/><path d="M4.6 15a8 8 0 1 0 1.9-8.3L4 10"/></svg>Reset guide
+            </button>
+          </div>
+
+          <ol aria-label="Battle steps" style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+              <li style="display:flex">
+                <button type="button" aria-current="{{ s.current }}" onClick="{{ s.go }}" style="{{ s.box }}"><span style="{{ s.modeStyle }}">{{ s.mode }}</span><span style="font-size:14px;line-height:1.1">{{ s.title }}</span></button>
+              </li>
+            </sc-for>
+          </ol>
+
+          <div style="padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.4);border:1px solid rgba(42,32,23,.2)">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+              <span style="font:600 13px 'Barlow Semi Condensed',sans-serif;color:#66543d">{{ now.count }}</span>
+              <h3 style="margin:0;font-size:21px">{{ now.title }}</h3>
+              <span style="{{ now.modeStyle }}">{{ now.mode }}</span>
+            </div>
+            <ul style="margin:0;padding:0 0 0 18px;font-size:15px;line-height:1.35">
+              <sc-for list="{{ now.lines }}" as="ln" hint-placeholder-count="2">
+                <li>{{ ln.text }}</li>
+              </sc-for>
+            </ul>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" disabled="{{ backOff }}" onClick="{{ back }}" style="{{ backStyle }}">‹ Previous battle step</button>
+            <button type="button" onClick="{{ forward }}" style="min-height:48px;padding:0 18px;border-radius:10px;border:0;background:#2a2017;color:#e8d7ae;font:600 16px 'Barlow Semi Condensed',sans-serif">{{ forwardText }}</button>
+            <span role="status" style="font:600 14px 'Barlow Semi Condensed',sans-serif;color:#3f6b2a">{{ status }}</span>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ isConsolidate }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Consolidate Power" style="display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-radius:12px;background:rgba(42,32,23,.07);border:2px solid #2d3a45">
+          <p style="margin:0;font-size:17px;line-height:1.35">Each house resolves its Consolidate Power orders at the table. Power stays on the physical board, so the app has nothing to count here.</p>
+          <p style="margin:0;font-size:15px;line-height:1.35;color:#4a3d2c">A Consolidate Power order can also build a Fortification for free: take it from the Market tab's stock.</p>
+          <p style="margin:0;font-size:15px;line-height:1.35;color:#4a3d2c">Next comes Gain Power and supply, all at once.</p>
+        </section>
+      </sc-if>
+    </article>
+
+    <div style="display:flex;align-items:center;gap:10px;height:52px;flex:none">
+      <sc-for list="{{ after }}" as="n" hint-placeholder-count="2">
+        <div style="{{ n.box }}">
+          <span style="{{ n.chip }}">{{ n.modeName }}</span>
+          <span style="font-size:13px;color:#b9a88a;font-family:'Barlow Semi Condensed',sans-serif">{{ n.where }}</span>
+          <span style="font-size:17px">{{ n.title }}</span>
+        </div>
+      </sc-for>
+      <a href="Round-A3.dc.html" style="flex:none;min-width:168px;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:0;background:#c9a24c;color:#211710;font-size:17px;font-weight:600;box-sizing:border-box;text-decoration:none">
+        Next step<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <section aria-label="Houses" style="height:88px;flex:none;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;padding:8px 20px;border-top:1px solid #5a4330;background:rgba(0,0,0,.25)">
+    <sc-for list="{{ seats }}" as="h" hint-placeholder-count="9">
+      <button type="button" style="{{ h.box }}">
+        <span style="display:flex;align-items:center;gap:6px;min-width:0">
+          <img src="{{ h.sigil }}" alt="" style="width:30px;height:30px;flex:none">
+          <span style="font-size:14px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+          <sc-if value="{{ h.ring }}" hint-placeholder-val="{{ true }}">
+            <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="Ring still available" title="Ring still available" style="width:22px;height:22px;flex:none">
+          </sc-if>
+          <sc-if value="{{ h.noRing }}" hint-placeholder-val="{{ false }}">
+            <img src="/_blob/d47cecb41a5325c4d45cd0db3377f88e" alt="Ring used" title="Ring used" style="width:22px;height:22px;flex:none">
+          </sc-if>
+        </span>
+        <span style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));text-align:center;line-height:1">
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.castles }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">castles</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.vp }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">VP</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.obj }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">obj.</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.supply }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">supply</span></span>
+        </span>
+        <span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px">{{ h.badges }}</span>
+        <span style="position:absolute;right:6px;bottom:5px;display:flex;gap:3px">
+          <sc-for list="{{ h.loans }}" as="l" hint-placeholder-count="0">
+            <span role="img" aria-label="{{ l.label }}" title="{{ l.label }}" style="{{ l.style }}"></span>
+          </sc-for>
+        </span>
+      </button>
+    </sc-for>
+  </section>
+
+  <nav aria-label="Views" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+      <a href="{{ t.href }}" aria-current="{{ t.current }}" style="{{ t.style }}">{{ t.name }}</a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const st = this.state || {};
+    const view = st.view || 'march';
+    const kind = st.kind || 'land';
+    const MODE = { all: ['≡ All at once', '#c9a24c'], turn: ['→ In turn', '#8fa8bd'], one: ['● One house', '#d9c6e8'] };
+    // two steps before and two after; the further away, the fainter
+    const fade = (m, where, title, opacity) => ({
+      where, title, modeName: MODE[m][0],
+      chip: 'flex:none;font:600 13px Barlow Semi Condensed,sans-serif;padding:3px 9px;border-radius:99px;border:1px solid ' + MODE[m][1] + ';color:' + MODE[m][1],
+      box: 'flex:1;min-width:0;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:12px;border:1px solid #4a3626;background:rgba(59,42,29,.45);white-space:nowrap;overflow:hidden;opacity:' + opacity
+    });
+    const isMarch = view === 'march';
+    const before = isMarch
+      ? [fade('one', 'Planning 5', 'Messenger Raven', .35), fade('turn', 'Action 1', 'Raid orders', .6)]
+      : [fade('turn', 'Action 1', 'Raid orders', .35), fade('turn', 'Action 2', 'March orders', .6)];
+    const after = isMarch
+      ? [fade('turn', 'Action 3', 'Consolidate Power', .6), fade('all', 'Action 4', 'Gain Power and supply', .35)]
+      : [fade('all', 'Action 4', 'Gain Power and supply', .6)];
+
+    // the battle guide: general steps only, no houses, areas or units
+    const KINDS = [['land', 'Field battle'], ['siege', 'Siege'], ['sea', 'Sea battle'], ['neutral', 'Neutral force']];
+    const STEPS = {
+      land: [
+        ['turn', 'Call for support', ['Every house with a Support order next to the battle says whom it backs: attacker, defender or neither.', 'A house at Dynasty level with one side cannot refuse to back it. Ships next to the area may support too.']],
+        ['all', 'Reveal House cards', ['Attacker and defender each choose a House card and reveal them together.', 'Card text applies now, in the order the cards say.']],
+        ['all', 'Tides of Battle', ['Each side draws one Tides of Battle card and adds its value.']],
+        ['one', 'Valyrian Steel Blade', ['Its holder, if fighting in this battle, may add +1 once per round.']],
+        ['all', 'Add up, find the winner', ['Add units (Footman 1, Knight 2, Siege engine 4 only against a castle), order bonus, support, House card and Tides.', 'Higher total wins. A tie is Matching Forces: both sides take casualties, and the house higher on the Fiefdoms track still wins.']],
+        ['turn', 'Casualties, retreat, hostage', ['The loser loses one unit for each sword on the winner’s card beyond the towers on its own.', 'The loser retreats into an empty or friendly area next to it; units that cannot retreat are lost.', 'Only the winner may take a hostage. Then remove the March order, and the order of a beaten defender.']]
+      ],
+      siege: [
+        ['turn', 'Call for support', ['Every house with a Support order next to the castle says whom it backs: attacker, defender or neither.']],
+        ['one', 'Defender: siege or normal', ['The defender of the castle chooses: fight it as a siege, or as a normal battle.', 'Normal battle: switch the guide to Field battle.']],
+        ['all', 'Reveal House cards', ['Both sides choose a House card and reveal them together.', 'Hidden Mole: after the reveal, the attacker or an attack supporter may turn the siege into a normal battle.']],
+        ['all', 'Tides of Battle', ['Each side draws one Tides of Battle card and adds its value.']],
+        ['one', 'Valyrian Steel Blade', ['Its holder, if fighting in this battle, may add +1 once per round.']],
+        ['all', 'Add up, siege values', ['Knights count 1. An army with an Archer gets +1. Siege engines count 4 attacking, 2 defending.', 'Defense order: +1 tower; a special Defense order at a Stronghold: +2. Then compare the totals as in a field battle.']],
+        ['turn', 'Result', ['Attacker wins: extra swords equal to the strength difference, and nobody retreats.', 'Defenders left: the castle stays besieged, and at Clean up the defender loses 1 supply or 1 unit there.', 'Escape Tunnels: a defender who loses takes no casualties and retreats normally.']]
+      ],
+      sea: [
+        ['turn', 'Call for support', ['Only ships support a sea battle: houses with ships on a Support order next to the sea area say whom they back.']],
+        ['all', 'Reveal House cards', ['Both sides choose a House card and reveal them together.']],
+        ['all', 'Tides of Battle', ['Each side draws one Tides of Battle card and adds its value.']],
+        ['one', 'Valyrian Steel Blade', ['Its holder, if fighting in this battle, may add +1 once per round.']],
+        ['all', 'Add up, find the winner', ['Each ship counts 1, plus order bonus, support, House card and Tides.', 'Higher total wins; a tie is Matching Forces, as on land.']],
+        ['turn', 'Casualties and retreat', ['The loser loses one ship for each sword on the winner’s card beyond the towers on its own.', 'Losing ships retreat into an empty or friendly sea area next to it, or a port of their own; ships that cannot retreat are lost.']]
+      ],
+      neutral: [
+        ['turn', 'Call for support', ['Houses with a Support order next to the area may back the attacker. The neutral force gets no support.']],
+        ['one', 'Add up the attacker', ['Units, March order bonus and support. No House cards, no Tides of Battle, no Valyrian Steel Blade.']],
+        ['one', 'Result', ['Equal to or above the value on the token: remove the token and move in.', 'Below it: the units cannot move into that area.']]
+      ]
+    };
+    const list = STEPS[kind];
+    const step = Math.min(st.step || 0, list.length - 1);
+    const BM = { all: ['≡ both sides', '#8a5e12'], turn: ['→ in turn', '#2d5878'], one: ['● one house', '#5d3f7a'] };
+    const steps = list.map(([m, title], i) => {
+      const state = i < step ? 'done' : i === step ? 'now' : 'next';
+      return {
+        title, current: state === 'now' ? 'step' : 'false',
+        mode: (state === 'done' ? '✓ ' : '') + BM[m][0],
+        go: () => this.setState({ step: i, status: '' }),
+        modeStyle: 'font:600 12px Barlow Semi Condensed,sans-serif;color:' + (state === 'now' ? '#fbe9cf' : BM[m][1]),
+        box: 'flex:1;min-width:0;min-height:52px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;padding:4px 8px;text-align:left;border-radius:8px;' +
+          (state === 'now' ? 'border:0;background:#8d2a22;color:#fbe9cf' : state === 'done' ? 'border:0;background:rgba(42,32,23,.12);color:#66543d' : 'background:rgba(255,255,255,.35);color:#2a2017;border:1px dashed rgba(42,32,23,.35)')
+      };
+    });
+    const [nm, ntitle, nlines] = list[step];
+    const now = {
+      count: 'Step ' + (step + 1) + ' of ' + list.length, title: ntitle, mode: BM[nm][0],
+      modeStyle: 'font:600 13px Barlow Semi Condensed,sans-serif;color:' + BM[nm][1],
+      lines: nlines.map((text) => ({ text }))
+    };
+    const last = step === list.length - 1;
+    const kinds = KINDS.map(([k, label]) => ({
+      label, pressed: k === kind ? 'true' : 'false',
+      pick: () => this.setState({ kind: k, step: 0, status: '' }),
+      style: 'min-height:44px;padding:0 14px;border-radius:10px;font:600 15px Barlow Semi Condensed,sans-serif;' +
+        (k === kind ? 'border:0;background:#8d2a22;color:#fbe9cf' : 'border:1px solid rgba(42,32,23,.4);background:rgba(255,255,255,.3);color:#2a2017')
+    }));
+
+    const SUP = { lannister: 1, tyrell: 2, bolton: 0, arryn: 3, martell: 1, greyjoy: 0, red: 1, tully: 0, white: 2 };
+    const LOAN = { lannister: ['Gold loan'], greyjoy: ['Red loan: 1 Victory Point less'], white: ['Red loan: 8th on Fiefdoms'] };
+    const loanStyle = (label) => 'display:block;width:12px;height:17px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.6);' +
+      (label.indexOf('Gold') === 0 ? 'background:linear-gradient(160deg,#f0d77a,#a8801f);border:1px solid #5e4a12' : 'background:linear-gradient(160deg,#d0503f,#7a1a14);border:1px solid #3a0d0a');
+    const seatData = [
+      ['lannister', '#a3262a', 5, 3, 2, 'Hand', false],
+      ['tyrell', '#4d7a2c', 4, 2, 1, 'Kingsguard', true],
+      ['bolton', '#b56a73', 4, 1, 1, 'Laws', false],
+      ['arryn', '#5d8fc4', 3, 2, 1, 'Maester', true],
+      ['martell', '#d27a2c', 3, 1, 1, 'Coin', true],
+      ['greyjoy', '#8a8d91', 4, 1, 2, 'Ships', true],
+      ['red', '#8a1520', 2, 1, 1, 'Whispers', false],
+      ['tully', '#2c4f86', 3, 0, 0, 'No council seat', true],
+      ['white', '#d8d2c4', 2, 1, 1, 'No council seat', true]
+    ];
+    const seats = seatData.map(([k, color, castles, vp, obj, badges, ring]) => ({
+      name: N[k], sigil: S[k], castles, vp, obj, badges, ring, noRing: !ring, supply: SUP[k],
+      loans: (LOAN[k] || []).map((label) => ({ label, style: loanStyle(label) })),
+      box: 'position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:1px;min-width:0;padding:5px 8px;text-align:left;color:#eadfc8;border-radius:0 0 8px 8px;' +
+        'border-top:4px solid ' + color + ';border-left:1px solid #5a4330;border-right:1px solid #5a4330;border-bottom:1px solid #5a4330;background:rgba(59,42,29,.6)'
+    }));
+    const tabs = [['Round', 'Round-D7'], ['Houses', 'Houses'], ['Relations', 'Relations'], ['Westeros', 'Westeros'], ['Loans', 'Loans'], ['Market', 'Market'], ['Log', 'Log']].map(([name, file], i) => ({
+      name, href: file + '.dc.html', current: i === 0 ? 'page' : 'false',
+      style: 'min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;' + (i === 0 ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a')
+    }));
+    return {
+      before, after, seats, tabs, isMarch, isConsolidate: !isMarch,
+      stepLabel: isMarch ? 'Action, step 2 of 6' : 'Action, step 3 of 6',
+      stepTitle: isMarch ? 'March orders' : 'Consolidate Power',
+      stepRule: isMarch ? 'One March order each, then the next house, until none are left.' : 'Each house resolves its Consolidate Power orders.',
+      kinds, steps, now, status: st.status || '',
+      reset: () => this.setState({ kind: 'land', step: 0, status: 'Guide reset' }),
+      backOff: step === 0,
+      backStyle: 'min-height:48px;padding:0 16px;border-radius:10px;border:1px solid rgba(42,32,23,.45);background:transparent;color:#2a2017;font:600 16px Barlow Semi Condensed,sans-serif;' + (step === 0 ? 'opacity:.4;cursor:default' : ''),
+      back: () => this.setState({ step: Math.max(0, step - 1), status: '' }),
+      forwardText: last ? 'Battle done, reset' : 'Next battle step ›',
+      forward: () => this.setState(last ? { step: 0, status: 'Battle done. Ready for the next one.' } : { step: step + 1, status: '' }),
+      nextStep: () => { if (isMarch) this.setState({ view: 'consolidate' }); },
+      prevStep: () => { if (!isMarch) this.setState({ view: 'march' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

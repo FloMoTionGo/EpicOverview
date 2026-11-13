@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Relations tab</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width:1180px;height:820px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:68px;flex:none;display:flex;align-items:center;gap:20px;padding:0 20px;border-bottom:1px solid #5a4330">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#c4473a,#8d2a22 55%,#5e1912);box-shadow:0 0 0 3px #211710,0 0 0 5px #c9a24c;font:600 22px 'Barlow Semi Condensed',sans-serif;color:#fbe9cf">4</div>
+      <div style="line-height:1.1"><div style="font-size:20px;font-weight:700">Round 4</div><div style="font-size:14px;color:#b9a88a">of 12</div></div>
+    </div>
+    <div style="flex:1"></div>
+    <a href="Choose-House.dc.html" aria-label="Playing as Greyjoy on this device. Change house" style="min-height:48px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 14px 0 6px;border-radius:24px;border:1px solid #5a4330;background:#2b1f16;color:#eadfc8;text-decoration:none"><img src="/_blob/c928f54c08f0c97af6e1e38ef5ba1339" alt="" style="width:36px;height:36px"><span style="line-height:1.05"><span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Playing as</span><span style="font-size:17px;font-weight:600">Greyjoy</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b9a88a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    <button type="button" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:16px">Undo</button>
+  </header>
+
+  <main style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;padding:10px 20px">
+    <section aria-labelledby="r-matrix" style="display:flex;flex-direction:column;gap:8px;min-height:0">
+      <div style="display:flex;align-items:baseline;gap:14px">
+        <h1 id="r-matrix" style="margin:0;font-size:24px">Diplomatic levels</h1>
+        <span style="font:500 15px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Tap a cell to raise, lower, break or set a marriage. Each option shows its cost.</span>
+      </div>
+      <div style="position:relative">
+        <div role="grid" aria-label="Diplomatic levels between all houses" style="display:grid;grid-template-columns:44px repeat(9,50px) 64px;grid-auto-rows:46px;gap:4px;align-items:center">
+          <span></span>
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="9">
+            <img src="{{ c.sigil }}" alt="{{ c.name }}" style="width:40px;height:40px;margin:auto">
+          </sc-for>
+          <span style="font:600 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a;text-align:center;line-height:1.1">friendly of 3</span>
+          <sc-for list="{{ matrix }}" as="row" hint-placeholder-count="9">
+            <img src="{{ row.sigil }}" alt="{{ row.name }}" style="width:40px;height:40px">
+            <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="9">
+              <button type="button" aria-label="{{ cell.label }}" style="{{ cell.box }}">
+                <span style="{{ cell.shield }}">{{ cell.text }}</span>
+                <sc-if value="{{ cell.married }}" hint-placeholder-val="{{ false }}">
+                  <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="" style="position:absolute;right:1px;top:1px;width:16px;height:16px">
+                </sc-if>
+              </button>
+            </sc-for>
+            <span style="{{ row.countStyle }}">{{ row.count }}</span>
+          </sc-for>
+        </div>
+
+        <div role="dialog" aria-label="Martell and Red Targaryen" style="position:absolute;left:434px;top:78px;width:340px;box-sizing:border-box;padding:12px 14px;border-radius:14px;color:#2a2017;background:linear-gradient(180deg,#efe0bb,#dcc796);box-shadow:0 0 0 1px #120c08,0 0 0 4px #4a3121,0 16px 34px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:8px">
+          <span aria-hidden="true" style="position:absolute;left:-9px;top:187px;width:16px;height:16px;transform:rotate(45deg);background:#e6d4a9;box-shadow:-1px 1px 0 #4a3121"></span>
+          <div style="display:flex;align-items:center;gap:6px"><img src="/_blob/cd0279272519d4f3293cd9d1fe172d58" alt="" style="width:28px;height:28px"><img src="/_blob/fb608f52c5c17e75116f81e672eb9225" alt="" style="width:28px;height:28px"><span style="font-size:17px;font-weight:700;line-height:1.1">Martell and Red Targaryen</span></div>
+          <div style="font-size:15px;color:#4a3d2c">Truce since round 3, not changed this round.</div>
+          <button type="button" style="min-height:58px;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:6px 12px;text-align:left;border-radius:10px;border:0;background:#2a2017;color:#e8d7ae;font:600 16px 'Barlow Semi Condensed',sans-serif">Raise to Alliance<span style="font:500 13px 'Barlow Semi Condensed',sans-serif;color:#cdb98d;line-height:1.2">Both agree. Each pays Power equal to the areas between their closest castles, minus their King's Court stars.</span></button>
+          <button type="button" style="min-height:58px;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:6px 12px;text-align:left;border-radius:10px;border:2px solid #2a2017;background:transparent;color:#2a2017;font:600 16px 'Barlow Semi Condensed',sans-serif">Lower to War<span style="font:500 13px 'Barlow Semi Condensed',sans-serif;color:#5a4a36;line-height:1.2">Free. Either house decides alone.</span></button>
+          <button type="button" style="min-height:58px;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:6px 12px;text-align:left;border-radius:10px;border:2px solid #8d2a22;background:transparent;color:#8d2a22;font:600 16px 'Barlow Semi Condensed',sans-serif">Break the Truce<span style="font:500 13px 'Barlow Semi Condensed',sans-serif;color:#7a3a2c;line-height:1.2">Back to War. The house that broke it pays 3, in Power or Supply steps, any mix.</span></button>
+          <button type="button" style="min-height:58px;display:flex;align-items:center;gap:10px;padding:6px 12px;text-align:left;border-radius:10px;border:1px solid rgba(42,32,23,.4);background:rgba(255,255,255,.3);color:#2a2017;font:600 16px 'Barlow Semi Condensed',sans-serif"><img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="" style="width:22px;height:22px;flex:none"><span style="display:flex;flex-direction:column;gap:2px">Set marriage<span style="font:500 13px 'Barlow Semi Condensed',sans-serif;color:#5a4a36;line-height:1.2">The proposer's ring is spent. Raises one level for free, unless raised this round. Dowries swap.</span></span></button>
+          <div style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#66543d">Alliance costs 5 to break, Dynasty 8.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px;font:500 14px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">
+        <span style="display:inline-flex;align-items:center;gap:6px"><span style="{{ legend1 }}">1</span>Truce</span>
+        <span style="display:inline-flex;align-items:center;gap:6px"><span style="{{ legend2 }}">2</span>Alliance</span>
+        <span style="display:inline-flex;align-items:center;gap:6px"><span style="{{ legend3 }}">3</span>Dynasty</span>
+        <span style="display:inline-flex;align-items:center;gap:6px"><img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="" style="width:18px;height:18px">married</span>
+        <span>Dotted: changed this round</span>
+      </div>
+    </section>
+
+    <aside style="display:flex;flex-direction:column;gap:12px;min-height:0">
+      <section aria-labelledby="r-marriages" style="padding:12px 14px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330">
+        <h2 id="r-marriages" style="margin:0 0 6px;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Marriages</h2>
+        <div style="font-size:15px;line-height:1.5">Lannister and Tyrell, round 2<br>Bolton and Arryn, round 3</div>
+        <p style="margin:6px 0 10px;font-size:14px;color:#b9a88a">Proposals are answered at the table. Record the result here or by tapping a cell.</p>
+        <button type="button" style="width:100%;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;border:0;background:#c9a24c;color:#211710;font:600 16px 'Barlow Semi Condensed',sans-serif"><img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="" style="width:22px;height:22px">Set marriage</button>
+      </section>
+
+      <section aria-labelledby="r-hostages" style="padding:12px 14px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330">
+        <h2 id="r-hostages" style="margin:0 0 6px;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Hostages</h2>
+        <sc-for list="{{ hostages }}" as="h" hint-placeholder-count="2">
+          <div style="min-height:52px;display:flex;align-items:center;gap:8px;border-top:1px solid #4a3626">
+            <img src="{{ h.holder }}" alt="" style="width:28px;height:28px">
+            <span style="flex:1;font-size:15px;line-height:1.2">{{ h.text }}</span>
+            <button type="button" style="min-height:44px;padding:0 10px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:14px">Release</button>
+          </div>
+        </sc-for>
+      </section>
+
+      <section aria-labelledby="r-dowries" style="padding:12px 14px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330">
+        <h2 id="r-dowries" style="margin:0 0 6px;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Dowries changed hands</h2>
+        <div style="font-size:15px;line-height:1.5">Tyrell holds Masters of Intrigue (Lannister)<br>Lannister holds Fruits of the Reach (Tyrell)<br>Arryn holds The North Remembers (Bolton)<br>Bolton holds Knights of the Vale (Arryn)</div>
+      </section>
+    </aside>
+  </main>
+
+  <section aria-label="Houses" style="height:88px;flex:none;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;padding:8px 20px;border-top:1px solid #5a4330;background:rgba(0,0,0,.25)">
+    <sc-for list="{{ seats }}" as="h" hint-placeholder-count="9">
+      <button type="button" style="{{ h.box }}">
+        <span style="display:flex;align-items:center;gap:6px;min-width:0">
+          <img src="{{ h.sigil }}" alt="" style="width:30px;height:30px;flex:none">
+          <span style="font-size:14px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+          <sc-if value="{{ h.ring }}" hint-placeholder-val="{{ true }}">
+            <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="Ring still available" title="Ring still available" style="width:22px;height:22px;flex:none">
+          </sc-if>
+          <sc-if value="{{ h.noRing }}" hint-placeholder-val="{{ false }}">
+            <img src="/_blob/d47cecb41a5325c4d45cd0db3377f88e" alt="Ring used" title="Ring used" style="width:22px;height:22px;flex:none">
+          </sc-if>
+        </span>
+        <span style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));text-align:center;line-height:1">
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.castles }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">castles</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.vp }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">VP</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.obj }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">obj.</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.supply }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">supply</span></span>
+        </span>
+        <span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px">{{ h.badges }}</span>
+        <span style="position:absolute;right:6px;bottom:5px;display:flex;gap:3px">
+          <sc-for list="{{ h.loans }}" as="l" hint-placeholder-count="0">
+            <span role="img" aria-label="{{ l.label }}" title="{{ l.label }}" style="{{ l.style }}"></span>
+          </sc-for>
+        </span>
+      </button>
+    </sc-for>
+  </section>
+
+  <nav aria-label="Views" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+      <a href="{{ t.href }}" aria-current="{{ t.current }}" style="{{ t.style }}">{{ t.name }}</a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const ids = Object.keys(S);
+    const phases = ['Westeros', 'Diplomacy', 'Planning', 'Action', 'End of round'].map((name, i) => ({
+      name,
+      style: 'min-height:44px;display:flex;align-items:center;padding:0 16px;border-radius:22px;font-size:17px;' +
+        (i === 1 ? 'background:#e8d7ae;color:#2a2017;font-weight:700' : i === 0 ? 'color:#c9a24c' : 'color:#b9a88a')
+    }));
+    const LV = ['War', 'Truce', 'Alliance', 'Dynasty'];
+    const SH = ['#4a3626', '#b77a3a', '#aeb6be', '#d9b44a'];
+    const shield = (lv, w) => 'display:inline-flex;align-items:center;justify-content:center;width:' + w + 'px;height:' + Math.round(w * 1.17) + 'px;font:700 14px Barlow Semi Condensed,sans-serif;color:#211710;clip-path:polygon(0 0,100% 0,100% 55%,50% 100%,0 55%);background:' + SH[lv];
+    const levels = {
+      'lannister|tyrell': 3, 'bolton|arryn': 2, 'bolton|tully': 2, 'arryn|tully': 2,
+      'martell|red': 1, 'tyrell|martell': 1, 'greyjoy|white': 1
+    };
+    const married = { 'lannister|tyrell': 1, 'bolton|arryn': 1 };
+    const changed = { 'bolton|tully': 1, 'arryn|tully': 1, 'tyrell|martell': 1, 'greyjoy|martell': 1 };
+    const focus = 'martell|red';
+    const norm = (a, b) => ids.indexOf(a) < ids.indexOf(b) ? a + '|' + b : b + '|' + a;
+    const has = (obj, a, b) => obj[a + '|' + b] !== undefined ? obj[a + '|' + b] : obj[b + '|' + a];
+    const cols = ids.map((k) => ({ name: N[k], sigil: S[k] }));
+    const matrix = ids.map((a) => {
+      let friendly = 0;
+      const cells = ids.map((b) => {
+        if (a === b) return { label: N[a], text: '', married: false, shield: 'display:none', box: 'width:50px;height:46px;border-radius:8px;border:0;padding:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 4px,transparent 4px 8px)' };
+        const lv = has(levels, a, b) || 0;
+        if (lv) friendly++;
+        const isChanged = !!has(changed, a, b), isMarried = !!has(married, a, b);
+        const isFocus = (a === 'martell' && b === 'red');
+        return {
+          label: N[a] + ' and ' + N[b] + ': ' + LV[lv] + (isMarried ? ', married' : '') + (isChanged ? ', changed this round' : '') + ', tap for options',
+          text: lv ? String(lv) : '–', married: isMarried,
+          shield: lv ? shield(lv, 24) : 'font:600 16px Barlow Semi Condensed,sans-serif;color:rgba(234,223,200,.28)',
+          box: 'position:relative;width:50px;height:46px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(0,0,0,.22);' +
+            (isFocus ? 'border:2px solid #ead08a;box-shadow:0 0 0 3px rgba(234,208,138,.25)' : isChanged ? 'border:1.5px dotted #b9a88a' : 'border:1px solid #3b2a1d')
+        };
+      });
+      return { name: N[a], sigil: S[a], cells, count: friendly + ' / 3',
+        countStyle: 'text-align:center;font:600 16px Barlow Semi Condensed,sans-serif;' + (friendly >= 3 ? 'color:#ead08a' : 'color:#eadfc8') };
+    });
+    const hostages = [
+      { holder: S.greyjoy, text: 'Greyjoy holds a Tully house card (strength 2)' },
+      { holder: S.red, text: 'Red Targaryen holds a White Targaryen house card (strength 3)' }
+    ];
+    const LOAN = {
+      lannister: [['/_blob/9d3a75c124c2cdbae8f9b755ad36bb40', 'Gold loan']],
+      greyjoy: [['/_blob/f9a5592db4b31607076fd4a11eb7a8ff', 'Red loan: 1 Victory Point less']],
+      white: [['/_blob/963e17d1082f3fbbe4de1642d81f2a2c', 'Red loan: 8th on Fiefdoms']]
+    };
+    const seatData = [
+      ['lannister', '#a3262a', 5, 3, 2, 'Hand', false],
+      ['tyrell', '#4d7a2c', 4, 2, 1, 'Kingsguard', true],
+      ['bolton', '#b56a73', 4, 1, 1, 'Laws', false],
+      ['arryn', '#5d8fc4', 3, 2, 1, 'Maester', true],
+      ['martell', '#d27a2c', 3, 1, 1, 'Coin', true],
+      ['greyjoy', '#8a8d91', 4, 1, 2, 'Ships', true],
+      ['red', '#8a1520', 2, 1, 1, 'Whispers', false],
+      ['tully', '#2c4f86', 3, 0, 0, 'No council seat', true],
+      ['white', '#d8d2c4', 2, 1, 1, 'No council seat', true]
+    ];
+    const SUP = { lannister: 1, tyrell: 2, bolton: 0, arryn: 3, martell: 1, greyjoy: 0, red: 1, tully: 0, white: 2 };
+    const seats = seatData.map(([k, color, castles, vp, obj, badges, ring]) => ({
+      name: N[k], sigil: S[k], castles, vp, obj, badges, ring, noRing: !ring, supply: SUP[k],
+      loans: (LOAN[k] || []).map(([img, label]) => ({ img, label, style: 'display:block;flex:none;width:12px;height:17px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.6);' + (label.indexOf('Gold') === 0 ? 'background:linear-gradient(160deg,#f0d77a,#a8801f);border:1px solid #5e4a12' : 'background:linear-gradient(160deg,#d0503f,#7a1a14);border:1px solid #3a0d0a') })),
+      box: 'position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:1px;min-width:0;padding:5px 8px;text-align:left;color:#eadfc8;border-radius:0 0 8px 8px;' +
+        'border-top:4px solid ' + color + ';border-left:1px solid #5a4330;border-right:1px solid #5a4330;border-bottom:1px solid #5a4330;background:rgba(59,42,29,.6)'
+    }));
+    const tabs = [['Round', 'Round-D7'], ['Houses', 'Houses'], ['Relations', 'Relations'], ['Westeros', 'Westeros'], ['Loans', 'Loans'], ['Market', 'Market'], ['Log', 'Log']].map(([name, file], i) => ({
+      name, href: file + '.dc.html', current: i === 2 ? 'page' : 'false',
+      style: 'min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;' + (i === 2 ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a')
+    }));
+    return { phases, cols, matrix, hostages, seats, tabs,
+      legend1: shield(1, 18), legend2: shield(2, 18), legend3: shield(3, 18) };
+  }
+}
+</script>
+</body>
+</html>

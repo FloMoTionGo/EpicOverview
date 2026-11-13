@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phone relations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:60px;flex:none;display:flex;align-items:center;gap:10px;padding:0 12px 0 16px;border-bottom:1px solid #5a4330">
+    <h1 style="margin:0;flex:1;font-size:26px">Relations</h1>
+    <span style="font:600 14px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Round 4</span>
+    <a href="Phone-Choose.dc.html" aria-label="Playing as Greyjoy on this phone. Change house" style="flex:none;width:48px;height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid #5a4330;background:#2b1f16"><img src="/_blob/c928f54c08f0c97af6e1e38ef5ba1339" alt="" style="width:34px;height:34px"></a>
+    <button type="button" onClick="{{ undo }}" aria-disabled="{{ undoDisabled }}" style="{{ undoStyle }}">Undo</button>
+  </header>
+
+  <div style="flex:none;padding:10px 12px 6px">
+    <div role="group" aria-label="Whose relations to show" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px">
+      <sc-for list="{{ picker }}" as="p" hint-placeholder-count="9">
+        <button type="button" aria-label="{{ p.label }}" aria-pressed="{{ p.pressed }}" onClick="{{ p.choose }}" style="{{ p.style }}"><img src="{{ p.sigil }}" alt="" style="width:40px;height:40px"></button>
+      </sc-for>
+    </div>
+  </div>
+
+  <section aria-label="{{ meLimitsLabel }}" style="flex:none;margin:0 12px;padding:10px 12px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330;display:flex;align-items:center;gap:12px">
+    <img src="{{ meSigil }}" alt="" style="width:44px;height:44px">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:20px;font-weight:700;line-height:1.1">{{ meName }}</div>
+      <div style="font:500 14px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ limits }}</div>
+    </div>
+    <span style="{{ ringChip }}"><img src="{{ ringImg }}" alt="" style="width:20px;height:20px">{{ ringText }}</span>
+  </section>
+
+  <ul aria-label="Levels with the other houses" style="list-style:none;margin:8px 0 0;padding:0 12px;flex:1;min-height:0;display:flex;flex-direction:column;gap:6px">
+    <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+      <li style="display:flex">
+        <button type="button" aria-label="{{ r.label }}" onClick="{{ r.open }}" style="{{ r.box }}">
+          <img src="{{ r.sigil }}" alt="" style="width:38px;height:38px;flex:none">
+          <span style="flex:1;min-width:0">
+            <span style="display:block;font-size:17px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+            <span style="display:flex;align-items:center;gap:6px;font:500 13px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">
+              <span style="{{ r.shield }}">{{ r.num }}</span>{{ r.level }}
+            </span>
+          </span>
+          <sc-if value="{{ r.married }}" hint-placeholder-val="{{ false }}">
+            <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="Married" title="Married" style="width:22px;height:22px;flex:none">
+          </sc-if>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b9a88a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </li>
+    </sc-for>
+  </ul>
+
+  <p style="flex:none;margin:6px 16px 8px;font-size:14px;color:#b9a88a">Tap a house for raise, lower, break or marriage. Each option shows its cost; Power is paid at the table.</p>
+
+  <nav aria-label="Views" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+      <a href="{{ t.href }}" aria-current="{{ t.current }}" style="{{ t.style }}">{{ t.name }}</a>
+    </sc-for>
+  </nav>
+
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <button type="button" aria-label="Close the options" onClick="{{ close }}" style="position:absolute;inset:0;border:0;padding:0;background:rgba(10,6,3,.62)"></button>
+    <div role="dialog" aria-label="{{ sheetTitle }}" style="position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:10px 16px 16px;border-radius:18px 18px 0 0;color:#2a2017;background:linear-gradient(180deg,#efe0bb,#dcc796);box-shadow:0 -12px 30px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:8px">
+      <span aria-hidden="true" style="align-self:center;width:44px;height:5px;border-radius:3px;background:rgba(42,32,23,.3)"></span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <img src="{{ meSigil }}" alt="" style="width:30px;height:30px">
+        <img src="{{ otherSigil }}" alt="" style="width:30px;height:30px">
+        <span style="font-size:19px;font-weight:700;line-height:1.1">{{ sheetTitle }}</span>
+      </div>
+      <div style="font-size:15px;color:#4a3d2c">{{ sheetStatus }}</div>
+
+      <sc-if value="{{ choosing }}" hint-placeholder-val="{{ true }}">
+        <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+          <button type="button" aria-disabled="{{ o.disabled }}" onClick="{{ o.choose }}" style="{{ o.style }}">
+            <sc-if value="{{ o.ring }}" hint-placeholder-val="{{ false }}">
+              <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="" style="width:22px;height:22px;flex:none">
+            </sc-if>
+            <span style="display:flex;flex-direction:column;gap:2px;min-width:0">{{ o.title }}<span style="{{ o.subStyle }}">{{ o.sub }}</span></span>
+          </button>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ breaking }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:16px;font-weight:700">{{ breakQuestion }}</div>
+        <div style="font-size:14px;color:#4a3d2c">{{ breakCost }}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button type="button" onClick="{{ brokeMe }}" style="min-height:56px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:2px solid #8d2a22;background:transparent;color:#8d2a22;font:600 16px 'Barlow Semi Condensed',sans-serif"><img src="{{ meSigil }}" alt="" style="width:24px;height:24px">{{ meName }}</button>
+          <button type="button" onClick="{{ brokeOther }}" style="min-height:56px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:2px solid #8d2a22;background:transparent;color:#8d2a22;font:600 16px 'Barlow Semi Condensed',sans-serif"><img src="{{ otherSigil }}" alt="" style="width:24px;height:24px">{{ otherName }}</button>
+        </div>
+      </sc-if>
+
+      <button type="button" onClick="{{ back }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(42,32,23,.4);background:rgba(255,255,255,.3);color:#2a2017;font:600 16px 'Barlow Semi Condensed',sans-serif">{{ backText }}</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const ids = Object.keys(S);
+    const LV = ['War', 'Truce', 'Alliance', 'Dynasty'];
+    const SH = ['#4a3626', '#b77a3a', '#aeb6be', '#d9b44a'];
+    const BREAK = [0, 3, 5, 8];
+    const key = (a, b) => ids.indexOf(a) < ids.indexOf(b) ? a + '|' + b : b + '|' + a;
+
+    // same example state as the tablet Relations matrix
+    const st = this.state || {};
+    const me = st.me || 'greyjoy';
+    const levels = st.levels || { 'lannister|tyrell': 3, 'bolton|arryn': 2, 'bolton|tully': 2, 'arryn|tully': 2, 'martell|red': 1, 'tyrell|martell': 1, 'greyjoy|white': 1 };
+    const married = st.married || { 'lannister|tyrell': 1, 'bolton|arryn': 1 };
+    const rings = st.rings || { lannister: false, tyrell: true, bolton: false, arryn: true, martell: true, greyjoy: true, red: false, tully: true, white: true };
+    const changed = st.changed || { 'bolton|tully': 1, 'arryn|tully': 1, 'tyrell|martell': 1, 'greyjoy|martell': 1 };
+    const hist = st.hist || [];
+    const sheet = st.sheet || null;
+    const breaking = !!st.breaking;
+
+    const lv = (a, b) => levels[key(a, b)] || 0;
+    const counts = (h, skip) => {
+      const c = { friendly: 0, alliances: 0, dynasty: 0 };
+      ids.forEach((o) => {
+        if (o === h || o === skip) return;
+        const l = lv(h, o);
+        if (l > 0) c.friendly++;
+        if (l === 2) c.alliances++;
+        if (l === 3) c.dynasty++;
+      });
+      return c;
+    };
+    // why a raise is not allowed, or '' when it is (EPIC p. 9-11)
+    const raiseBlock = (a, b) => {
+      const l = lv(a, b), k = key(a, b);
+      if (l >= 3) return 'Already a Dynasty, the highest level.';
+      if (changed[k]) return 'Already changed this round: one step per round.';
+      for (const h of [a, b]) {
+        const c = counts(h, h === a ? b : a);
+        if (l === 0 && c.friendly >= 3) return N[h] + ' already has 3 friendly levels.';
+        if (l === 1 && c.dynasty) return N[h] + ' is in a Dynasty and cannot add an Alliance.';
+        if (l === 1 && c.alliances >= 2) return N[h] + ' already has 2 Alliances.';
+        if (l === 2 && c.dynasty) return N[h] + ' already has a Dynasty.';
+        if (l === 2 && c.alliances) return N[h] + ' has another Alliance; a Dynasty allows none.';
+      }
+      return '';
+    };
+    const snapshot = () => ({ levels, married, rings, changed });
+    const commit = (next) => this.setState(Object.assign({ levels, married, rings, changed }, next, { hist: hist.concat([snapshot()]), sheet: null, breaking: false }));
+    const setLevel = (a, b, l, extra) => {
+      const nl = Object.assign({}, levels), k = key(a, b);
+      if (l) nl[k] = l; else delete nl[k];
+      commit(Object.assign({ levels: nl, changed: Object.assign({}, changed, { [k]: 1 }) }, extra || {}));
+    };
+
+    const picker = ids.map((k) => ({
+      sigil: S[k], label: 'Show ' + N[k], pressed: k === me ? 'true' : 'false',
+      choose: () => this.setState({ me: k, sheet: null, breaking: false }),
+      style: 'flex:none;width:52px;height:52px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;' +
+        (k === me ? 'border:3px solid #ead08a' : 'border:1px solid #5a4330')
+    }));
+    const mc = counts(me);
+    const rows = ids.filter((o) => o !== me).map((o) => {
+      const l = lv(me, o), k = key(me, o), isC = !!changed[k], isM = !!married[k];
+      return {
+        name: N[o], sigil: S[o], num: l ? String(l) : '', married: isM,
+        level: LV[l] + (isC ? ', changed this round' : ''),
+        shield: 'display:inline-flex;align-items:center;justify-content:center;width:18px;height:21px;font:700 12px Barlow Semi Condensed,sans-serif;color:#211710;clip-path:polygon(0 0,100% 0,100% 55%,50% 100%,0 55%);background:' + SH[l],
+        label: N[me] + ' and ' + N[o] + ': ' + LV[l] + (isM ? ', married' : '') + (isC ? ', changed this round' : '') + '. Tap for options.',
+        open: () => this.setState({ sheet: o, breaking: false }),
+        box: 'flex:1;min-height:60px;display:flex;align-items:center;gap:10px;padding:6px 10px 6px 8px;text-align:left;border-radius:12px;background:rgba(59,42,29,.55);color:#eadfc8;' +
+          (isC ? 'border:1.5px dotted #b9a88a' : 'border:1px solid #4a3626')
+      };
+    });
+
+    const vals = {
+      picker, rows,
+      meName: N[me], meSigil: S[me], meLimitsLabel: N[me] + ' limits',
+      limits: mc.friendly + ' of 3 friendly levels, ' + mc.alliances + ' of 2 Alliances, ' + mc.dynasty + ' of 1 Dynasty',
+      ringImg: rings[me] ? '/_blob/e741fb83f9639123ab54e54782e5ee35' : '/_blob/d47cecb41a5325c4d45cd0db3377f88e',
+      ringText: rings[me] ? 'Ring' : 'Ring spent',
+      ringChip: 'flex:none;display:inline-flex;align-items:center;gap:5px;font:600 13px Barlow Semi Condensed,sans-serif;padding:4px 8px;border-radius:6px;' + (rings[me] ? 'border:1px solid #7a5d1e;color:#ead08a' : 'border:1px dashed #5a4330;color:#b9a88a'),
+      undo: () => { if (!hist.length) return; const p = hist[hist.length - 1]; this.setState(Object.assign({}, p, { hist: hist.slice(0, -1), sheet: null, breaking: false })); },
+      undoDisabled: hist.length ? 'false' : 'true',
+      undoStyle: 'min-height:48px;padding:0 14px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:16px;' + (hist.length ? '' : 'opacity:.4'),
+      tabs: [['Round', 'Round-D7'], ['Houses', 'Houses'], ['Relations', 'A-Phone'], ['Westeros', 'Westeros'], ['Loans', 'Loans'], ['Market', 'Market'], ['Log', 'Log']].map(([name, file], i) => ({
+        name, href: file + '.dc.html', current: i === 2 ? 'page' : 'false',
+        style: 'min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px;padding:0 1px;' + (i === 2 ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a')
+      })),
+      sheetOpen: !!sheet, choosing: !!sheet && !breaking, breaking: !!sheet && breaking,
+      close: () => this.setState({ sheet: null, breaking: false }),
+      sheetTitle: '', sheetStatus: '', otherSigil: '', otherName: '', options: [],
+      breakQuestion: '', breakCost: '', brokeMe: () => {}, brokeOther: () => {},
+      back: () => this.setState({ sheet: null, breaking: false }), backText: 'Close'
+    };
+
+    if (sheet) {
+      const o = sheet, l = lv(me, o), k = key(me, o), isC = !!changed[k], isM = !!married[k];
+      vals.otherSigil = S[o]; vals.otherName = N[o];
+      vals.sheetTitle = N[me] + ' and ' + N[o];
+      vals.sheetStatus = LV[l] + (isM ? ', married' : '') + (isC ? ', changed this round' : ', not changed this round') + '.';
+      const opt = (title, sub, block, kind, choose, ring) => ({
+        title, ring: !!ring, sub: block || sub, disabled: block ? 'true' : 'false',
+        choose: block ? () => {} : choose,
+        subStyle: 'font:500 13px Barlow Semi Condensed,sans-serif;line-height:1.2;color:' + (block ? '#7a6a52' : kind === 'main' ? '#cdb98d' : kind === 'break' ? '#7a3a2c' : '#5a4a36'),
+        style: 'min-height:60px;display:flex;align-items:center;gap:10px;padding:6px 12px;text-align:left;border-radius:12px;font:600 17px Barlow Semi Condensed,sans-serif;' +
+          (block ? 'border:1px dashed rgba(42,32,23,.35);background:transparent;color:#7a6a52' :
+            kind === 'main' ? 'border:0;background:#2a2017;color:#e8d7ae' :
+            kind === 'break' ? 'border:2px solid #8d2a22;background:transparent;color:#8d2a22' :
+            'border:2px solid #2a2017;background:transparent;color:#2a2017')
+      });
+      // a new Alliance chains: both must also reach Alliance with each other's allies this phase
+      const allies = l === 1 ? ids.filter((h) => h !== me && h !== o && (lv(me, h) === 2 || lv(o, h) === 2)) : [];
+      const raiseSub = 'Both agree. Each pays Power equal to the areas between their closest castles, minus their King\'s Court stars.' +
+        (allies.length ? ' Alliances chain: also needs Alliance with ' + allies.map((h) => N[h]).join(' and ') + ' this phase.' : '');
+      const rb = raiseBlock(me, o);
+      const marryBlock = isM ? 'Already married.' : !rings[me] ? N[me] + '\'s ring is already spent.' : '';
+      vals.options = [
+        opt(l < 3 ? 'Raise to ' + LV[l + 1] : 'Raise', raiseSub, rb, 'main', () => setLevel(me, o, l + 1)),
+        opt(l > 0 ? 'Lower to ' + LV[l - 1] : 'Lower', 'Free. Either house decides alone.',
+          l === 0 ? 'Already at War.' : isC ? 'Already changed this round: one step per round.' : '', 'plain', () => setLevel(me, o, l - 1)),
+        opt(l > 0 ? 'Break the ' + LV[l] : 'Break', 'Back to War. The house that broke it pays ' + BREAK[l] + ', in Power or Supply steps, any mix.',
+          l === 0 ? 'Nothing to break at War.' : '', 'break', () => this.setState({ breaking: true })),
+        opt('Set marriage', N[me] + '\'s ring is spent. Raises one level for free, unless raised this round. Dowries swap.', marryBlock, 'plain', () => {
+          const nr = Object.assign({}, rings, { [me]: false });
+          const nm = Object.assign({}, married, { [k]: 1 });
+          if (!rb && l < 3) setLevel(me, o, l + 1, { rings: nr, married: nm });
+          else commit({ rings: nr, married: nm });
+        }, true)
+      ];
+      if (breaking) {
+        vals.breakQuestion = 'Who broke the ' + LV[l] + '?';
+        vals.breakCost = 'That house pays ' + BREAK[l] + ' at the table, in Power or Supply steps, any mix. The level goes back to War.';
+        vals.brokeMe = () => setLevel(me, o, 0);
+        vals.brokeOther = () => setLevel(me, o, 0);
+        vals.back = () => this.setState({ breaking: false });
+        vals.backText = 'Back';
+      }
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

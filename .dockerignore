@@ -1,0 +1,5 @@
+# Only the server and the web app go into the image.
+*
+!server.py
+!web/
+!web/**

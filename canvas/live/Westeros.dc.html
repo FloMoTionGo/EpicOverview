@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Westeros tab</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width:1180px;height:820px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:68px;flex:none;display:flex;align-items:center;gap:20px;padding:0 20px;border-bottom:1px solid #5a4330">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#c4473a,#8d2a22 55%,#5e1912);box-shadow:0 0 0 3px #211710,0 0 0 5px #c9a24c;font:600 22px 'Barlow Semi Condensed',sans-serif;color:#fbe9cf">4</div>
+      <div style="line-height:1.1"><div style="font-size:20px;font-weight:700">Round 4</div><div style="font-size:14px;color:#b9a88a">of 12</div></div>
+    </div>
+    <div style="flex:1"></div>
+    <a href="Choose-House.dc.html" aria-label="Playing as Greyjoy on this device. Change house" style="min-height:48px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 14px 0 6px;border-radius:24px;border:1px solid #5a4330;background:#2b1f16;color:#eadfc8;text-decoration:none"><img src="/_blob/c928f54c08f0c97af6e1e38ef5ba1339" alt="" style="width:36px;height:36px"><span style="line-height:1.05"><span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Playing as</span><span style="font-size:17px;font-weight:600">Greyjoy</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b9a88a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    <button type="button" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:16px">Undo</button>
+  </header>
+
+  <main style="flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;padding:14px 20px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <h1 style="margin:0;font-size:26px">Westeros cards, round 4</h1>
+      <button type="button" disabled style="min-height:48px;padding:0 16px;border-radius:10px;border:1px dashed #5a4330;background:transparent;color:#b9a88a;font-size:16px">Draw cards in the next Westeros phase</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+      <sc-for list="{{ decks }}" as="d" hint-placeholder-count="4">
+        <section style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between">
+            <h2 style="margin:0;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">{{ d.deck }}</h2>
+            <span style="{{ d.valueStyle }}">{{ d.value }}</span>
+          </div>
+          <img src="{{ d.img }}" alt="{{ d.name }}" style="height:150px;width:auto;max-width:100%;align-self:center;border-radius:10px;box-shadow:0 10px 22px rgba(0,0,0,.5)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button type="button" aria-label="{{ d.shuffleLabel }}" style="min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 6px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font:600 14px 'Barlow Semi Condensed',sans-serif;line-height:1.1">Shuffle deck<span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ d.left }}</span></button>
+            <button type="button" aria-label="{{ d.reshuffleLabel }}" style="min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 6px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font:600 14px 'Barlow Semi Condensed',sans-serif;line-height:1.1">Shuffle discards in<span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ d.discarded }}</span></button>
+          </div>
+          <p style="margin:0;font-size:15px;line-height:1.3">{{ d.note }}</p>
+        </section>
+      </sc-for>
+    </div>
+    <p style="margin:0;padding:10px 14px;border-radius:10px;background:#2b1f16;border:1px solid #5a4330;font-size:16px">Round target for deck IV: <strong style="font:600 20px 'Barlow Semi Condensed',sans-serif;color:#ead08a">5</strong>, the sum of the values on decks I to III. Winter is Coming shuffles its deck by itself; the shuffle buttons are for everything else.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+      <sc-for list="{{ abilities }}" as="a" hint-placeholder-count="3">
+        <article style="padding:14px 18px;border-radius:14px;color:#2a2017;background:linear-gradient(180deg,#e8d7ae,#dcc796);box-shadow:0 0 0 1px #120c08,0 0 0 6px #4a3121,0 0 0 7px rgba(201,162,76,.45);margin:7px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <sc-if value="{{ a.hasSigil }}" hint-placeholder-val="{{ true }}"><img src="{{ a.sigil }}" alt="" style="width:36px;height:36px"></sc-if>
+            <div style="line-height:1.15"><div style="font-size:20px;font-weight:700">{{ a.role }}</div><div style="font-size:15px;color:#66543d">{{ a.holder }}, {{ a.mode }}</div></div>
+          </div>
+          <p style="margin:0;font-size:15px;line-height:1.35">{{ a.text }}</p>
+          <button type="button" style="{{ a.btnStyle }}">{{ a.btn }}</button>
+        </article>
+      </sc-for>
+    </div>
+  </main>
+
+  <section aria-label="Houses" style="height:88px;flex:none;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;padding:8px 20px;border-top:1px solid #5a4330;background:rgba(0,0,0,.25)">
+    <sc-for list="{{ seats }}" as="h" hint-placeholder-count="9">
+      <button type="button" style="{{ h.box }}">
+        <span style="display:flex;align-items:center;gap:6px;min-width:0">
+          <img src="{{ h.sigil }}" alt="" style="width:30px;height:30px;flex:none">
+          <span style="font-size:14px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+          <sc-if value="{{ h.ring }}" hint-placeholder-val="{{ true }}">
+            <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="Ring still available" title="Ring still available" style="width:22px;height:22px;flex:none">
+          </sc-if>
+          <sc-if value="{{ h.noRing }}" hint-placeholder-val="{{ false }}">
+            <img src="/_blob/d47cecb41a5325c4d45cd0db3377f88e" alt="Ring used" title="Ring used" style="width:22px;height:22px;flex:none">
+          </sc-if>
+        </span>
+        <span style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));text-align:center;line-height:1">
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.castles }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">castles</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.vp }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">VP</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.obj }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">obj.</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.supply }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">supply</span></span>
+        </span>
+        <span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px">{{ h.badges }}</span>
+        <span style="position:absolute;right:6px;bottom:5px;display:flex;gap:3px">
+          <sc-for list="{{ h.loans }}" as="l" hint-placeholder-count="0">
+            <span role="img" aria-label="{{ l.label }}" title="{{ l.label }}" style="{{ l.style }}"></span>
+          </sc-for>
+        </span>
+      </button>
+    </sc-for>
+  </section>
+
+  <nav aria-label="Views" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+      <a href="{{ t.href }}" aria-current="{{ t.current }}" style="{{ t.style }}">{{ t.name }}</a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const phases = ['Westeros', 'Diplomacy', 'Planning', 'Action', 'End of round'].map((name, i) => ({
+      name,
+      style: 'min-height:44px;display:flex;align-items:center;padding:0 16px;border-radius:22px;font-size:17px;' +
+        (i === 1 ? 'background:#e8d7ae;color:#2a2017;font-weight:700' : i === 0 ? 'color:#c9a24c' : 'color:#b9a88a')
+    }));
+    const decks = [
+      ['Deck I', 'Shifting Ambitions', '/_blob/3afd8efa6f060128ffc6126688b8bf73', 'value 2', '8 in deck', '4 discarded', 'Replaced Thwarted Plans (Master of Laws).'],
+      ['Deck II', 'Mustering Troops', '/_blob/d4dd90349d479d2ae876d76d5f5a8c9a', 'value 1', '9 in deck', '3 discarded', 'Mustered in reverse Sword order.'],
+      ['Deck III', 'Clash of Kings', '/_blob/67c128b98bc85c9553a925d0db24ed15', 'value 2', '9 in deck', '3 discarded', 'Tracks bid; Small Council reassigned.'],
+      ['Deck IV', 'Bands of Outlaws', '/_blob/56ba6935ef61732ae2816587a3bd68b2', 'bid', '9 in deck', '3 discarded', 'Bids 7 against target 5: won. The highest bidder took 3 Gold.']
+    ].map(([deck, name, img, value, left, discarded, note]) => ({
+      deck, name, img, value, left, discarded, note,
+      shuffleLabel: 'Shuffle ' + deck + ', ' + left, reshuffleLabel: 'Shuffle the ' + discarded + ' cards back into ' + deck,
+      valueStyle: 'font:600 14px Barlow Semi Condensed,sans-serif;padding:3px 9px;border-radius:99px;' + (value === 'bid' ? 'background:#8d2a22;color:#fbe9cf' : 'background:#3b2a1d;color:#ead08a')
+    }));
+    const abilities = [
+      ['bolton', 'Master of Laws', 'once per round', 'Replace one revealed card of decks I to III with the next card of that deck.', 'Used on Thwarted Plans', 'used'],
+      ['arryn', 'Grand Maester', 'once per round', 'Look at the top card of any two Westeros decks. The cards open only on the device that taps it.', 'Look at two decks, eyes only', 'ready'],
+      ['', 'Messenger Raven', 'in Planning', 'After orders are revealed: look at the top of deck IV and keep it or put it at the bottom, instead of swapping an order.', 'Available in Planning', 'later']
+    ].map(([k, role, mode, text, btn, st]) => ({
+      sigil: k ? S[k] : '', hasSigil: !!k, holder: k ? N[k] : 'Whoever holds the Raven', role, mode, text, btn,
+      btnStyle: 'min-height:52px;border-radius:12px;font-size:17px;' + (st === 'ready' ? 'border:0;background:#2a2017;color:#e8d7ae' : 'border:1px dashed #8a7350;background:transparent;color:#66543d')
+    }));
+    const seatData = [
+      ['lannister', '#a3262a', 5, 3, 2, 'Hand', false],
+      ['tyrell', '#4d7a2c', 4, 2, 1, 'Kingsguard', true],
+      ['bolton', '#b56a73', 4, 1, 1, 'Laws', false],
+      ['arryn', '#5d8fc4', 3, 2, 1, 'Maester', true],
+      ['martell', '#d27a2c', 3, 1, 1, 'Coin', true],
+      ['greyjoy', '#8a8d91', 4, 1, 2, 'Ships', true],
+      ['red', '#8a1520', 2, 1, 1, 'Whispers', false],
+      ['tully', '#2c4f86', 3, 0, 0, 'No council seat', true],
+      ['white', '#d8d2c4', 2, 1, 1, 'No council seat', true]
+    ];
+    const seats = seatData.map(([k, color, castles, vp, obj, badges, ring]) => ({
+      name: N[k], sigil: S[k], castles, vp, obj, badges, ring, noRing: !ring,
+      supply: ({ lannister: 1, tyrell: 2, bolton: 0, arryn: 3, martell: 1, greyjoy: 0, red: 1, tully: 0, white: 2 })[k],
+      loans: ({ lannister: [['/_blob/9d3a75c124c2cdbae8f9b755ad36bb40', 'Gold loan']], greyjoy: [['/_blob/f9a5592db4b31607076fd4a11eb7a8ff', 'Red loan: 1 Victory Point less']], white: [['/_blob/963e17d1082f3fbbe4de1642d81f2a2c', 'Red loan: 8th on Fiefdoms']] }[k] || []).map(([img, label]) => ({ img, label, style: 'display:block;flex:none;width:12px;height:17px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.6);' + (label.indexOf('Gold') === 0 ? 'background:linear-gradient(160deg,#f0d77a,#a8801f);border:1px solid #5e4a12' : 'background:linear-gradient(160deg,#d0503f,#7a1a14);border:1px solid #3a0d0a') })),
+      box: 'position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:1px;min-width:0;padding:5px 8px;text-align:left;color:#eadfc8;border-radius:0 0 8px 8px;' +
+        'border-top:4px solid ' + color + ';border-left:1px solid #5a4330;border-right:1px solid #5a4330;border-bottom:1px solid #5a4330;background:rgba(59,42,29,.6)'
+    }));
+    const tabs = [['Round', 'Round-D7'], ['Houses', 'Houses'], ['Relations', 'Relations'], ['Westeros', 'Westeros'], ['Loans', 'Loans'], ['Market', 'Market'], ['Log', 'Log']].map(([name, file], i) => ({
+      name, href: file + '.dc.html', current: i === 3 ? 'page' : 'false',
+      style: 'min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;' + (i === 3 ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a')
+    }));
+    return { phases, decks, abilities, seats, tabs };
+  }
+}
+</script>
+</body>
+</html>

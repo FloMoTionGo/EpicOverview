@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Market tab</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width:1180px;height:820px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:68px;flex:none;display:flex;align-items:center;gap:20px;padding:0 20px;border-bottom:1px solid #5a4330">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#c4473a,#8d2a22 55%,#5e1912);box-shadow:0 0 0 3px #211710,0 0 0 5px #c9a24c;font:600 22px 'Barlow Semi Condensed',sans-serif;color:#fbe9cf">4</div>
+      <div style="line-height:1.1"><div style="font-size:20px;font-weight:700">Round 4</div><div style="font-size:14px;color:#b9a88a">of 12</div></div>
+    </div>
+    <div style="flex:1"></div>
+    <a href="Choose-House.dc.html" aria-label="Playing as Greyjoy on this device. Change house" style="min-height:48px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 14px 0 6px;border-radius:24px;border:1px solid #5a4330;background:#2b1f16;color:#eadfc8;text-decoration:none"><img src="/_blob/c928f54c08f0c97af6e1e38ef5ba1339" alt="" style="width:36px;height:36px"><span style="line-height:1.05"><span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Playing as</span><span style="font-size:17px;font-weight:600">Greyjoy</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b9a88a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    <button type="button" style="min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:16px">Undo</button>
+  </header>
+
+  <main style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding:12px 20px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between">
+      <h1 style="margin:0;font-size:26px">Limited stock</h1>
+      <span style="font-size:15px;color:#b9a88a">Gold is paid at the table; the app only keeps count.</span>
+    </div>
+    <div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start">
+
+      <section aria-labelledby="m-build" style="display:flex;flex-direction:column;padding:12px 14px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330">
+        <h2 id="m-build" style="margin:0 0 4px;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Buildings</h2>
+        <sc-for list="{{ buildings }}" as="b" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:8px;min-height:62px;border-top:1px solid #4a3626">
+            <img src="{{ b.token }}" alt="" style="width:30px;height:30px;object-fit:contain;flex:none">
+            <span style="flex:1;min-width:0;font-size:16px;line-height:1.15">{{ b.name }}<span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ b.cost }}</span><span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.built }}</span></span>
+            <button type="button" aria-label="{{ b.less }}" style="flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1">−</button>
+            <span style="flex:none;width:46px;text-align:center;font:600 17px 'Barlow Semi Condensed',sans-serif">{{ b.left }}</span>
+            <button type="button" aria-label="{{ b.more }}" style="flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1">+</button>
+          </div>
+        </sc-for>
+        <p style="margin:6px 0 0;font-size:13px;color:#b9a88a">Count shows what is left. − takes one from the stock, + returns one.</p>
+      </section>
+
+      <section aria-labelledby="m-merc" style="display:flex;flex-direction:column;padding:12px 14px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330">
+        <h2 id="m-merc" style="margin:0 0 4px;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Mercenaries and more</h2>
+        <sc-for list="{{ units }}" as="u" hint-placeholder-count="7">
+          <div style="display:flex;align-items:center;gap:8px;min-height:50px;border-top:1px solid #4a3626">
+            <span style="flex:1;min-width:0;font-size:16px;line-height:1.1">{{ u.name }}<span style="display:block;font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ u.cost }}</span></span>
+            <button type="button" aria-label="{{ u.less }}" style="flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1">−</button>
+            <span style="flex:none;width:46px;text-align:center;font:600 17px 'Barlow Semi Condensed',sans-serif">{{ u.left }}</span>
+            <button type="button" aria-label="{{ u.more }}" style="flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1">+</button>
+          </div>
+        </sc-for>
+      </section>
+
+      <section aria-labelledby="m-supply" style="display:flex;flex-direction:column;padding:12px 14px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330">
+        <div style="display:flex;align-items:center;gap:8px">
+          <img src="/_blob/d4f0e3d37b8be1b24dcc0a566f03c103" alt="" style="width:26px;height:26px;object-fit:contain">
+          <h2 id="m-supply" style="margin:0;flex:1;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Supply tokens</h2>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:6px">
+          <span style="font:600 34px 'Barlow Semi Condensed',sans-serif;line-height:1;color:#ead08a">{{ supplyTotal }}</span>
+          <span style="font:500 14px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">used / total</span>
+        </div>
+        <p style="margin:6px 0 0;font-size:13px;color:#b9a88a">Each house changes its own supply in the Houses tab.</p>
+      </section>
+    </div>
+  </main>
+
+  <section aria-label="Houses" style="height:88px;flex:none;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;padding:8px 20px;border-top:1px solid #5a4330;background:rgba(0,0,0,.25)">
+    <sc-for list="{{ seats }}" as="h" hint-placeholder-count="9">
+      <button type="button" style="{{ h.box }}">
+        <span style="display:flex;align-items:center;gap:6px;min-width:0">
+          <img src="{{ h.sigil }}" alt="" style="width:30px;height:30px;flex:none">
+          <span style="font-size:14px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+          <sc-if value="{{ h.ring }}" hint-placeholder-val="{{ true }}">
+            <img src="/_blob/e741fb83f9639123ab54e54782e5ee35" alt="Ring still available" title="Ring still available" style="width:22px;height:22px;flex:none">
+          </sc-if>
+          <sc-if value="{{ h.noRing }}" hint-placeholder-val="{{ false }}">
+            <img src="/_blob/d47cecb41a5325c4d45cd0db3377f88e" alt="Ring used" title="Ring used" style="width:22px;height:22px;flex:none">
+          </sc-if>
+        </span>
+        <span style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));text-align:center;line-height:1">
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.castles }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">castles</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.vp }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">VP</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.obj }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">obj.</span></span>
+          <span style="font:600 16px 'Barlow Semi Condensed',sans-serif">{{ h.supply }}<span style="display:block;font:500 11px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">supply</span></span>
+        </span>
+        <span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px">{{ h.badges }}</span>
+        <span style="position:absolute;right:6px;bottom:5px;display:flex;gap:3px">
+          <sc-for list="{{ h.loans }}" as="l" hint-placeholder-count="0">
+            <span role="img" aria-label="{{ l.label }}" title="{{ l.label }}" style="{{ l.style }}"></span>
+          </sc-for>
+        </span>
+      </button>
+    </sc-for>
+  </section>
+
+  <nav aria-label="Views" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+      <a href="{{ t.href }}" aria-current="{{ t.current }}" style="{{ t.style }}">{{ t.name }}</a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const SUP = { lannister: 1, tyrell: 2, bolton: 0, arryn: 3, martell: 1, greyjoy: 0, red: 1, tully: 0, white: 2 };
+    const phases = ['Westeros', 'Diplomacy', 'Planning', 'Action', 'End of round'].map((name, i) => ({
+      name,
+      style: 'min-height:44px;display:flex;align-items:center;padding:0 16px;border-radius:22px;font-size:17px;' +
+        (i === 1 ? 'background:#e8d7ae;color:#2a2017;font-weight:700' : i === 0 ? 'color:#c9a24c' : 'color:#b9a88a')
+    }));
+    const buildings = [
+      ['Port', '/_blob/0b817f05f5c3c454f5fd55c2cb521947', '2 Gold', 1, 3, "Greyjoy at Flint's Finger, Tyrell at Oldtown"],
+      ['Fortification', '/_blob/c78f952d3b55f1c97b93911b5349c3d3', '2 Gold, or free with Consolidate', 4, 6, "Bolton at Moat Cailin, Martell at Prince's Pass"],
+      ['Stronghold upgrade', '/_blob/0df7636a87c5b1d2f4fea3f41f365b8c', '3 Gold', 3, 4, 'Lannister at Golden Tooth'],
+      ['Bridge', '/_blob/7b54da1530fa1f62ec5aae5c25cb0ce5', '4 Gold', 1, 2, 'Tully, Riverrun to the Twins']
+    ].map(([name, token, cost, left, total, built]) => ({ name, token, cost, built, left: left + ' / ' + total,
+      less: name + ': take one from the stock', more: name + ': return one to the stock' }));
+    const units = [
+      ['Mercenary footmen', '2 Gold', 9, 12], ['Mercenary knights', '3 Gold', 5, 6], ['Mercenary ships', '2 Gold', 6, 6],
+      ['Siege engines', '3 Gold', 3, 3], ['Upgrade disks', 'with a unit', 6, 6],
+      ['Mercenary cards', '4 Gold: draw 2, keep 1', 12, 14], ['Support −1 token', 'from Tactic cards', 1, 1]
+    ].map(([name, cost, left, total]) => ({ name, cost, left: left + ' / ' + total,
+      less: name + ': take one', more: name + ': return one' }));
+    const seatData = [
+      ['lannister', '#a3262a', 5, 3, 2, 'Hand', false],
+      ['tyrell', '#4d7a2c', 4, 2, 1, 'Kingsguard', true],
+      ['bolton', '#b56a73', 4, 1, 1, 'Laws', false],
+      ['arryn', '#5d8fc4', 3, 2, 1, 'Maester', true],
+      ['martell', '#d27a2c', 3, 1, 1, 'Coin', true],
+      ['greyjoy', '#8a8d91', 4, 1, 2, 'Ships', true],
+      ['red', '#8a1520', 2, 1, 1, 'Whispers', false],
+      ['tully', '#2c4f86', 3, 0, 0, 'No council seat', true],
+      ['white', '#d8d2c4', 2, 1, 1, 'No council seat', true]
+    ];
+    const seats = seatData.map(([k, color, castles, vp, obj, badges, ring]) => ({
+      name: N[k], sigil: S[k], castles, vp, obj, supply: SUP[k], badges, ring, noRing: !ring,
+      loans: ({ lannister: [['/_blob/9d3a75c124c2cdbae8f9b755ad36bb40', 'Gold loan']], greyjoy: [['/_blob/f9a5592db4b31607076fd4a11eb7a8ff', 'Red loan: 1 Victory Point less']], white: [['/_blob/963e17d1082f3fbbe4de1642d81f2a2c', 'Red loan: 8th on Fiefdoms']] }[k] || []).map(([img, label]) => ({ img, label, style: 'display:block;flex:none;width:12px;height:17px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.6);' + (label.indexOf('Gold') === 0 ? 'background:linear-gradient(160deg,#f0d77a,#a8801f);border:1px solid #5e4a12' : 'background:linear-gradient(160deg,#d0503f,#7a1a14);border:1px solid #3a0d0a') })),
+      box: 'position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:1px;min-width:0;padding:5px 8px;text-align:left;color:#eadfc8;border-radius:0 0 8px 8px;' +
+        'border-top:4px solid ' + color + ';border-left:1px solid #5a4330;border-right:1px solid #5a4330;border-bottom:1px solid #5a4330;background:rgba(59,42,29,.6)'
+    }));
+    const tabs = [['Round', 'Round-D7'], ['Houses', 'Houses'], ['Relations', 'Relations'], ['Westeros', 'Westeros'], ['Loans', 'Loans'], ['Market', 'Market'], ['Log', 'Log']].map(([name, file], i) => ({
+      name, href: file + '.dc.html', current: i === 5 ? 'page' : 'false',
+      style: 'min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;' + (i === 5 ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a')
+    }));
+    // used = what the houses hold, out of the 27 tokens in the game
+    const supplyTotal = Object.keys(SUP).reduce((n, k) => n + SUP[k], 0) + ' / 27';
+    return { phases, buildings, units, supplyTotal, seats, tabs };
+  }
+}
+</script>
+</body>
+</html>

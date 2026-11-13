@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phone, choose your house</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ead08a}a:hover{color:#fff1c9}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;display:flex;flex-direction:column;background:#211710;color:#eadfc8;font-family:'EB Garamond',Georgia,serif;overflow:hidden">
+
+  <header style="height:60px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #5a4330">
+    <span style="font-size:22px;font-weight:700">EPIC Overview</span>
+    <span style="font:600 14px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">Round 4</span>
+  </header>
+
+  <main style="flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;padding:20px 16px">
+    <div>
+      <h1 style="margin:0;font-size:27px;line-height:1.15">Which house do you play on this phone?</h1>
+      <p style="margin:6px 0 0;font-size:15px;line-height:1.35;color:#b9a88a">Your changes show in the Log under this house. Several devices can play the same house.</p>
+    </div>
+    <div role="radiogroup" aria-label="Houses" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+      <sc-for list="{{ houses }}" as="h" hint-placeholder-count="9">
+        <button type="button" role="radio" aria-checked="{{ h.checked }}" onClick="{{ h.pick }}" style="{{ h.style }}">
+          <img src="{{ h.sigil }}" alt="" style="width:52px;height:52px">
+          <span style="max-width:100%;font:600 14px 'Barlow Semi Condensed',sans-serif;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+          <span style="font:500 12px 'Barlow Semi Condensed',sans-serif;color:#b9a88a">{{ h.devices }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <a href="A-Phone.dc.html" style="min-height:56px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:14px;background:#c9a24c;color:#211710;text-decoration:none;font-size:19px;font-weight:600"><img src="{{ pickSigil }}" alt="" style="width:32px;height:32px">{{ playLabel }}</a>
+    <p style="margin:0;font-size:14px;line-height:1.35;color:#b9a88a">Change it any time with your house's sigil in the top bar.</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      lannister: '/_blob/00239e7f6cc5b8d22fc12a61b33a4ddc', tyrell: '/_blob/8e6473f7f37f3ef492e364d6c0a850dd',
+      bolton: '/_blob/0ace54556eeed7d5ca3e26e98bfc9c1c', arryn: '/_blob/6b463f5e8229b1a7db8e88bd5ed250c1',
+      martell: '/_blob/cd0279272519d4f3293cd9d1fe172d58', greyjoy: '/_blob/c928f54c08f0c97af6e1e38ef5ba1339',
+      red: '/_blob/fb608f52c5c17e75116f81e672eb9225', tully: '/_blob/c58a744e9a9e4f7cd16876c20ec22c00',
+      white: '/_blob/8ad4c612e167275bb3c11b04d714ffe6'
+    };
+    const N = { lannister: 'Lannister', tyrell: 'Tyrell', bolton: 'Bolton', arryn: 'Arryn', martell: 'Martell', greyjoy: 'Greyjoy', red: 'Red Targaryen', tully: 'Tully', white: 'White Targaryen' };
+    const DEV = { lannister: 1, tyrell: 1, bolton: 2, arryn: 1, martell: 0, greyjoy: 0, red: 1, tully: 0, white: 1 };
+    const st = this.state || {};
+    const pick = st.pick || 'greyjoy';
+    const houses = Object.keys(S).map((k) => {
+      const on = k === pick;
+      return {
+        name: N[k], sigil: S[k], checked: on ? 'true' : 'false',
+        devices: DEV[k] === 0 ? 'no device' : DEV[k] + (DEV[k] === 1 ? ' device' : ' devices'),
+        pick: () => this.setState({ pick: k }),
+        style: 'min-width:0;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;border-radius:12px;color:#eadfc8;' +
+          (on ? 'border:3px solid #ead08a;background:rgba(201,162,76,.16)' : 'border:1px solid #5a4330;background:rgba(59,42,29,.55)')
+      };
+    });
+    return { houses, pickSigil: S[pick], playLabel: 'Play as ' + N[pick] };
+  }
+}
+</script>
+</body>
+</html>

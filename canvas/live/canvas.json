@@ -1,0 +1,392 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-12T21:30:00Z"
+  },
+  "title": "EPIC Overview layouts",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Choose-House.dc.html": {
+      "x": 0,
+      "y": 300,
+      "w": 1180,
+      "h": 820,
+      "title": "First start: choose your house (tablet)",
+      "is_interactive": true
+    },
+    "Houses.dc.html": {
+      "x": 1260,
+      "y": 300,
+      "w": 1180,
+      "h": 820,
+      "title": "Houses: scores, Small Council, tokens",
+      "is_interactive": true
+    },
+    "Relations.dc.html": {
+      "x": 2520,
+      "y": 300,
+      "w": 1180,
+      "h": 820,
+      "title": "Relations: tap a cell for options, marriages, hostages",
+      "is_interactive": true
+    },
+    "Phone-Choose.dc.html": {
+      "x": 3780,
+      "y": 300,
+      "w": 390,
+      "h": 844,
+      "title": "Phone: choose your house",
+      "is_interactive": true
+    },
+    "A-Phone.dc.html": {
+      "x": 4260,
+      "y": 300,
+      "w": 390,
+      "h": 844,
+      "title": "Phone: Relations, every button works",
+      "is_interactive": true
+    },
+    "Westeros.dc.html": {
+      "x": 0,
+      "y": 1240,
+      "w": 1180,
+      "h": 820,
+      "title": "Westeros: decks and abilities",
+      "is_interactive": true
+    },
+    "Loans.dc.html": {
+      "x": 1260,
+      "y": 1240,
+      "w": 1180,
+      "h": 820,
+      "title": "Loans",
+      "is_interactive": true
+    },
+    "Market.dc.html": {
+      "x": 2520,
+      "y": 1240,
+      "w": 1180,
+      "h": 820,
+      "title": "Market: limited stock",
+      "is_interactive": true
+    },
+    "Log.dc.html": {
+      "x": 3780,
+      "y": 1240,
+      "w": 1180,
+      "h": 820,
+      "title": "Log: every change, by house",
+      "is_interactive": true
+    },
+    "Round-W1.dc.html": {
+      "x": 0,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 1: Advance the hold counters",
+      "is_interactive": true
+    },
+    "Round-W2.dc.html": {
+      "x": 1260,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 2: Reveal the cards, Master of Laws",
+      "is_interactive": true
+    },
+    "Round-W4.dc.html": {
+      "x": 2520,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 3: Deck I: Shifting Ambitions",
+      "is_interactive": true
+    },
+    "Round-W5.dc.html": {
+      "x": 3780,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 4: Deck II: Mustering Troops",
+      "is_interactive": true
+    },
+    "Round-W6.dc.html": {
+      "x": 5040,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 5: Deck III: Clash of Kings",
+      "is_interactive": true
+    },
+    "Round-W7.dc.html": {
+      "x": 6300,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 6: Deck IV: Bands of Outlaws",
+      "is_interactive": true
+    },
+    "Round-W8.dc.html": {
+      "x": 7560,
+      "y": 2500,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Westeros 7: Small Council: swap House cards",
+      "is_interactive": true
+    },
+    "Round-D1.dc.html": {
+      "x": 0,
+      "y": 3600,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Diplomacy 1: Start of phase: Master of Whispers",
+      "is_interactive": true
+    },
+    "Round-D2.dc.html": {
+      "x": 1260,
+      "y": 3600,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Diplomacy 2: Diplomatic bonus and hostage income",
+      "is_interactive": true
+    },
+    "Round-D4.dc.html": {
+      "x": 2520,
+      "y": 3600,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Diplomacy 3: Executions",
+      "is_interactive": true
+    },
+    "Round-D5.dc.html": {
+      "x": 3780,
+      "y": 3600,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Diplomacy 4: Change levels and marriages",
+      "is_interactive": true
+    },
+    "Round-D6.dc.html": {
+      "x": 5040,
+      "y": 3600,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Diplomacy 5: Loan interest",
+      "is_interactive": true
+    },
+    "Round-D7.dc.html": {
+      "x": 6300,
+      "y": 3600,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Diplomacy 6: New loans",
+      "is_interactive": true
+    },
+    "Round-P1.dc.html": {
+      "x": 0,
+      "y": 4700,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Planning 1: Blade bans an order type",
+      "is_interactive": true
+    },
+    "Round-P2.dc.html": {
+      "x": 1260,
+      "y": 4700,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Planning 2: Assign orders, pick a Tactic",
+      "is_interactive": true
+    },
+    "Round-P3.dc.html": {
+      "x": 2520,
+      "y": 4700,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Planning 3: Reveal orders and Tactics",
+      "is_interactive": true
+    },
+    "Round-P4.dc.html": {
+      "x": 3780,
+      "y": 4700,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Planning 4: Immediate Tactic effects",
+      "is_interactive": true
+    },
+    "Round-P5.dc.html": {
+      "x": 5040,
+      "y": 4700,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Planning 5: Messenger Raven",
+      "is_interactive": true
+    },
+    "Round-A1.dc.html": {
+      "x": 0,
+      "y": 5800,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Action 1: Raid orders",
+      "is_interactive": true
+    },
+    "Round-MarchToBattle.dc.html": {
+      "x": 1260,
+      "y": 5800,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Action 2: March orders, battle guide (resettable)",
+      "is_interactive": true
+    },
+    "Round-A3.dc.html": {
+      "x": 2520,
+      "y": 5800,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Action 3: Consolidate Power",
+      "is_interactive": true
+    },
+    "Round-A4.dc.html": {
+      "x": 3780,
+      "y": 5800,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Action 4: Gain Power and supply",
+      "is_interactive": true
+    },
+    "Round-A5.dc.html": {
+      "x": 5040,
+      "y": 5800,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Action 5: Spend Gold",
+      "is_interactive": true
+    },
+    "Round-A6.dc.html": {
+      "x": 6300,
+      "y": 5800,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, Action 6: Clean up",
+      "is_interactive": true
+    },
+    "Round-E1.dc.html": {
+      "x": 0,
+      "y": 6900,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, End 1: Objectives",
+      "is_interactive": true
+    },
+    "Round-E2.dc.html": {
+      "x": 1260,
+      "y": 6900,
+      "w": 1180,
+      "h": 820,
+      "title": "Round, End 2: Victory check",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Choose-House.dc.html",
+    "Houses.dc.html",
+    "Relations.dc.html",
+    "Phone-Choose.dc.html",
+    "A-Phone.dc.html",
+    "Westeros.dc.html",
+    "Loans.dc.html",
+    "Market.dc.html",
+    "Log.dc.html",
+    "Round-W1.dc.html",
+    "Round-W2.dc.html",
+    "Round-W4.dc.html",
+    "Round-W5.dc.html",
+    "Round-W6.dc.html",
+    "Round-W7.dc.html",
+    "Round-W8.dc.html",
+    "Round-D1.dc.html",
+    "Round-D2.dc.html",
+    "Round-D4.dc.html",
+    "Round-D5.dc.html",
+    "Round-D6.dc.html",
+    "Round-D7.dc.html",
+    "Round-P1.dc.html",
+    "Round-P2.dc.html",
+    "Round-P3.dc.html",
+    "Round-P4.dc.html",
+    "Round-P5.dc.html",
+    "Round-A1.dc.html",
+    "Round-MarchToBattle.dc.html",
+    "Round-A3.dc.html",
+    "Round-A4.dc.html",
+    "Round-A5.dc.html",
+    "Round-A6.dc.html",
+    "Round-E1.dc.html",
+    "Round-E2.dc.html"
+  ],
+  "notes": {
+    "titleA": {
+      "x": 0,
+      "y": 20,
+      "text": "EPIC Overview, layout A: every tab",
+      "kind": "title1",
+      "maxW": 10080
+    },
+    "stickyA": {
+      "x": 5040,
+      "y": 1240,
+      "w": 360,
+      "text": "Press Play on any screen and tap the tab bar to move between tabs. One version for everyone: no GM or player screens. A device first picks the house it plays (several devices may pick the same one); the house button in the top bar changes it. Every change lands in the Log under that house. Gold and Power are not tracked: the physical board keeps them, as it keeps the loan conditions.",
+      "size": "m",
+      "fill": "orange"
+    },
+    "titleRoundW": {
+      "x": 0,
+      "y": 2300,
+      "text": "Round tab, Westeros: steps 1 to 7",
+      "kind": "title1",
+      "maxW": 10080
+    },
+    "titleRoundD": {
+      "x": 0,
+      "y": 3400,
+      "text": "Round tab, Diplomacy: steps 1 to 6",
+      "kind": "title1",
+      "maxW": 10080
+    },
+    "titleRoundP": {
+      "x": 0,
+      "y": 4500,
+      "text": "Round tab, Planning: steps 1 to 5",
+      "kind": "title1",
+      "maxW": 10080
+    },
+    "titleRoundA": {
+      "x": 0,
+      "y": 5600,
+      "text": "Round tab, Action: steps 1 to 6",
+      "kind": "title1",
+      "maxW": 10080
+    },
+    "titleRoundE": {
+      "x": 0,
+      "y": 6700,
+      "text": "Round tab, End of round: steps 1 to 2",
+      "kind": "title1",
+      "maxW": 10080
+    },
+    "stickyRound": {
+      "x": 10080,
+      "y": 2500,
+      "w": 380,
+      "size": "m",
+      "fill": "green",
+      "text": "The Round tab is one screen per step. These rows show every step of round 4; Previous step and Next step link them in Play, from Westeros 1 to End 2 and round again. The app knows no map, units, placed orders, influence-track positions or token holders: In turn steps show who has already acted, and the table keeps the order. This device plays Greyjoy."
+    }
+  },
+  "designSystems": []
+}
