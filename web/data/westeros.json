@@ -1,0 +1,569 @@
+{
+  "source": "card images in web/assets/cards/westeros (copied from EPIC Westeros Cards by tools/build_assets.py)",
+  "cards": [
+    {
+      "id": "1-new-information-1",
+      "deck": 1,
+      "name": "New Information",
+      "value": 1,
+      "text": "In Throne order, each player can pay any number or Power Tokens, then draw and discard that many Objectives.",
+      "image": "cards/westeros/1-new-information-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-new-information-2a",
+      "deck": 1,
+      "name": "New Information",
+      "value": 2,
+      "text": "In Throne order, each player can pay any number or Power Tokens, then draw and discard that many Objectives.",
+      "image": "cards/westeros/1-new-information-2a",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-new-information-2b",
+      "deck": 1,
+      "name": "New Information",
+      "value": 2,
+      "text": "In Throne order, each player can pay any number or Power Tokens, then draw and discard that many Objectives.",
+      "image": "cards/westeros/1-new-information-2b",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-new-information-3",
+      "deck": 1,
+      "name": "New Information",
+      "value": 3,
+      "text": "In Throne order, each player can pay any number or Power Tokens, then draw and discard that many Objectives.",
+      "image": "cards/westeros/1-new-information-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-shifting-ambitions-1",
+      "deck": 1,
+      "name": "Shifting Ambitions",
+      "value": 1,
+      "text": "Each player chooses 1 Objective from their hand. Reveal all the chosen Objectives. Then, in Throne order, each player chooses one of them and adds it to their hand.",
+      "image": "cards/westeros/1-shifting-ambitions-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-shifting-ambitions-2a",
+      "deck": 1,
+      "name": "Shifting Ambitions",
+      "value": 2,
+      "text": "Each player chooses 1 Objective from their hand. Reveal all the chosen Objectives. Then, in Throne order, each player chooses one of them and adds it to their hand.",
+      "image": "cards/westeros/1-shifting-ambitions-2a",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-shifting-ambitions-2b",
+      "deck": 1,
+      "name": "Shifting Ambitions",
+      "value": 2,
+      "text": "Each player chooses 1 Objective from their hand. Reveal all the chosen Objectives. Then, in Throne order, each player chooses one of them and adds it to their hand.",
+      "image": "cards/westeros/1-shifting-ambitions-2b",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-shifting-ambitions-3",
+      "deck": 1,
+      "name": "Shifting Ambitions",
+      "value": 3,
+      "text": "Each player chooses 1 Objective from their hand. Reveal all the chosen Objectives. Then, in Throne order, each player chooses one of them and adds it to their hand.",
+      "image": "cards/westeros/1-shifting-ambitions-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-the-burden-of-power-1",
+      "deck": 1,
+      "name": "The Burden of Power",
+      "value": 1,
+      "text": "The holder of the Throne chooses, in order, any number of the following:\na) resolve the event New Information.\nb) resolve the event Shifting Ambitions.\nc) resolve the event Thwarted Plans.",
+      "image": "cards/westeros/1-the-burden-of-power-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-the-burden-of-power-3",
+      "deck": 1,
+      "name": "The Burden of Power",
+      "value": 3,
+      "text": "The holder of the Throne chooses, in order, any number of the following:\na) resolve the event New Information.\nb) resolve the event Shifting Ambitions.\nc) resolve the event Thwarted Plans.",
+      "image": "cards/westeros/1-the-burden-of-power-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-thwarted-plans-4",
+      "deck": 1,
+      "name": "Thwarted Plans",
+      "value": 4,
+      "text": "Each player with at least 2 scored Objective cards in their play area is reduced one position on the Victory track.",
+      "image": "cards/westeros/1-thwarted-plans-4",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "1-winter-is-coming-i",
+      "deck": 1,
+      "name": "Winter is Coming",
+      "value": null,
+      "text": "Immediately shuffle this deck. Then draw and resolve a new card.",
+      "image": "cards/westeros/1-winter-is-coming-i",
+      "reshuffle": true,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-drought-4",
+      "deck": 2,
+      "name": "Drought",
+      "value": 4,
+      "text": "In Sword order, each player is reduced two positions on the Supply track and then reconciles armies. All River borders are passable this turn.",
+      "image": "cards/westeros/2-drought-4",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-mustering-troops-1",
+      "deck": 2,
+      "name": "Mustering Troops",
+      "value": 1,
+      "text": "In reversed Sword order, each player recruits units in every one of their areas with a Stronghold or a Castle.",
+      "image": "cards/westeros/2-mustering-troops-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-mustering-troops-2",
+      "deck": 2,
+      "name": "Mustering Troops",
+      "value": 2,
+      "text": "In reversed Sword order, each player recruits units in every one of their areas with a Stronghold or a Castle.",
+      "image": "cards/westeros/2-mustering-troops-2",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-prepare-tactics-1",
+      "deck": 2,
+      "name": "Prepare Tactics",
+      "value": 1,
+      "text": "Players can spend 3 Power Tokens to shuffle their discarded Tactics into their deck. Then, players shuffle Tactics in their hand into the deck and choose a new hand of three Tactics.",
+      "image": "cards/westeros/2-prepare-tactics-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-prepare-tactics-2a",
+      "deck": 2,
+      "name": "Prepare Tactics",
+      "value": 2,
+      "text": "Players can spend 3 Power Tokens to shuffle their discarded Tactics into their deck. Then, players shuffle Tactics in their hand into the deck and choose a new hand of three Tactics.",
+      "image": "cards/westeros/2-prepare-tactics-2a",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-prepare-tactics-2b",
+      "deck": 2,
+      "name": "Prepare Tactics",
+      "value": 2,
+      "text": "Players can spend 3 Power Tokens to shuffle their discarded Tactics into their deck. Then, players shuffle Tactics in their hand into the deck and choose a new hand of three Tactics.",
+      "image": "cards/westeros/2-prepare-tactics-2b",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-prepare-tactics-3",
+      "deck": 2,
+      "name": "Prepare Tactics",
+      "value": 3,
+      "text": "Players can spend 3 Power Tokens to shuffle their discarded Tactics into their deck. Then, players shuffle Tactics in their hand into the deck and choose a new hand of three Tactics.",
+      "image": "cards/westeros/2-prepare-tactics-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-rally-the-men-2",
+      "deck": 2,
+      "name": "Rally the Men",
+      "value": 2,
+      "text": "In reversed Sword order, each player recruits units in every one of their areas with a Castle.",
+      "image": "cards/westeros/2-rally-the-men-2",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-rally-the-men-3",
+      "deck": 2,
+      "name": "Rally the Men",
+      "value": 3,
+      "text": "In reversed Sword order, each player recruits units in every one of their areas with a Castle.",
+      "image": "cards/westeros/2-rally-the-men-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-strategical-superiority-1",
+      "deck": 2,
+      "name": "Strategical Superiority",
+      "value": 1,
+      "text": "The holder of the Sword chooses, in order, any number of the following:\na) resolve the event Mustering Troops.\nb) resolve the event Prepare Tactics.\nc) resolve the event Drought.",
+      "image": "cards/westeros/2-strategical-superiority-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-strategical-superiority-3",
+      "deck": 2,
+      "name": "Strategical Superiority",
+      "value": 3,
+      "text": "The holder of the Sword chooses, in order, any number of the following:\na) resolve the event Mustering Troops.\nb) resolve the event Prepare Tactics.\nc) resolve the event Drought.",
+      "image": "cards/westeros/2-strategical-superiority-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "2-winter-is-coming-ii",
+      "deck": 2,
+      "name": "Winter is Coming",
+      "value": null,
+      "text": "Immediately shuffle this deck. Then draw and resolve a new card.",
+      "image": "cards/westeros/2-winter-is-coming-ii",
+      "reshuffle": true,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-clash-of-kings-1",
+      "deck": 3,
+      "name": "Clash of Kings",
+      "value": 1,
+      "text": "Players bid on the three Influence tracks.",
+      "image": "cards/westeros/3-clash-of-kings-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-clash-of-kings-2a",
+      "deck": 3,
+      "name": "Clash of Kings",
+      "value": 2,
+      "text": "Players bid on the three Influence tracks.",
+      "image": "cards/westeros/3-clash-of-kings-2a",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-clash-of-kings-2b",
+      "deck": 3,
+      "name": "Clash of Kings",
+      "value": 2,
+      "text": "Players bid on the three Influence tracks.",
+      "image": "cards/westeros/3-clash-of-kings-2b",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-clash-of-kings-3",
+      "deck": 3,
+      "name": "Clash of Kings",
+      "value": 3,
+      "text": "Players bid on the three Influence tracks.",
+      "image": "cards/westeros/3-clash-of-kings-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-dark-wings-dark-words-1",
+      "deck": 3,
+      "name": "Dark Wings, Dark Words",
+      "value": 1,
+      "text": "The holder of the Raven chooses, in order, any number of the following:\na) resolve the event Clash of Kings.\nb) resolve the event Secret Conspiracies.\nc) resolve the event Storm in the Skies.",
+      "image": "cards/westeros/3-dark-wings-dark-words-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-dark-wings-dark-words-3",
+      "deck": 3,
+      "name": "Dark Wings, Dark Words",
+      "value": 3,
+      "text": "The holder of the Raven chooses, in order, any number of the following:\na) resolve the event Clash of Kings.\nb) resolve the event Secret Conspiracies.\nc) resolve the event Storm in the Skies.",
+      "image": "cards/westeros/3-dark-wings-dark-words-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-secret-conspiracies-1",
+      "deck": 3,
+      "name": "Secret Conspiracies",
+      "value": 1,
+      "text": "Each player can pay up to two Power Tokens to draw that many Intrigues, up to a maximum hand size equal to their stars on the King's Court track plus 1 (discard exceeding cards).",
+      "image": "cards/westeros/3-secret-conspiracies-1",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-secret-conspiracies-2a",
+      "deck": 3,
+      "name": "Secret Conspiracies",
+      "value": 2,
+      "text": "Each player can pay up to two Power Tokens to draw that many Intrigues, up to a maximum hand size equal to their stars on the King's Court track plus 1 (discard exceeding cards).",
+      "image": "cards/westeros/3-secret-conspiracies-2a",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-secret-conspiracies-2b",
+      "deck": 3,
+      "name": "Secret Conspiracies",
+      "value": 2,
+      "text": "Each player can pay up to two Power Tokens to draw that many Intrigues, up to a maximum hand size equal to their stars on the King's Court track plus 1 (discard exceeding cards).",
+      "image": "cards/westeros/3-secret-conspiracies-2b",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-secret-conspiracies-3",
+      "deck": 3,
+      "name": "Secret Conspiracies",
+      "value": 3,
+      "text": "Each player can pay up to two Power Tokens to draw that many Intrigues, up to a maximum hand size equal to their stars on the King's Court track plus 1 (discard exceeding cards).",
+      "image": "cards/westeros/3-secret-conspiracies-3",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-storm-in-the-skies-4",
+      "deck": 3,
+      "name": "Storm in the Skies",
+      "value": 4,
+      "text": "The maximum number of Special orders each House is allowed to place this round (as indicated by their position on the King's Court track) is reduced by two.",
+      "image": "cards/westeros/3-storm-in-the-skies-4",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "3-winter-is-coming-iii",
+      "deck": 3,
+      "name": "Winter is Coming",
+      "value": null,
+      "text": "Immediately shuffle this deck. Then draw and resolve a new card.",
+      "image": "cards/westeros/3-winter-is-coming-iii",
+      "reshuffle": true,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "4-bands-of-outlaws",
+      "deck": 4,
+      "name": "Bands of Outlaws",
+      "value": null,
+      "text": "Players secretly bid against the round target (ties in Raven order):\nWon, Highest Bid: gains 3 Gold Coins.\nLost - Lowest Bid: loses 1 Gold Coin and 2 positions on the Supply track.\nLost - Others: lose 1 Gold Coin and 1 position on the Supply track.",
+      "image": "cards/westeros/4-bands-of-outlaws",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": {
+        "tiebreak": "Raven order",
+        "won": "gains 3 Gold Coins.",
+        "lowest": "loses 1 Gold Coin and 2 positions on the Supply track.",
+        "others": "lose 1 Gold Coin and 1 position on the Supply track.",
+        "highest": null
+      }
+    },
+    {
+      "id": "4-bountiful-harvest",
+      "deck": 4,
+      "name": "Bountiful Harvest",
+      "value": null,
+      "text": "All players move forward 1 step on the Supply track and gain 1 Gold Coin.",
+      "image": "cards/westeros/4-bountiful-harvest",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "4-flawless-strategy",
+      "deck": 4,
+      "name": "Flawless Strategy",
+      "value": null,
+      "text": "Players secretly bid against the round target (ties in Sword order):\nWon, Highest Bid: may return any House Card to their hand.\nLost - Lowest Bid: discards all House Cards with the highest strength.\nLost - Others: discard one House Card at random.",
+      "image": "cards/westeros/4-flawless-strategy",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": {
+        "tiebreak": "Sword order",
+        "won": "may return any House Card to their hand.",
+        "lowest": "discards all House Cards with the highest strength.",
+        "others": "discard one House Card at random.",
+        "highest": null
+      }
+    },
+    {
+      "id": "4-knights-of-the-seven-kingdoms",
+      "deck": 4,
+      "name": "Knights of the Seven Kingdoms",
+      "value": null,
+      "text": "Players secretly bid against the round target (ties in Throne order):\nWon, Highest Bid: may replace up to two Footmen with Knights.\nLost - Lowest Bid: replaces all Knights with Footmen.\nLost - Others: replace two Knights with Footmen.",
+      "image": "cards/westeros/4-knights-of-the-seven-kingdoms",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": {
+        "tiebreak": "Throne order",
+        "won": "may replace up to two Footmen with Knights.",
+        "lowest": "replaces all Knights with Footmen.",
+        "others": "replace two Knights with Footmen.",
+        "highest": null
+      }
+    },
+    {
+      "id": "4-militant-faith",
+      "deck": 4,
+      "name": "Militant Faith",
+      "value": null,
+      "text": "For each Stronghold, its controller destroys one unit in that area. If there are none, they remove from the game one of the House Cards in their hand with the highest strength.",
+      "image": "cards/westeros/4-militant-faith",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "4-peasant-uprising",
+      "deck": 4,
+      "name": "Peasant Uprising",
+      "value": null,
+      "text": "Each player may discard 1 Power Token for every 2 Supply levels they have. If they cannot or do not want, reduce their Supply level by 1 for every Power Token not spent.",
+      "image": "cards/westeros/4-peasant-uprising",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "4-royal-tournament",
+      "deck": 4,
+      "name": "Royal Tournament",
+      "value": null,
+      "text": "All players simultaneously discard one of their House Cards. Add up strength and sword icons for each of them. The player with the highest total gains 5 Power Tokens, the player with the second highest total gains 3 Power Tokens (ties in Sword order).",
+      "image": "cards/westeros/4-royal-tournament",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "4-storm-at-sea",
+      "deck": 4,
+      "name": "Storm at Sea",
+      "value": null,
+      "text": "Every player destroys 2 of their Ship units in Open Sea areas. If they have none, they destroy 1 of their Ship units in normal Sea areas. Ships in Ports are not affected.",
+      "image": "cards/westeros/4-storm-at-sea",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": null
+    },
+    {
+      "id": "4-treachery-and-deceit",
+      "deck": 4,
+      "name": "Treachery and Deceit",
+      "value": null,
+      "text": "Players secretly bid against the round target (ties in Raven order):\nWon, Highest Bid: moves to the top of any Influence track.\nLost - Lowest Bid: loses 2 positions on their highest influence track.\nLost - Others: discard 2 Power Tokens.",
+      "image": "cards/westeros/4-treachery-and-deceit",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": {
+        "tiebreak": "Raven order",
+        "won": "moves to the top of any Influence track.",
+        "lowest": "loses 2 positions on their highest influence track.",
+        "others": "discard 2 Power Tokens.",
+        "highest": null
+      }
+    },
+    {
+      "id": "4-war-preparations",
+      "deck": 4,
+      "name": "War Preparations",
+      "value": null,
+      "text": "Players secretly bid against the round target (ties in Sword order):\nWon, Highest Bid: may muster at a Castle or Stronghold.\nLost - Lowest Bid: destroys 2 of their units, if possible at a Castle.\nLost - Others: destroy 1 of their units, if possible at a Castle.",
+      "image": "cards/westeros/4-war-preparations",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": {
+        "tiebreak": "Sword order",
+        "won": "may muster at a Castle or Stronghold.",
+        "lowest": "destroys 2 of their units, if possible at a Castle.",
+        "others": "destroy 1 of their units, if possible at a Castle.",
+        "highest": null
+      }
+    },
+    {
+      "id": "4-wavering-loyalties",
+      "deck": 4,
+      "name": "Wavering Loyalties",
+      "value": null,
+      "text": "Players secretly bid against the round target (ties in Throne order):\nWon, Highest Bid: puts Power Tokens from reserve on 3 controlled areas.\nLost - Lowest Bid: discards Power Tokens from all controlled areas.\nLost - Others: discard Power Tokens from 2 controlled areas.",
+      "image": "cards/westeros/4-wavering-loyalties",
+      "reshuffle": false,
+      "targaryen": false,
+      "bid": {
+        "tiebreak": "Throne order",
+        "won": "puts Power Tokens from reserve on 3 controlled areas.",
+        "lowest": "discards Power Tokens from all controlled areas.",
+        "others": "discard Power Tokens from 2 controlled areas.",
+        "highest": null
+      }
+    },
+    {
+      "id": "4-winter-is-coming-iv",
+      "deck": 4,
+      "name": "Winter is Coming",
+      "value": null,
+      "text": "Immediately shuffle this deck. Then draw and resolve a new card.",
+      "image": "cards/westeros/4-winter-is-coming-iv",
+      "reshuffle": true,
+      "targaryen": false,
+      "bid": null
+    }
+  ]
+}
