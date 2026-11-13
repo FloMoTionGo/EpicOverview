@@ -131,7 +131,7 @@ async function onClick(ev) {
   ev.preventDefault();
   const name = el.dataset.act;
   const params = el.dataset.p ? JSON.parse(el.dataset.p) : {};
-  if (app.querySelector('.k-test') && app.contains(el)) return;  // the test tab only shows; nothing on it changes the game
+  if (el.closest('.k-test')) return;                         // the test tab only shows; nothing on it changes the game
   if (store.replay && !REPLAY_OK.test(name)) { store.say('This is a replay. Exit the replay to change the game.'); return; }
   if (LOCAL[name]) {
     await LOCAL[name](params);

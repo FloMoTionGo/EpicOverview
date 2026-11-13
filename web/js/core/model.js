@@ -27,7 +27,13 @@ export function upgradeGame(g, cards = []) {
   const w = g.westeros;
   if (w) {
     if (!Array.isArray(w.chosen)) w.chosen = [];
-    if (typeof w.trackBid !== 'boolean') w.trackBid = bidOnTracks(w, cards);
+    if (cards.length) {
+      // Both follow from the card on deck III, so they are worked out again every time: a device that still
+      // runs an older version of the app carries them into the next round unchanged.
+      const deck3 = cards.find((c) => c.id === w.revealed[3]);
+      if (!deck3 || deck3.name !== 'Dark Wings, Dark Words') w.chosen = [];
+      w.trackBid = bidOnTracks(w, cards);
+    } else if (typeof w.trackBid !== 'boolean') w.trackBid = false;
   }
   return g;
 }

@@ -82,8 +82,14 @@ export const store = {
     this._msgTimer = setTimeout(() => { this.message = ''; this.emit(); }, 5000);
   },
 
+  // status 0: the request never reached the server (a phone that just woke up, no network)
   async post(path, body) {
-    const r = await fetch(api(path), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    let r;
+    try {
+      r = await fetch(api(path), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    } catch {
+      return { status: 0, body: { error: 'Could not reach the server. Nothing was changed; tap again.' } };
+    }
     return { status: r.status, body: await r.json().catch(() => ({})) };
   },
 
@@ -118,6 +124,7 @@ export const store = {
   // A new game: the server moves the current one to the past games (for replays).
   async replaceGame(game, summary, kind) {
     const r = await this.post('api/new', { baseVersion: this.version, kind, state: game, entry: { summary, kind: 'game', house: this.house, round: game.round, step: game.step, houses: [] } });
+    if (r.status === 0) { this.say(r.body.error); return false; }
     if (r.status === 409) { await this.reload(); return this.replaceGame(game, summary, kind); }
     this.games = null;
     await this.reload();
@@ -187,6 +194,7 @@ export const store = {
 
   async undo() {
     const r = await this.post('api/undo', { house: this.house });
+    if (r.status === 0) { this.say(r.body.error); return; }
     if (r.status === 409) this.say('Nothing to undo.');
     await this.reload();
   }

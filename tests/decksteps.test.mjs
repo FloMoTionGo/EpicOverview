@@ -209,6 +209,16 @@ test('games without the bid flag (example, older saves, old replays) still leave
   assert.deepEqual(up.tracks, { throne: null, blade: null, raven: null });
   assert.equal(up.step, 'W3');
   assert.match(view(up, 'W7'), /No council swap this round: there was a bid/);
+  // a device still on the older app started the next round: its flags from the last round are stale
+  const stale = JSON.parse(JSON.stringify(ex));
+  stale.westeros.revealed = { 1: null, 2: null, 3: null, 4: null };
+  Object.assign(stale.westeros, { shown: 0, trackBid: true, chosen: ['Storm in the Skies'] });
+  const healed = upgradeGame(stale, cards);
+  assert.equal(healed.westeros.trackBid, false);
+  assert.deepEqual(healed.westeros.chosen, []);
+  // without the card list nothing can be worked out: the flags stay as they are
+  const kept = upgradeGame(JSON.parse(JSON.stringify(ex)));
+  assert.equal(kept.westeros.trackBid, true);
 });
 
 test('Diplomacy 3: Executed only when the vote did not go against it', async () => {

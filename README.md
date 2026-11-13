@@ -15,7 +15,7 @@ by Fantasy Flight Games. This is an unofficial, non-commercial fan tool.
 
 - **https://flomotiongo.github.io/EpicOverview/** opens the app on any phone, tablet or computer. It uses the
   shared game on **https://epic-overview.fly.dev/**, which also serves the app itself.
-- The Fly.io server sleeps when no device is connected; the first visit wakes it in a few seconds.
+- The Fly.io server stays awake (`fly.toml`); the game is saved on its volume after every change.
 - Anyone with the address can change the game. Download a backup from the Log before a game evening.
 - Without internet, run the laptop server below and open its own address; the Pages copy cannot reach it.
 
