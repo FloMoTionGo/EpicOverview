@@ -1,6 +1,7 @@
 // Building a game: a new game, and the round-4 example that the canvas boards show.
 import { HOUSE_IDS, ROLES, STOCK } from './data.js';
-import { buildDecks, rngNext } from './westeros.js';
+import { buildDecks, rngNext, bidOnTracks } from './westeros.js';
+import { canonicalStep } from './steps.js';
 
 export const SCHEMA = 1;
 
@@ -16,6 +17,20 @@ export const DOWRY = {
   white: 'Claim to the Throne',
   red: 'Blood of Kings'
 };
+
+// A game written by an older version of the app: fill in what it lacks. Runs on every game the store reads
+// (state, replay frames) and inside the reducer, so screens and rules never see a half-old game. Mutates g.
+export function upgradeGame(g, cards = []) {
+  if (!g || typeof g !== 'object') return g;
+  if (g.step) g.step = canonicalStep(g.step);                     // retired steps W2, D4
+  if (!g.tracks) g.tracks = { throne: null, blade: null, raven: null };
+  const w = g.westeros;
+  if (w) {
+    if (!Array.isArray(w.chosen)) w.chosen = [];
+    if (typeof w.trackBid !== 'boolean') w.trackBid = bidOnTracks(w, cards);
+  }
+  return g;
+}
 
 function blankHouse() {
   return { castles: 1, vp: 0, obj: 0, supply: 0, ring: true };
@@ -33,6 +48,7 @@ export function newGame({ cards = [], seed = 20261112 } = {}) {
     houses: Object.fromEntries(HOUSE_IDS.map((h) => [h, blankHouse()])),
     council: Object.fromEntries(ROLES.map((r) => [r.id, null])),
     councilUsed: {},
+    tracks: { throne: null, blade: null, raven: null },
     relations: {},
     changed: {},
     married: {},
@@ -95,6 +111,7 @@ export function exampleGame({ cards = [], seed = 4 } = {}) {
     });
     w.decks[1].discard.push(thwarted.id);
     Object.assign(w, { shown: 4, laws: { 1: 'replace' }, lawsUsed: 1, lawsOld: thwarted.id, deck4: 'won' });
+    w.trackBid = bidOnTracks(w, cards);                             // Clash of Kings on deck III: no council swap
   }
   return g;
 }

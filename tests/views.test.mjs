@@ -7,6 +7,7 @@ import { reduce } from '../web/js/core/reducer.js';
 import { renderGather } from '../web/js/views/gather.js';
 import { replayBar, renderGames, renderSummary, gameTitle, when } from '../web/js/views/replay.js';
 import { renderRound } from '../web/js/views/round.js';
+import { STEPS } from '../web/js/core/steps.js';
 import { renderLog } from '../web/js/views/other.js';
 
 const cards = JSON.parse(readFileSync(new URL('../web/data/westeros.json', import.meta.url), 'utf8')).cards;
@@ -34,7 +35,7 @@ function history() {
   for (let round = 1; round <= 3; round++) {
     act({ type: 'objective/score', house: 'tyrell', vp: round });
     act({ type: 'house/adjust', house: 'martell', field: 'castles', delta: 1 });
-    const steps = round === 1 ? 13 : 26;
+    const steps = round === 1 ? 13 : STEPS.length;
     for (let k = 0; k < steps && round < 3; k++) act({ type: 'step/next' });
   }
   act({ type: 'win/confirm', house: 'tyrell', reason: '7 Victory Points' });
@@ -101,4 +102,37 @@ test('replay bar and the screens at any frame', () => {
       assert.doesNotMatch(log, /Replay this game|download/);              // live-only buttons hidden in a replay
     }
   }
+});
+
+test('temporary test tab: every Westeros card on its Deck step, hidden without ?test', async () => {
+  const { renderTest } = await import('../web/js/views/test.js');
+  const { TABS, TEST_TAB } = await import('../web/js/ui/chrome.js');
+  assert.equal(TEST_TAB, false);
+  assert.ok(!TABS.some(([id]) => id === 'test'));
+  for (const narrow of [false, true]) {
+    const html = clean(renderTest({ ...base(narrow), game: frames[frames.length - 1].g }), 'test tab');
+    assert.equal((html.match(/<article /g) || []).length, 43);                // 4 face down + 39 distinct cards
+    assert.equal((html.match(/>Deck I: /g) || []).length, 10);
+    assert.match(html, /Deck IV: Bands of Outlaws/);
+    assert.match(html, /Round target 6 \(1 \+ 4 \+ 1\)/);
+    assert.doesNotMatch(html, /Deck [I-V]+: Winter is Coming/);
+    assert.equal(new Set([...html.matchAll(/ id="(t-\d+)"/g)].map((m) => m[1])).size, 43, 'unique heading ids');
+  }
+});
+
+test('Round tab: no button in a step card only goes to the next step or opens another tab', async () => {
+  const { exampleGame } = await import('../web/js/core/model.js');
+  const g = exampleGame({ cards });
+  const article = (html) => html.slice(html.indexOf('<article'), html.indexOf('</article>'));
+  for (const s of STEPS) {
+    for (const narrow of [false, true]) {
+      const html = article(clean(renderRound({ ...base(narrow), house: 'greyjoy', game: { ...g, step: s.id } }), s.id));
+      assert.doesNotMatch(html, /data-act="step\/next"/, `${s.id}: a Next button in the card`);
+      assert.doesNotMatch(html, /href="#\//, `${s.id}: a link to another tab`);
+      assert.doesNotMatch(html, /Seats on the Houses tab|Assign the Small Council seats/, s.id);
+    }
+  }
+  const d3 = article(renderRound({ ...base(false), house: 'greyjoy', game: { ...g, step: 'D3' } }));
+  assert.match(d3, /&quot;result&quot;:&quot;executed&quot;/);
+  assert.doesNotMatch(d3, /&quot;result&quot;:&quot;(spared|kept)&quot;|>Spared<|Keep the hostage/);
 });

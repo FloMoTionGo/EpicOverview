@@ -6,6 +6,8 @@ import { renderRelations } from './views/relations.js';
 import { renderWesteros } from './views/westeros.js';
 import { renderLoans, renderMarket, renderLog, renderChoose, renderSetup } from './views/other.js';
 import { renderGather } from './views/gather.js';
+import { renderTest } from './views/test.js';
+import { TEST_TAB } from './ui/chrome.js';
 import { replayBar, renderGames, renderSummary, readPanel, showRound, hideRound } from './views/replay.js';
 import { logAt, nextRoundIndex, prevRoundIndex } from './core/replay.js';
 import { HOUSE_IDS } from './core/data.js';
@@ -18,7 +20,8 @@ let seeking = false;
 const ui = {};                       // this device only: open menus, picks, peeks
 const narrowQuery = window.matchMedia('(max-width: 760px)');
 
-const VIEWS = { round: renderRound, houses: renderHouses, relations: renderRelations, westeros: renderWesteros, loans: renderLoans, market: renderMarket, log: renderLog };
+const VIEWS = { round: renderRound, houses: renderHouses, relations: renderRelations, westeros: renderWesteros, loans: renderLoans, market: renderMarket, log: renderLog,
+  ...(TEST_TAB ? { test: renderTest } : {}) };   // TEMPORARY test tab, only with ?test
 
 function route() {
   const h = (location.hash || '#/round').replace(/^#\//, '').split('/');
@@ -108,6 +111,7 @@ const AFTER = {
   'hostage/add': () => { Object.assign(ui, { addHostage: false, hHolder: null, hOwner: null }); },
   'hostage/execute': () => { Object.assign(ui, { favour: 0, against: 0, execId: null }); },
   'council/assign': () => { ui.reassignPick = null; },
+  'track/assign': () => { ui.trackPick = null; },
   'westeros/raven': () => { ui.peek = null; },
   'win/confirm': () => { ui.pickWinner = false; ui.hideEnd = false; },
   'order/ban': () => { ui.banPick = null; },
@@ -119,19 +123,34 @@ const AFTER = {
 // In a replay only looking around is allowed: no change reaches the shared game.
 const REPLAY_OK = /^(ui\/|replay\/|games\/|house\/choose$)/;
 
+const SHUFFLE_MS = 800;            // how long "Shuffling…" stays over a deck at least
+
 async function onClick(ev) {
   const el = ev.target.closest('[data-act]');
   if (!el || el.getAttribute('aria-disabled') === 'true') return;
   ev.preventDefault();
   const name = el.dataset.act;
   const params = el.dataset.p ? JSON.parse(el.dataset.p) : {};
+  if (app.querySelector('.k-test') && app.contains(el)) return;  // the test tab only shows; nothing on it changes the game
   if (store.replay && !REPLAY_OK.test(name)) { store.say('This is a replay. Exit the replay to change the game.'); return; }
   if (LOCAL[name]) {
     await LOCAL[name](params);
     render();
     return;
   }
-  const ok = await store.dispatch({ type: name, ...params });
+  // a shuffle shows nothing new on the deck: a short "Shuffling…" over it tells the tap was taken
+  const shuffle = name === 'westeros/shuffle' ? Date.now() : 0;
+  if (shuffle) { ui.shuffling = [...(ui.shuffling || []), params.deck]; render(); }
+  let ok = false;
+  try {
+    ok = await store.dispatch({ type: name, ...params });
+  } finally {
+    if (shuffle) {
+      await new Promise((r) => setTimeout(r, Math.max(0, SHUFFLE_MS - (Date.now() - shuffle))));
+      ui.shuffling = ui.shuffling.filter((d) => d !== params.deck);
+      render();
+    }
+  }
   if (ok && AFTER[name]) AFTER[name]();
   render();
 }
@@ -170,9 +189,9 @@ window.addEventListener('hashchange', () => {
 // Esc closes whatever is open on top: the eyes-only curtain, a Relations popover or sheet, pickers, the game menu
 window.addEventListener('keydown', (ev) => {
   if (ev.key !== 'Escape') return;
-  const open = ['peek', 'cell', 'relStage', 'addHostage', 'reassign', 'maesterPick', 'pickWinner', 'menu'].filter((k) => ui[k]);
+  const open = ['peek', 'cell', 'relStage', 'addHostage', 'reassign', 'tracksEdit', 'trackPick', 'maesterPick', 'pickWinner', 'menu'].filter((k) => ui[k]);
   if (!open.length) return;
-  for (const k of open) ui[k] = k === 'addHostage' || k === 'reassign' || k === 'maesterPick' || k === 'pickWinner' || k === 'menu' ? false : null;
+  for (const k of open) ui[k] = ['addHostage', 'reassign', 'tracksEdit', 'maesterPick', 'pickWinner', 'menu'].includes(k) ? false : null;
   render();
 });
 narrowQuery.addEventListener('change', render);

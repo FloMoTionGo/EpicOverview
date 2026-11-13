@@ -2,7 +2,7 @@
 // A change made on an outdated version gets a 409; the store reloads, re-applies the action and retries.
 // Replays: a game's history from the server, stepped through on this device only (nothing is sent).
 import { reduce, RuleError } from './core/reducer.js';
-import { newGame, exampleGame } from './core/model.js';
+import { newGame, exampleGame, upgradeGame } from './core/model.js';
 import { api, API_BASE } from './api.js';
 
 const HOUSE_KEY = 'epic-overview.house';
@@ -54,7 +54,7 @@ export const store = {
   async reload() {
     const r = await fetch(api('api/state'), { cache: 'no-store' });
     const doc = await r.json();
-    Object.assign(this, { version: doc.version, game: doc.game, log: doc.log || [], online: true });
+    Object.assign(this, { version: doc.version, game: upgradeGame(doc.game, this.cards), log: doc.log || [], online: true });
     this.emit();
   },
 
@@ -152,6 +152,7 @@ export const store = {
       if (r.ok) doc = await r.json();
     } catch { /* reported below */ }
     if (!doc || !doc.frames || !doc.frames.length) { this.say('That game could not be loaded.'); return false; }
+    for (const f of doc.frames) upgradeGame(f.g, this.cards);        // games from older versions of the app
     this.replay = { id: doc.id, meta: doc.meta || {}, frames: doc.frames, index: at === 'end' ? doc.frames.length - 1 : 0, playing: false };
     this.emit();
     return true;

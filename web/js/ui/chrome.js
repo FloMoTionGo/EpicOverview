@@ -9,7 +9,10 @@ export const RING_USED = 'assets/icons/ring-outline.webp';
 const CHEV_L = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 const CHEV_R = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
-export const TABS = [['round', 'Round'], ['houses', 'Houses'], ['relations', 'Relations'], ['westeros', 'Westeros'], ['loans', 'Loans'], ['market', 'Market'], ['log', 'Log']];
+// TEMPORARY: the test tab (views/test.js) shows only with ?test in the address. Node tests have no location.
+export const TEST_TAB = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+export const TABS = [['round', 'Round'], ['houses', 'Houses'], ['relations', 'Relations'], ['westeros', 'Westeros'], ['loans', 'Loans'], ['market', 'Market'], ['log', 'Log'],
+  ...(TEST_TAB ? [['test', 'Test']] : [])];
 
 export function header(game, house, opts = {}) {
   const chip = house
@@ -63,7 +66,7 @@ export function seatsBar(game, move = []) {
 }
 
 export function tabBar(current) {
-  return `<nav aria-label="Views" class="k-tabs" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
+  return `<nav aria-label="Views" class="k-tabs" style="height:64px;flex:none;display:grid;grid-template-columns:repeat(${TABS.length},minmax(0,1fr));border-top:1px solid #5a4330;background:#1a120c">
     ${TABS.map(([id, name]) => `<a href="#/${id}" ${id === current ? 'aria-current="page"' : ''} style="min-height:56px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;${id === current ? 'color:#ead08a;box-shadow:inset 0 3px 0 #c9a24c' : 'color:#b9a88a'}">${name}</a>`).join('')}
   </nav>`;
 }
@@ -102,26 +105,31 @@ function cardsLine(text) {
   return `<details class="k-cardsnow" style="${st}"><summary style="cursor:pointer;min-height:24px"><strong>Cards that can act now</strong> <span style="color:#66543d">(tap to show)</span></summary>${esc(text)}.</details>`;
 }
 
-export function stepFrame(game, step, { title, modeText, bodyHtml, footerHtml, source, cardsNow }) {
-  const n = neighbours(step.id, game.round);
+// The step card itself: heading, mode, body, cards line, footer, source. The test tab shows it without the step rows.
+export function stepCard(step, { title, modeText, bodyHtml, footerHtml, source, cardsNow, id = 'r-now' }) {
   const [mname] = MODE[step.mode];
   const head = `<div class="k-stephead" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex:none"><div><p style="margin:0;font-size:15px;color:#66543d">${esc(step.phase)}, step ${step.n} of ${step.total}</p>`
-    + `<h1 id="r-now" style="margin:0;font-size:32px;line-height:1.1">${esc(title || step.title)}</h1></div>`
+    + `<h1 id="${id}" style="margin:0;font-size:32px;line-height:1.1">${esc(title || step.title)}</h1></div>`
     + `<div class="k-mode" style="flex:none;max-width:520px;display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;background:${MODE_BOX[step.mode]};color:#f4ead6;font-size:16px;line-height:1.25">`
     + `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex:none">${MODE_ICON[step.mode]}</svg>`
     + `<span><strong>${esc(step.mode === 'seq' ? 'One after another' : mname.slice(2))}.</strong> ${esc(modeText || step.modeText)}</span></div></div>`;
-  return `<main class="k-main" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:12px 20px">
-    <div class="k-steprow" style="display:flex;align-items:center;gap:10px;height:48px;flex:none">
-      <button type="button" ${act('step/prev')} style="flex:none;min-width:168px;min-height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:17px">${CHEV_L}Previous step</button>
-      ${fadedChip(n.before[0], 0.35, true)}${fadedChip(n.before[1], 0.6, true)}
-    </div>
-    <article aria-labelledby="r-now" class="k-article" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding:14px 22px;border-radius:14px;color:#2a2017;background:linear-gradient(180deg,#e8d7ae,#dcc796);box-shadow:0 0 0 1px #120c08,0 0 0 7px #4a3121,0 0 0 8px rgba(201,162,76,.45),0 18px 36px rgba(0,0,0,.5);margin:8px;overflow:hidden">
+  return `<article aria-labelledby="${id}" class="k-article" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding:14px 22px;border-radius:14px;color:#2a2017;background:linear-gradient(180deg,#e8d7ae,#dcc796);box-shadow:0 0 0 1px #120c08,0 0 0 7px #4a3121,0 0 0 8px rgba(201,162,76,.45),0 18px 36px rgba(0,0,0,.5);margin:8px;overflow:hidden">
       ${head}
       <div class="k-body" style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px">${bodyHtml}</div>
       ${cardsNow ? cardsLine(cardsNow) : ''}
       ${footerHtml || ''}
       <p style="margin:0;flex:none;font-size:13px;color:#5e4d37">Source: ${esc(source || '')}</p>
-    </article>
+    </article>`;
+}
+
+export function stepFrame(game, step, parts) {
+  const n = neighbours(step.id, game.round, game);
+  return `<main class="k-main" style="flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:12px 20px">
+    <div class="k-steprow" style="display:flex;align-items:center;gap:10px;height:48px;flex:none">
+      <button type="button" ${act('step/prev')} style="flex:none;min-width:168px;min-height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:17px">${CHEV_L}Previous step</button>
+      ${fadedChip(n.before[0], 0.35, true)}${fadedChip(n.before[1], 0.6, true)}
+    </div>
+    ${stepCard(step, parts)}
     <div class="k-steprow" style="display:flex;align-items:center;gap:10px;height:48px;flex:none">
       ${fadedChip(n.after[0], 0.6, false)}${fadedChip(n.after[1], 0.35, false)}
       <button type="button" ${act('step/next')} style="flex:none;min-width:168px;min-height:48px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:0;background:#c9a24c;color:#211710;font-size:17px;font-weight:600">Next step${CHEV_R}</button>

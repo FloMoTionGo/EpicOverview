@@ -3,8 +3,9 @@
 A companion web app for an EPIC Game of Thrones evening with nine houses. One laptop runs a small server;
 every phone and tablet at the table opens it in the browser. The app keeps what the board doesn't show well:
 council seats, diplomatic levels, marriages, hostages, dowries, loans, the limited stock, Victory Points,
-castles, Objectives, Supply tokens and the digital Westeros decks. It walks the table through all 26 steps of
-a round. It knows nothing about the map, units, orders or influence-track positions.
+castles, Objectives, Supply tokens, who holds the Iron Throne, the Blade and the Raven, and the digital Westeros
+decks. It walks the table through the 24 steps of a round (23 after a bid, when the council swap is left out).
+It knows nothing about the map, units, orders or the order on the influence tracks.
 
 **Credits.** The rules, card texts and card art are from [EPIC Game of Thrones](https://boardgamegeek.com/thread/2865288/epic-game-of-thrones/page/1)
 by Christian Zoli, a fan expansion of *A Game of Thrones: The Board Game* (2nd edition) and *Mother of Dragons*
@@ -38,7 +39,8 @@ Other port: `set EPIC_PORT=8800` before starting, or `python server.py --port 88
 
 - **Round** shows the current step: what happens, who acts (all at once, in turn, or one house), and
   the previous and next steps. Next step moves every device on.
-- **Houses**: castles, VP, Objectives, Supply tokens, council seats (Reassign).
+- **Houses**: castles, VP, Objectives, Supply tokens, council seats (Reassign), and **Tracks**: who holds the Iron
+  Throne, the Valyrian Steel Blade and the Messenger Raven (Change). The steps where a holder acts name that house.
 - **Relations**: tap a cell to raise, lower, break or marry; costs and limits are shown. Hostages and dowries on the side.
 - **Westeros**: the four decks, the round target, shuffle buttons, Master of Laws, Grand Maester (eyes only) and the Raven.
 - **Loans**, **Market**: the Bank of Braavos and the limited stock.
@@ -48,14 +50,17 @@ Other port: `set EPIC_PORT=8800` before starting, or `python server.py --port 88
   while a replay is open. **Round summary** shows VP and castles of every house after each round. A new game
   moves the current one to this list.
 
-House rules built in: Westeros cards are revealed one after another; Master of Laws decides on each card of
-decks I–III right after it is revealed.
+House rules built in: Westeros cards are revealed one after another, each on its own Deck step (nothing of the
+card shows before **Reveal**); Master of Laws decides on each card of decks I–III right after it is revealed.
+Diplomacy happens all game long, so the round has no separate step for changing levels and marriages.
 
 ## For developers
 
 - `web/` is the app (plain HTML, CSS and JavaScript modules, no build step). `server.py` serves it and stores the game:
   `data/save/current.json` (the game), `snapshots.json` (Undo), `history.jsonl` (every version, for replays) and
   `games/<id>/` (finished games). The API is described at the top of `server.py`.
+- `?test` in the address adds a temporary **Test** tab: every Westeros card on its Deck step, read-only
+  (`web/js/views/test.js`; remove it once the cards are checked, see `issues.md`).
 - Replays: `web/js/core/replay.js` (pure helpers), `web/js/views/replay.js` (bar, games list, round summary).
   The QR code comes from `web/js/ui/qr.js`, a small encoder after Project Nayuki's QR Code generator (MIT).
 - Rules: `web/js/core/` (`reducer.js` holds every change; `rules.js` the checks). Screens: `web/js/views/`.

@@ -44,7 +44,7 @@ export function renderLoans(ctx) {
         <div role="row" class="k-owerow" style="${ROWGRID};padding:6px 4px;font:500 14px ${BAR};color:#b9a88a"><span role="columnheader">House</span><span role="columnheader">Loans</span><span role="columnheader">Owes each Diplomacy phase</span><span role="columnheader">While open</span><span role="columnheader">To pay back</span></div>
         ${rows || `<div style="padding:10px 4px;font-size:16px">Nobody holds a loan.</div>`}
       </div>
-      <p style="margin:0;font-size:15px;color:#b9a88a">${none.length ? 'No loans: ' + esc(none.join(', ')) + '.' : ''} Loans are taken and paid back in the Round tab, Diplomacy 6.</p>
+      <p style="margin:0;font-size:15px;color:#b9a88a">${none.length ? 'No loans: ' + esc(none.join(', ')) + '.' : ''} Loans are taken and paid back in the Round tab, ${esc(stepById('D6').label)}.</p>
     </section></main>`;
   return frame({ game: g, house: ctx.house, tab: 'loans', body });
 }

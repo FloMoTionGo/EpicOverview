@@ -28,6 +28,14 @@ export const ROLES = [
 ];
 export const ROLE = Object.fromEntries(ROLES.map((r) => [r.id, r]));
 
+// The three dominance tokens: the app records only who holds each (Houses tab), not the track order.
+export const TRACKS = [
+  { id: 'throne', name: 'Iron Throne', track: 'Throne track' },
+  { id: 'blade', name: 'Valyrian Steel Blade', track: 'Fiefdoms track' },
+  { id: 'raven', name: 'Messenger Raven', track: "King's Court track" }
+];
+export const TRACK = Object.fromEntries(TRACKS.map((t) => [t.id, t]));
+
 export const LEVELS = ['War', 'Truce', 'Alliance', 'Dynasty'];
 export const BONUS = [0, 1, 3, 5];          // Power per level, EPIC p. 9
 export const BREAK_COST = [0, 3, 5, 8];     // Power or Supply steps, EPIC p. 10

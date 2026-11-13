@@ -18,10 +18,11 @@ primary_region = "fra"
 [http_service]
   internal_port = 8080
   force_https = true
-  # Sleeps when no device is connected; the first request wakes it in a few seconds.
-  auto_stop_machines = "stop"
+  # Stays awake, so nobody waits for a wake-up during a game evening. The save is on the
+  # volume either way; to let it sleep when idle again: "stop" and 0.
+  auto_stop_machines = "off"
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
 
 [[http_service.checks]]
   interval = "30s"

@@ -11,6 +11,11 @@ button[aria-disabled="true"] { cursor: default; }
 :focus-visible { outline: 3px solid #ead08a; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
+/* Westeros tab: the short "Shuffling…" over a deck (a still ring with reduced motion) */
+.k-spin { width: 34px; height: 34px; box-sizing: border-box; border-radius: 50%; border: 4px solid rgba(234, 208, 138, .3);
+  border-top-color: #ead08a; animation: k-spin .7s linear infinite; }
+@keyframes k-spin { to { transform: rotate(360deg); } }
+
 #app { height: 100%; }
 * { scrollbar-width: thin; scrollbar-color: #5a4330 transparent; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -52,7 +57,7 @@ button[aria-disabled="true"] { cursor: default; }
   .k-d2name { display: none; }
   .k-d2house { visibility: hidden; }
   .k-wrap { white-space: normal !important; }
-  /* card rows (Westeros 2, deck steps): two cards per row */
+  /* card rows (deck steps): two cards per row */
   .k-cards > figure { flex: 0 1 calc(50% - 7px); }
   .k-cards > figure > img { width: 100% !important; height: auto !important; }
   .k-main { padding: 10px 12px !important; overflow: auto !important; }
@@ -69,7 +74,10 @@ button[aria-disabled="true"] { cursor: default; }
   .k-queue { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; row-gap: 6px !important; }
   .k-substeps, .k-guidesteps { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   .k-options { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .k-footer { flex-wrap: wrap; }
+  .k-footer, .k-laws { flex-wrap: wrap; }
+  .k-laws > [role="group"] { flex: 1 1 100% !important; }
+  .k-laws > [role="group"] > button { flex: 1 !important; }
+  .k-testcard { height: auto !important; }
   .k-footer > * { flex: 1 1 100% !important; min-width: 0 !important; }
   .k-guidehead { flex-wrap: wrap; }
   .k-guidehead h2 { flex: 1 1 auto; }

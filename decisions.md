@@ -38,11 +38,12 @@ words on each Round step with its board (`--text` prints both, `--tabs` checks t
    at once and gives it back on payback; "−1 castle" lowers the castle count for the victory check only.
 5. **GUESS** Deck IV: the round is **won** when the total of all bids is **at least** the round target (sum of the
    I–III values). The Deck IV step has a "Total of all bids" counter, as on the board; Done records won/lost.
-6. **GUESS** Dark Wings, Dark Words on deck III: the app can't know whether the Raven holder picked Clash of Kings,
-   so Westeros 7 (council swap) shows a note instead of skipping. Clash of Kings itself skips the swap.
+6. **DECIDED 2026-11-13** Dark Wings, Dark Words on deck III: the Raven holder ticks the events they choose on the
+   Deck III step; Clash of Kings (there or as the card itself) leaves the council swap step out of the round.
 7. **GUESS** Executions: hostages are handled one at a time in the order they were added (the app doesn't know the
-   Throne order). Tap the underlined name of another holder to take that one first. "Keep the hostage" = no
-   execution this round; "Spared" = the bid failed, the card stays held.
+   Throne order). Tap the underlined name of another holder to take that one first. Only **Executed** records
+   anything, and only when the vote did not go against it (a tie goes to the Throne holder); a spared or kept
+   hostage just stays where it is (the creator removed "Spared" and "Keep the hostage").
 8. **GUESS** Victory: a Dynasty wins when the two partners together have **10 VP and 10 castles**; both houses are
    listed as winners. Besieged castles aren't tracked: lower the castle count on the Houses tab while a siege lasts.
 9. **GUESS** Rally the Men = muster in areas with a Castle only (1 point each), from the card text in `web/data/westeros.json`.
@@ -52,7 +53,8 @@ words on each Round step with its board (`--text` prints both, `--tabs` checks t
 ## Rules in the app
 
 ### Round flow
-- **DECIDED** 26 steps per round (Westeros 7, Diplomacy 6, Planning 5, Action 6, End 2) as on the boards.
+- **DECIDED** 24 steps per round (Westeros 6, Diplomacy 5, Planning 5, Action 6, End 2); 26 on the boards, see
+  "Feedback from the creator" below.
   Round 1 starts at Planning 1 and skips Westeros and Diplomacy. Next step after End 2 starts the next round.
 - **DECIDED** A new round puts the revealed Westeros cards on their discard piles and clears the per-round flags:
   council powers used, Master of Laws, peeks, deck IV result, the Blade's ban, and all "who has acted" records.
@@ -63,9 +65,9 @@ words on each Round step with its board (`--text` prints both, `--tabs` checks t
 - **DECIDED** Blade ban (Planning 1), as on its board: tap an order type to select it, then **Ban Support** (etc.).
 
 ### Westeros
-- **DECIDED** House rules: cards revealed one by one, deck I → IV; Master of Laws decides on each I–III card
-  right after it is revealed (replace with the next card of that deck, or keep). The next Reveal is blocked until
-  the decision; once used, no more decisions that round; no going back.
+- **DECIDED** House rules: cards revealed one by one, deck I → IV, each on its own Deck step; Master of Laws
+  decides on each I–III card right after it is revealed (replace with the next card of that deck, or keep). The
+  next Reveal is blocked until the decision; once used, no more decisions that round; no going back.
 - **DECIDED** Winter is Coming shuffles its deck and draws again by itself; the Log names it.
 - **DECIDED** Decks are digital and shuffled with a seed (new game = time-based seed). Shuffle buttons per deck on
   the Westeros tab: shuffle the draw pile, or shuffle the discards back in.
@@ -171,8 +173,7 @@ have the old wording; tell me if the canvas should follow):
   left.", "Bolton replaced Thwarted Plans (deck I) with Shifting Ambitions.", "Bands of Outlaws: bids 7 against
   target 5, won.").
 - **DEVIATION** Scroll bars are thin and brown where a screen has to scroll; the boards never scroll.
-- **DECIDED** Westeros 2's heading is "Reveal the Westeros cards" and its mode box says "One after another."
-  (board text); the step chips elsewhere say "One by one".
+- **RETIRED 2026-11-13** Westeros 2 ("Reveal the Westeros cards") left the round; its reveal is on the Deck steps.
 
 ### Phones and tablets
 - **DECIDED** Phones (up to 760 px) follow the phone boards: the view name as heading with "Round 4" beside it,
@@ -236,6 +237,31 @@ have the old wording; tell me if the canvas should follow):
   dark surfaces), a crosshair readout per panel, and a table with every value.
 - **DECIDED** Request bodies are capped at 512 KB (was 5 MB): a whole game is about 3 KB, and the history keeps
   every version, so a big body would fill the Fly volume quickly.
+
+## Feedback from the creator (2026-11-13)
+
+Tasks and the full list of choices: `tasks/feedback-plan.md`, `tasks/feedback-todo.md`.
+- **DECIDED** Westeros 2 is gone: each Deck step (I–IV) shows a face-down card with **Reveal**; the card takes its
+  place. Face down, a Deck step shows nothing of the card: no name, picture, mode, guide or "Cards that can act
+  now". The Master of Laws strip sits on all four Deck steps; the round target only on Deck IV with a bid card.
+  No house-rule text on these steps.
+- **DECIDED** Diplomacy 4 (levels and marriages) is gone: at this table diplomacy happens all game long (house rule,
+  not mentioned in the app). Its "A Red Wedding" card line went with it.
+- **DECIDED** Step ids stay fixed (W1, W3–W7, D1–D3, D5, D6, …): records, the Log, saved games and replays use them.
+  The retired W2 and D4 lead to W3 (Deck I) and D5 (Loan interest); a game parked on one moves on from there.
+  Labels count the steps in use, so "Westeros 2" is now Deck I. An unknown step id shows the first step.
+- **DECIDED** Buttons in a step card that only went to the next step or opened another tab are gone; **Next step**
+  in the step row moves on. Deck IV **Done** stays (it records won or lost first); End 2 keeps "A house has won".
+- **DECIDED** The council swap step (Westeros 6) is left out of the round after a bid on the influence tracks.
+  Deck IV bid cards don't count as such a bid (to confirm with the creator).
+- **DECIDED** A Master of Laws replacement that draws Winter is Coming reshuffles and draws again (it stayed face up
+  before); the replaced card is discarded after that draw, so it can't come straight back.
+- **DECIDED** Tracks (Houses tab): holders only, one house may hold several tokens, nobody is allowed. Where a holder
+  acts (Burden of Power, Strategical Superiority, Dark Wings, Blade ban, Messenger Raven, execution ties, the ravens
+  rule, the battle guide's Blade step, the Westeros tab's Raven) the step names and highlights that house; every
+  device can still tap everything. The Round tab has no assign button and no link to the Houses tab.
+- **DECIDED** Shuffling on the Westeros tab shows "Shuffling…" over that deck for 0.8 s on the device that tapped.
+- **DECIDED** A temporary Test tab (`?test` only) shows every Westeros card's Deck step, read-only.
 
 ## Not done yet
 

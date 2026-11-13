@@ -13,8 +13,9 @@ const cards = JSON.parse(readFileSync(join(root, 'web/data/westeros.json'), 'utf
 const cardById = Object.fromEntries(cards.map((c) => [c.id, c]));
 
 const BOARD = {
-  W1: 'Round-W1', W2: 'Round-W2', W3: 'Round-W4', W4: 'Round-W5', W5: 'Round-W6', W6: 'Round-W7', W7: 'Round-W8',
-  D1: 'Round-D1', D2: 'Round-D2', D3: 'Round-D4', D4: 'Round-D5', D5: 'Round-D6', D6: 'Round-D7',
+  // W2 (reveal) and D4 (levels and marriages) left the round; their boards Round-W2 and Round-D5 have no step now
+  W1: 'Round-W1', W3: 'Round-W4', W4: 'Round-W5', W5: 'Round-W6', W6: 'Round-W7', W7: 'Round-W8',
+  D1: 'Round-D1', D2: 'Round-D2', D3: 'Round-D4', D5: 'Round-D6', D6: 'Round-D7',
   P1: 'Round-P1', P2: 'Round-P2', P3: 'Round-P3', P4: 'Round-P4', P5: 'Round-P5',
   A1: 'Round-A1', A2: 'Round-MarchToBattle', A3: 'Round-A3', A4: 'Round-A4', A5: 'Round-A5', A6: 'Round-A6',
   E1: 'Round-E1', E2: 'Round-E2'

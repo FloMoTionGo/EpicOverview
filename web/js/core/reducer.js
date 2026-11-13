@@ -1,9 +1,10 @@
 // reduce(game, action, ctx) -> { game, entry }. Pure: the input game is never changed.
 // ctx = { house, cards } — the house this device plays and the Westeros card list (for names and values).
 // Every action produces one log entry { summary, kind, houses }.
-import { HOUSE_IDS, ROLE, ROLES, LEVELS, BREAK_COST, LOAN, STOCK_ITEM, SUPPLY_MAX, HOLDING_CELLS, houseName } from './data.js';
+import { HOUSE_IDS, ROLE, ROLES, TRACK, LEVELS, BREAK_COST, LOAN, STOCK_ITEM, SUPPLY_MAX, HOLDING_CELLS, houseName } from './data.js';
 import { pairKey, level, raiseBlock, lowerBlock, breakBlock, marriageBlock } from './rules.js';
-import { draw, shuffle } from './westeros.js';
+import { draw, shuffle, revealBlock, bidOnTracks } from './westeros.js';
+import { upgradeGame } from './model.js';
 import { STEP_IDS, stepById, nextStepId, prevStepId } from './steps.js';
 
 export class RuleError extends Error {}
@@ -22,6 +23,23 @@ function rng(g) {
   return { get seed() { return g.seed; }, set seed(v) { g.seed = v; } };
 }
 
+// Draw the next card of deck d. Winter is Coming shuffles that deck (its discards included) and draws again;
+// notes collects what happened for the Log line.
+function drawCard(g, d, ctx, notes) {
+  const w = g.westeros;
+  let id = draw(w, d, rng(g));
+  for (let guard = 0; id && guard < 10; guard++) {
+    const card = (ctx.cards || []).find((c) => c.id === id);
+    if (!card || !card.reshuffle) break;
+    notes.push(`${card.name} shuffled deck ${DECK[d]}`);
+    w.decks[d].discard.push(id);
+    w.decks[d].draw = shuffle(w.decks[d].draw.concat(w.decks[d].discard), rng(g));
+    w.decks[d].discard = [];
+    id = draw(w, d, rng(g));
+  }
+  return id;
+}
+
 function startRound(g, ctx) {
   // Revealed Westeros cards go to their discard piles; per-round flags reset.
   const w = g.westeros;
@@ -29,10 +47,20 @@ function startRound(g, ctx) {
     if (w.revealed[d]) w.decks[d].discard.push(w.revealed[d]);
     w.revealed[d] = null;
   }
-  Object.assign(w, { shown: 0, laws: {}, lawsUsed: null, lawsOld: null, deck4: null, peeks: {} });
+  Object.assign(w, { shown: 0, laws: {}, lawsUsed: null, lawsOld: null, deck4: null, peeks: {}, chosen: [], trackBid: false });
   g.councilUsed = {};
   g.records = {};
   g.bannedOrder = null;
+}
+
+// After deck III changes or the Raven holder chooses: the Dark Wings choices belong to that card only, and the
+// bid flag follows (bidOnTracks in westeros.js).
+const DARK_WINGS = 'Dark Wings, Dark Words';
+const DARK_WINGS_EVENTS = ['Clash of Kings', 'Secret Conspiracies', 'Storm in the Skies'];
+function refreshBid(g, ctx) {
+  const w = g.westeros;
+  if (cardName(ctx, w.revealed[3]) !== DARK_WINGS) w.chosen = [];
+  w.trackBid = bidOnTracks(w, ctx.cards);
 }
 
 // Alliance or Dynasty partners can't hold each other's hostages: the cards go back for free (EPIC p. 9).
@@ -64,11 +92,11 @@ const handlers = {
   },
   'step/goto'(g, a) {
     stepById(a.step) || fail(`Unknown step: ${a.step}`);
-    g.step = a.step;
+    g.step = stepById(a.step).id;
     return entry(`Went to ${stepById(a.step).label}: ${stepById(a.step).title}.`, 'step');
   },
   'step/next'(g, a, ctx) {
-    const next = nextStepId(g.step, g.round);
+    const next = nextStepId(g.step, g.round, g);
     if (next.newRound) {
       if (g.round >= 12) fail('Round 12 is the last round.');
       g.round += 1;
@@ -79,7 +107,7 @@ const handlers = {
     return entry(next.newRound ? `Round ${g.round} starts: ${s.label}, ${s.title}.` : `Next step: ${s.label}, ${s.title}.`, 'step');
   },
   'step/prev'(g) {
-    const prev = prevStepId(g.step, g.round);
+    const prev = prevStepId(g.step, g.round, g);
     if (!prev) fail('This is the first step of the round.');
     g.step = prev;
     const s = stepById(prev);
@@ -109,6 +137,17 @@ const handlers = {
     if (other) s += old ? ` (swapped with ${houseName(old)}, now ${other.name})` : ` (left ${other.name})`;
     if (a.role === 'hand' && a.house && a.house !== old) s += '. Takes 2 Power at the table';
     return entry(s + '.', 'houses', [a.house, old].filter(Boolean));
+  },
+  // Houses tab, Tracks: who holds a dominance token. One house may hold several; nobody is allowed.
+  'track/assign'(g, a) {
+    const t = TRACK[a.track] || fail(`Unknown track: ${a.track}`);
+    if (a.house !== null) isHouse(a.house);
+    g.tracks = { throne: null, blade: null, raven: null, ...(g.tracks || {}) };
+    const old = g.tracks[a.track];
+    if (old === a.house) fail(`${a.house ? houseName(a.house) : 'Nobody'} already holds the ${t.name}.`);
+    g.tracks[a.track] = a.house;
+    // Log: "Iron Throne: Lannister (was Tyrell)."
+    return entry(`${t.name}: ${a.house ? houseName(a.house) : 'nobody'}${old ? ` (was ${houseName(old)})` : ''}.`, 'houses', [a.house, old].filter(Boolean));
   },
   'council/use'(g, a) {
     const role = ROLE[a.role] || fail(`Unknown seat: ${a.role}`);
@@ -260,22 +299,16 @@ const handlers = {
   'westeros/reveal'(g, a, ctx) {
     const w = g.westeros;
     if (w.shown >= 4) fail('All four Westeros cards are revealed.');
-    const pending = w.shown >= 1 && w.shown <= 3 && w.lawsUsed === null && g.council.laws && !w.laws[w.shown];
-    if (pending) fail('Master of Laws decides on the last card first.');
-    const d = w.shown + 1;
-    let id = draw(w, d, rng(g));
+    // a Deck step names its deck; without one, the next deck is revealed
+    const d = a.deck ?? w.shown + 1;
+    if (![1, 2, 3, 4].includes(d)) fail('Unknown deck.');
+    const why = revealBlock(g, d);
+    if (why) fail(why);
     const notes = [];
-    for (let guard = 0; id && guard < 10; guard++) {
-      const card = (ctx.cards || []).find((c) => c.id === id);
-      if (!card || !card.reshuffle) break;
-      notes.push(`${card.name} shuffled deck ${DECK[d]}`);
-      w.decks[d].discard.push(id);
-      w.decks[d].draw = shuffle(w.decks[d].draw.concat(w.decks[d].discard), rng(g));
-      w.decks[d].discard = [];
-      id = draw(w, d, rng(g));
-    }
+    const id = drawCard(g, d, ctx, notes);
     w.revealed[d] = id;
     w.shown = d;
+    refreshBid(g, ctx);
     return entry(`Deck ${DECK[d]} revealed: ${id ? cardName(ctx, id) : 'no card'}${notes.length ? ' (' + notes.join('; ') + ')' : ''}.`, 'westeros');
   },
   'westeros/laws'(g, a, ctx) {
@@ -289,15 +322,32 @@ const handlers = {
       w.laws[d] = 'keep';
       return entry(`${holder ? houseName(holder) : 'Master of Laws'} kept ${cardName(ctx, w.revealed[d])} (deck ${DECK[d]}).`, 'westeros', [holder].filter(Boolean));
     }
+    // the replaced card is discarded after the draw, so a Winter is Coming reshuffle can't bring it straight back
     const old = w.revealed[d];
+    const notes = [];
+    const id = drawCard(g, d, ctx, notes);
+    if (!id) fail(`Deck ${DECK[d]} has no other card.`);
     w.decks[d].discard.push(old);
-    w.revealed[d] = draw(w, d, rng(g));
+    w.revealed[d] = id;
     w.laws[d] = 'replace';
     w.lawsUsed = d;
     w.lawsOld = old;
     g.councilUsed.laws = true;
+    refreshBid(g, ctx);
     // Log board: "Bolton replaced Thwarted Plans (deck I) with Shifting Ambitions."
-    return entry(`${holder ? houseName(holder) : 'Master of Laws'} replaced ${cardName(ctx, old)} (deck ${DECK[d]}) with ${cardName(ctx, w.revealed[d])}.`, 'westeros', [holder].filter(Boolean));
+    return entry(`${holder ? houseName(holder) : 'Master of Laws'} replaced ${cardName(ctx, old)} (deck ${DECK[d]}) with ${cardName(ctx, id)}${notes.length ? ' (' + notes.join('; ') + ')' : ''}.`, 'westeros', [holder].filter(Boolean));
+  },
+  // Dark Wings, Dark Words: the Raven holder ticks the events they choose (any of three, in order at the table)
+  'westeros/choose'(g, a, ctx) {
+    const w = g.westeros;
+    if (cardName(ctx, w.revealed[3]) !== DARK_WINGS) fail('Dark Wings, Dark Words is not face up on deck III.');
+    if (!DARK_WINGS_EVENTS.includes(a.event)) fail(`Unknown event: ${a.event}`);
+    const chosen = (w.chosen || []).filter((e) => e !== a.event);
+    w.chosen = a.on ? DARK_WINGS_EVENTS.filter((e) => chosen.includes(e) || e === a.event) : chosen;
+    refreshBid(g, ctx);
+    const raven = (g.tracks || {}).raven;
+    const who = raven ? `${houseName(raven)} (Raven)` : 'The Raven holder';
+    return entry(a.on ? `${who} chose ${a.event} for ${DARK_WINGS}.` : `${who} took back ${a.event} for ${DARK_WINGS}.`, 'westeros', raven ? [raven] : []);
   },
   'westeros/shuffle'(g, a) {
     const deck = g.westeros.decks[a.deck] || fail('Unknown deck.');
@@ -364,6 +414,8 @@ export function reduce(game, action, ctx = {}) {
   const fn = handlers[action && action.type];
   if (!fn) throw new RuleError(`Unknown action: ${action && action.type}`);
   const g = clone(game);
+  // a game from an older version: retired step ids, missing tracks and Westeros flags (records are keyed by step)
+  upgradeGame(g, ctx.cards);
   const e = fn(g, action, ctx);
   return { game: g, entry: { ...e, round: g.round, step: g.step } };
 }

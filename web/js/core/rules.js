@@ -83,6 +83,12 @@ export function hostageIncome(g, h) {
   return { value: held.length - lost.length, text: parts.join(', ') };
 }
 
+// Who holds the Iron Throne, the Valyrian Steel Blade or the Messenger Raven (null: nobody set; games saved
+// before the Tracks pane have no tracks at all).
+export function holder(g, track) {
+  return (g.tracks || {})[track] || null;
+}
+
 export function councilSeat(g, h) {
   const r = ROLES.find((role) => g.council[role.id] === h);
   return r || null;

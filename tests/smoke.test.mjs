@@ -8,6 +8,7 @@ import { reduce } from '../web/js/core/reducer.js';
 import { victory, suppliesUsed } from '../web/js/core/rules.js';
 import { HOUSE_IDS, STOCK, SUPPLY_POOL } from '../web/js/core/data.js';
 import { STEPS } from '../web/js/core/steps.js';
+import { lawsPending } from '../web/js/core/westeros.js';
 import { renderRound } from '../web/js/views/round.js';
 import { renderHouses } from '../web/js/views/houses.js';
 import { renderRelations } from '../web/js/views/relations.js';
@@ -15,6 +16,7 @@ import { renderWesteros } from '../web/js/views/westeros.js';
 import { renderLoans, renderMarket, renderLog, renderChoose } from '../web/js/views/other.js';
 
 const cards = JSON.parse(readFileSync(new URL('../web/data/westeros.json', import.meta.url), 'utf8')).cards;
+const DECK_OF = { W3: 1, W4: 2, W5: 3, W6: 4 };   // the Deck step that reveals each deck
 const cardById = Object.fromEntries(cards.map((c) => [c.id, c]));
 const VIEWS = [renderRound, renderHouses, renderRelations, renderWesteros, renderLoans, renderMarket, renderLog, renderChoose];
 
@@ -53,12 +55,13 @@ test('12 rounds: every step renders, decks and stock are conserved, Lannister wi
   while (!g.winner && g.round <= 12) {
     renderAll(g, log, HOUSE_IDS[steps % 9]);
     const s = g.step;
-    if (s === 'W2') {
-      while (g.westeros.shown < 4) {
-        const w = g.westeros;
-        const pending = w.shown >= 1 && w.shown <= 3 && w.lawsUsed === null && g.council.laws && !w.laws[w.shown];
-        if (pending) act({ type: 'westeros/laws', deck: w.shown, choice: g.round % 2 ? 'keep' : 'replace' }, 'bolton');
-        else act({ type: 'westeros/reveal' });
+    const d = DECK_OF[s];
+    if (d) {
+      // each Deck step reveals its deck; Master of Laws decides right after a card of decks I to III
+      act({ type: 'westeros/reveal', deck: d });
+      renderAll(g, log, 'bolton');
+      if (lawsPending(g)) {
+        act({ type: 'westeros/laws', deck: d, choice: g.round % 2 ? 'keep' : 'replace' }, 'bolton');
         renderAll(g, log, 'bolton');
       }
     }
@@ -84,7 +87,8 @@ test('12 rounds: every step renders, decks and stock are conserved, Lannister wi
   assert.equal(g.winner?.house, 'lannister');
   assert.equal(g.winner.reason, '7 Victory Points');
   assert.equal(g.round, 7, 'one VP per round from round 1: the 7th Objective lands in round 7');
-  // round 1 skips Westeros and Diplomacy: 13 steps, then 26 per round, up to End 2 of round 7
-  assert.equal(steps, 13 + 26 * 5 + (STEPS.length - 1));
+  // round 1 skips Westeros and Diplomacy: 13 steps, then a full round each (this seed never draws Clash of Kings
+  // on deck III, so the council swap step is always there), up to End 2 of round 7
+  assert.equal(steps, 13 + STEPS.length * 5 + (STEPS.length - 1));
   assert.ok(log.some((e) => /wins the game/.test(e.summary)));
 });

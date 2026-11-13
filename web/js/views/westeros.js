@@ -2,13 +2,17 @@
 import { houseName, sigil } from '../core/data.js';
 import { frame } from '../ui/chrome.js';
 import { esc, act, BAR } from '../ui/kit.js';
+import { lawsPending } from '../core/westeros.js';
+import { holder } from '../core/rules.js';
 
 const DECK = ['', 'I', 'II', 'III', 'IV'];
+const DECK_STEP = ['', 'W3', 'W4', 'W5', 'W6'];   // the Round tab step where each deck is revealed
 const cardImg = (c) => `assets/${c.image}-t.webp`;
 
 function deckColumn(ctx, d) {
   const { game: g } = ctx;
   const w = g.westeros, deck = w.decks[d];
+  const shuffling = (ctx.ui.shuffling || []).includes(d);   // this device just tapped a shuffle on this deck
   const c = w.revealed[d] ? ctx.cardById[w.revealed[d]] : null;
   const value = !c ? '' : d === 4 ? (c.bid ? 'bid' : 'event') : `value ${c.value ?? '–'}`;
   const valueStyle = `font:600 14px ${BAR};padding:3px 9px;border-radius:99px;` + (value === 'bid' ? 'background:#8d2a22;color:#fbe9cf' : 'background:#3b2a1d;color:#ead08a');
@@ -17,10 +21,13 @@ function deckColumn(ctx, d) {
   const sbtn = `min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 6px;border-radius:10px;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font:600 14px ${BAR};line-height:1.1`;
   return `<section style="display:flex;flex-direction:column;gap:6px;min-width:0">
     <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Deck ${DECK[d]}</h2>${value ? `<span style="${valueStyle}">${value}</span>` : ''}</div>
-    <img src="${c ? cardImg(c) : `assets/backs/westeros${d}.webp`}" alt="${esc(c ? c.name : `Deck ${DECK[d]}, face down`)}" style="height:150px;width:auto;max-width:100%;align-self:center;border-radius:10px;box-shadow:0 10px 22px rgba(0,0,0,.5)">
+    <div style="position:relative;align-self:center;max-width:100%;line-height:0">
+      <img src="${c ? cardImg(c) : `assets/backs/westeros${d}.webp`}" alt="${esc(c ? c.name : `Deck ${DECK[d]}, face down`)}" style="height:150px;width:auto;max-width:100%;border-radius:10px;box-shadow:0 10px 22px rgba(0,0,0,.5)">
+      ${shuffling ? `<div role="status" class="k-shuffling" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:10px;background:rgba(20,13,8,.72);color:#ead08a;font:600 15px ${BAR};line-height:1.2"><span class="k-spin" aria-hidden="true"></span>Shuffling…</div>` : ''}
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-      <button type="button" ${act('westeros/shuffle', { deck: d, which: 'deck' })} aria-label="Shuffle deck ${DECK[d]}, ${deck.draw.length} in deck" style="${sbtn}">Shuffle deck<span style="font:500 12px ${BAR};color:#b9a88a">${deck.draw.length} in deck</span></button>
-      <button type="button" ${deck.discard.length ? act('westeros/shuffle', { deck: d, which: 'discards' }) : 'aria-disabled="true"'} aria-label="Shuffle the ${deck.discard.length} discards back into deck ${DECK[d]}" style="${sbtn};${deck.discard.length ? '' : 'opacity:.45'}">Shuffle discards in<span style="font:500 12px ${BAR};color:#b9a88a">${deck.discard.length} discarded</span></button>
+      <button type="button" ${shuffling ? 'aria-disabled="true"' : act('westeros/shuffle', { deck: d, which: 'deck' })} aria-label="Shuffle deck ${DECK[d]}, ${deck.draw.length} in deck" style="${sbtn}">Shuffle deck<span style="font:500 12px ${BAR};color:#b9a88a">${deck.draw.length} in deck</span></button>
+      <button type="button" ${deck.discard.length && !shuffling ? act('westeros/shuffle', { deck: d, which: 'discards' }) : 'aria-disabled="true"'} aria-label="Shuffle the ${deck.discard.length} discards back into deck ${DECK[d]}" style="${sbtn};${deck.discard.length ? '' : 'opacity:.45'}">Shuffle discards in<span style="font:500 12px ${BAR};color:#b9a88a">${deck.discard.length} discarded</span></button>
     </div>
     <p style="margin:0;font-size:15px;line-height:1.3">${esc(note)}</p>
   </section>`;
@@ -55,7 +62,11 @@ export function renderWesteros(ctx) {
   const vals = [1, 2, 3].map((d) => (w.revealed[d] ? ctx.cardById[w.revealed[d]].value ?? 0 : null));
   const target = vals.every((v) => v !== null) ? vals.reduce((a, b) => a + b, 0) : null;
   const laws = g.council.laws, maester = g.council.maester;
-  const lawsBtn = w.lawsUsed !== null ? laterBtn(`Used on deck ${DECK[w.lawsUsed]}`) : laterBtn('Decides in Westeros 2, after each reveal', act('step/goto', { step: 'W2' }));
+  const lawsBtn = !laws ? laterBtn('Nobody sits on Master of Laws')
+    : w.lawsUsed !== null ? laterBtn(`Used on deck ${DECK[w.lawsUsed]}`)
+    : lawsPending(g) ? laterBtn(`Decides now on deck ${DECK[w.shown]} (Round tab)`, act('step/goto', { step: DECK_STEP[w.shown] }))
+    : w.shown >= 3 ? laterBtn('Not used this round')
+    : laterBtn('Decides on the Round tab, right after each reveal', act('step/goto', { step: DECK_STEP[w.shown + 1] }));
   let maesterBtn;
   if (!maester) maesterBtn = laterBtn('Nobody sits on Grand Maester');
   else if (g.councilUsed.maester) maesterBtn = laterBtn('Used this round');
@@ -71,14 +82,14 @@ export function renderWesteros(ctx) {
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
       <h1 style="margin:0;font-size:26px">Westeros cards, round ${g.round}</h1>
       ${g.round === 1 ? `<button type="button" aria-disabled="true" style="min-height:48px;padding:0 16px;border-radius:10px;border:1px dashed #5a4330;background:transparent;color:#b9a88a;font-size:16px">Round 1 has no Westeros phase</button>`
-        : `<button type="button" ${w.shown >= 4 ? 'aria-disabled="true"' : act('step/goto', { step: 'W2' })} style="min-height:48px;padding:0 16px;border-radius:10px;border:1px dashed #5a4330;background:transparent;color:#b9a88a;font-size:16px">${w.shown >= 4 ? 'Draw cards in the next Westeros phase' : 'Reveal the cards in Westeros 2'}</button>`}
+        : `<button type="button" ${w.shown >= 4 ? 'aria-disabled="true"' : act('step/goto', { step: DECK_STEP[w.shown + 1] })} style="min-height:48px;padding:0 16px;border-radius:10px;border:1px dashed #5a4330;background:transparent;color:#b9a88a;font-size:16px">${w.shown >= 4 ? 'Draw cards in the next Westeros phase' : `Reveal deck ${DECK[w.shown + 1]} on the Round tab`}</button>`}
     </div>
     <div class="k-decks" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">${[1, 2, 3, 4].map((d) => deckColumn(ctx, d)).join('')}</div>
     <p style="margin:0;padding:10px 14px;border-radius:10px;background:#2b1f16;border:1px solid #5a4330;font-size:16px">Round target for deck IV: <strong style="font:600 20px ${BAR};color:#ead08a">${target ?? '…'}</strong>, the sum of the values on decks I to III. Winter is Coming shuffles its deck by itself; the shuffle buttons are for everything else.</p>
     <div class="k-abilities" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
       ${ability(laws, 'Master of Laws', `${laws ? houseName(laws) : 'Nobody'}, once per round`, 'Replace a revealed card of decks I to III with the next card of that deck, right after it is revealed (house rule).', lawsBtn)}
       ${ability(maester, 'Grand Maester', `${maester ? houseName(maester) : 'Nobody'}, once per round`, 'Look at the top card of any two Westeros decks. The cards open only on the device that taps it.', maesterBtn)}
-      ${ability(null, 'Messenger Raven', 'Whoever holds the Raven, in Planning', 'After orders are revealed: look at the top of deck IV and keep it or put it at the bottom, instead of swapping an order.', w.peeks.raven ? laterBtn('Used this round') : laterBtn('Available in Planning 5', act('step/goto', { step: 'P5' })))}
+      ${ability(holder(g, 'raven'), 'Messenger Raven', `${holder(g, 'raven') ? houseName(holder(g, 'raven')) : 'Whoever holds the Raven'}, in Planning`, 'After orders are revealed: look at the top of deck IV and keep it or put it at the bottom, instead of swapping an order.', w.peeks.raven ? laterBtn('Used this round') : laterBtn('Available in Planning 5', act('step/goto', { step: 'P5' })))}
     </div>
   </main>`;
   return frame({ game: g, house: ctx.house, tab: 'westeros', body }) + peekCurtain(ctx);

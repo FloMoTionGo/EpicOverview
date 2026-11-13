@@ -1,0 +1,18 @@
+ add a new temporary "test tab" that shows the round tab for all the westeros cards;
+
+ round tab:
+ - remove all buttons that just lead to another tab; remove all buttons that just jump to the next step like Diplomacy, step 2 "everyone has taken it"
+ - westeros step 1: remove "dice turned" button
+ - westeros step 2, "Reveal the Westeros cards": remove this step and instead separate & integrate this step into the next 4; in those next four: dont mention the house rule; show the round target only when its needed for the westeros card; show the master of laws area on all four steps; make sure to not reveal any card information on the Deck I - Deck IV steps until the reveal button is clicked; the reveal button should be replaced by the card as you had in the "Reveal the Westeros cards" step
+ - westeros deck III clash of kings: remove "=all Seats on the Houses tab" and "assign the small council seats" button
+ - westeros step 7: "Small Council: swap House cards" only show when there was no bid this round
+
+ - Diplomacy, step 3: remove "spared" and "keep the hostage" button
+ - Diplomacy, step 4: remove this step: as an explanation to you, no need to mention it in the app: house rule: we do diplomacy throughout the game not just in this phase
+
+
+ Westeros tab:
+ - have a short loading symbol over the decks when shuffling
+
+ Houses tab:
+ - add a "tracks" pane to assign houses to raven, sword, throne; where appropriate prompt those houses for actions; dont add the assign or buttons leading to the houses tab after bidding in the round tab
