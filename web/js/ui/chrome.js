@@ -47,7 +47,7 @@ export function seatsBar(game, move = []) {
   return `<section aria-label="Houses" class="k-seats" style="height:88px;flex:none;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;padding:8px 20px;border-top:1px solid #5a4330;background:rgba(0,0,0,.25)">
     ${HOUSES.map(({ id, name, color }) => {
       const x = game.houses[id];
-      const box = `position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:1px;min-width:0;padding:5px 8px;text-align:left;color:#eadfc8;border-radius:0 0 8px 8px;border-top:4px solid ${color};`
+      const box = `display:flex;flex-direction:column;justify-content:space-between;gap:1px;min-width:0;padding:5px 8px;text-align:left;color:#eadfc8;border-radius:0 0 8px 8px;border-top:4px solid ${color};`
         + (move.includes(id) ? 'border-left:2px solid #ead08a;border-right:2px solid #ead08a;border-bottom:2px solid #ead08a;background:rgba(201,162,76,.18)'
           : 'border-left:1px solid #5a4330;border-right:1px solid #5a4330;border-bottom:1px solid #5a4330;background:rgba(59,42,29,.6)');
       const stat = (v, l) => `<span style="font:600 16px ${BAR}">${v}<span style="display:block;font:500 11px ${BAR};color:#b9a88a">${l}</span></span>`;
@@ -57,9 +57,11 @@ export function seatsBar(game, move = []) {
           <span style="font-size:14px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(name)}</span>
           <img src="${x.ring ? RING : RING_USED}" alt="${x.ring ? 'Ring still available' : 'Ring used'}" title="${x.ring ? 'Ring still available' : 'Ring used'}" style="width:22px;height:22px;flex:none">
         </span>
-        <span style="display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;text-align:center;line-height:1">${stat(x.castles, 'castles')}${stat(x.vp, 'VP')}${stat(x.obj, 'obj.')}${stat(x.supply, 'supply')}</span>
-        <span style="font:500 12px ${BAR};color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px">${esc(badges(game, id))}</span>
-        <span style="position:absolute;right:6px;bottom:5px;display:flex;gap:3px">${loanIcons(game, id)}</span>
+        <span style="display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;text-align:center;line-height:1">${stat(x.castles, 'castles')}${stat(x.vp, 'VP')}${stat(x.supply, 'supply')}</span>
+        <span style="display:flex;align-items:center;gap:4px;min-width:0">
+          <span style="flex:1;min-width:0;font:500 12px ${BAR};color:#ead08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(badges(game, id))}</span>
+          <span style="flex:none;display:flex;gap:3px">${loanIcons(game, id, 10, 14)}</span>
+        </span>
       </a>`;
     }).join('')}
   </section>`;

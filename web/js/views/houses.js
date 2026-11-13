@@ -4,7 +4,7 @@ import { councilSeat, holder } from '../core/rules.js';
 import { frame, RING, RING_USED, loanIcons } from '../ui/chrome.js';
 import { esc, act, BAR } from '../ui/kit.js';
 
-const FIELDS = [['castles', 'Castles'], ['vp', 'Victory points'], ['obj', 'Objectives'], ['supply', 'Supply (max 3)']];
+const FIELDS = [['castles', 'Castles'], ['vp', 'Victory points'], ['supply', 'Supply (max 3)']];
 
 function badge(g, h) {
   const seat = councilSeat(g, h);
@@ -23,7 +23,7 @@ function houseCard(g, { id, name, color }, move) {
   const btn = 'width:44px;height:44px;border-radius:50%;border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8;font-size:20px;line-height:1';
   const stats = FIELDS.map(([f, label]) => {
     const full = f === 'supply' && x[f] >= SUPPLY_MAX;
-    return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px${f === 'supply' ? ';grid-column:1/-1' : ''}">
       <span style="font:500 13px ${BAR};color:#b9a88a">${label}</span>
       <span style="display:flex;align-items:center;gap:2px">
         <button type="button" ${act('house/adjust', { house: id, field: f, delta: -1 })} aria-label="${esc(label)} for ${esc(name)}: one less" style="${btn}">−</button>

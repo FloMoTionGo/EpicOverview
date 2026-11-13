@@ -61,6 +61,7 @@ button[aria-disabled="true"] { cursor: default; }
   .k-cards > figure { flex: 0 1 calc(50% - 7px); }
   .k-cards > figure > img { width: 100% !important; height: auto !important; }
   .k-main { padding: 10px 12px !important; overflow: auto !important; }
+  .k-main.k-phone-rel { padding: 0 !important; } /* its sections bring their own 12px, as on the board */
   .k-steprow { height: auto !important; }
   .k-steprow .k-fade { display: none !important; }
   .k-steprow > button { flex: 1 !important; min-width: 0 !important; }

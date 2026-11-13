@@ -3,7 +3,7 @@
 A companion web app for an EPIC Game of Thrones evening with nine houses. One laptop runs a small server;
 every phone and tablet at the table opens it in the browser. The app keeps what the board doesn't show well:
 council seats, diplomatic levels, marriages, hostages, dowries, loans, the limited stock, Victory Points,
-castles, Objectives, Supply tokens, who holds the Iron Throne, the Blade and the Raven, and the digital Westeros
+castles, Supply tokens, who holds the Iron Throne, the Blade and the Raven, and the digital Westeros
 decks. It walks the table through the 24 steps of a round (23 after a bid, when the council swap is left out).
 It knows nothing about the map, units, orders or the order on the influence tracks.
 
@@ -39,9 +39,10 @@ Other port: `set EPIC_PORT=8800` before starting, or `python server.py --port 88
 
 - **Round** shows the current step: what happens, who acts (all at once, in turn, or one house), and
   the previous and next steps. Next step moves every device on.
-- **Houses**: castles, VP, Objectives, Supply tokens, council seats (Reassign), and **Tracks**: who holds the Iron
+- **Houses**: castles, VP, Supply tokens, council seats (Reassign), and **Tracks**: who holds the Iron
   Throne, the Valyrian Steel Blade and the Messenger Raven (Change). The steps where a holder acts name that house.
 - **Relations**: tap a cell to raise, lower, break or marry; costs and limits are shown. Hostages and dowries on the side.
+  Phones show the matrix too, above a list per house.
 - **Westeros**: the four decks, the round target, shuffle buttons, Master of Laws, Grand Maester (eyes only) and the Raven.
 - **Loans**, **Market**: the Bank of Braavos and the limited stock.
 - **Log**: every change with time, step and the house that made it. **Undo** in the top bar takes back the newest change.

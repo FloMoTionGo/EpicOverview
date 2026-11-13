@@ -11,8 +11,8 @@ const cardImg = (c, size = 't') => `assets/${c.image}-${size}.webp`;
 
 // Guidance per Westeros card, from EPIC p. 6–8. The printed card text is always shown as well.
 const GUIDE = {
-  'New Information': { mode: 'turn', modeText: 'In Throne order at the table.', rules: [['At the table', 'Each house may pay any number of Power, then draws and discards that many Objectives.'], ['Objectives in hand', 'Not tracked; only achieved ones are counted.']] },
-  'Shifting Ambitions': { mode: 'turn', modeText: 'First all at once, then in Throne order at the table.', sub: [['all', 'Choose 1 Objective'], ['all', 'Reveal them together'], ['turn', 'Each takes one, Throne order']], para: 'Each house chooses one Objective from its hand and all are revealed together. Then, in Throne order, each house takes one of them into its hand.', rules: [['At the table', 'Objectives in hand are not tracked; only achieved ones are counted.']] },
+  'New Information': { mode: 'turn', modeText: 'In Throne order at the table.', rules: [['At the table', 'Each house may pay any number of Power, then draws and discards that many Objectives.'], ['Objectives', 'Not tracked; a scored one only adds its VP.']] },
+  'Shifting Ambitions': { mode: 'turn', modeText: 'First all at once, then in Throne order at the table.', sub: [['all', 'Choose 1 Objective'], ['all', 'Reveal them together'], ['turn', 'Each takes one, Throne order']], para: 'Each house chooses one Objective from its hand and all are revealed together. Then, in Throne order, each house takes one of them into its hand.', rules: [['At the table', 'Objectives are not tracked; a scored one only adds its VP.']] },
   'Thwarted Plans': { mode: 'all', modeText: 'At once.', rules: [['Victory Points', 'Each house with at least 2 scored Objectives loses 1 VP: change it on the Houses tab.']] },
   'The Burden of Power': { mode: 'one', modeText: 'The holder of the Iron Throne.', holder: 'throne', rules: [['Choice', 'The Throne holder picks, in order, any of New Information, Shifting Ambitions and Thwarted Plans.']] },
   'Mustering Troops': { mode: 'turn', modeText: 'In reverse Sword order at the table.', muster: 'every one of its areas with a Stronghold or a Castle: Stronghold 2 points, Castle 1', source: 'EPIC p. 7, base game mustering' },
@@ -128,7 +128,13 @@ function deckStep(ctx, d) {
   } else if (gd.sub) {
     right = col(substeps(gd.sub.map(([m, t]) => [m, t, ''])), para(gd.para), rules(gd.rules));
   } else {
-    right = col(text, rules(gd.rules.length ? gd.rules : [['At the table', 'Resolve the card as printed; the app records nothing here.']]), gd.choose ? chooser(ctx, gd.choose) : '');
+    let list = gd.rules.length ? gd.rules : [['At the table', 'Resolve the card as printed; the app records nothing here.']];
+    if (c.name === 'Thwarted Plans') {
+      // the only place the count of scored Objectives still shows: it comes from the Objectives step (E1)
+      const twice = HOUSE_IDS.filter((h) => ctx.game.houses[h].obj >= 2).map(houseName);
+      list = [...list, ['Scored in the app', `${twice.length ? `2 or more: ${twice.join(', ')}` : 'No house has 2 or more'}. Check the scored cards on the table.`]];
+    }
+    right = col(text, rules(list), gd.choose ? chooser(ctx, gd.choose) : '');
   }
   // a card the Throne, Blade or Raven holder resolves: name that house and highlight it
   const chooserHouse = gd.holder ? holder(ctx.game, gd.holder) : null;

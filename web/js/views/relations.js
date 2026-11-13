@@ -1,4 +1,5 @@
 // Relations tab: canvas boards "Relations: tap a cell for options…" (tablet) and "Phone: Relations" (phone).
+// The phone also shows the matrix, above the board's per-house list.
 import { HOUSES, HOUSE_IDS, LEVELS, BREAK_COST, houseName, sigil } from '../core/data.js';
 import { pairKey, level, raiseBlock, lowerBlock, breakBlock, marriageBlock, allianceChain, counts, changedThisRound, married, LEVEL_SHIELD } from '../core/rules.js';
 import { DOWRY } from '../core/model.js';
@@ -56,24 +57,42 @@ function menuInner(g, a, b, ui) {
   return head + body + `<button type="button" ${back} style="min-height:48px;border-radius:12px;border:1px solid rgba(42,32,23,.4);background:rgba(255,255,255,.3);color:#2a2017;font:600 16px ${BAR}">${ui.relStage ? 'Back' : 'Close'}</button>`;
 }
 
-function matrix(g, ui) {
-  const cols = HOUSES.map((h) => `<img src="${sigil(h.id)}" alt="${esc(h.name)}" style="width:40px;height:40px;margin:auto">`).join('');
+// compact: the phone version. The grid fills the width (sigil column and nine square cells), has no
+// "friendly of 3" column (the house card below shows it for the chosen house) and no popover (the phone's
+// bottom sheet opens instead). The cells are about 31 px at 360 px, below the usual 48 px: the list below has the big rows.
+function matrix(g, ui, compact = false) {
+  const wh = compact ? 'width:100%;aspect-ratio:1' : 'width:50px;height:46px';
+  const rad = compact ? 6 : 8;
+  const sig = compact ? 'display:block;width:100%;max-width:40px;height:auto;aspect-ratio:1;margin:auto' : 'width:40px;height:40px';
+  const cols = HOUSES.map((h) => `<img src="${sigil(h.id)}" alt="${esc(h.name)}" style="${sig}${compact ? '' : ';margin:auto'}">`).join('');
   const rows = HOUSES.map((ra, r) => {
     const a = ra.id;
-    const c = counts(g, a);
     const cells = HOUSES.map((cb) => {
       const b = cb.id;
-      if (a === b) return '<span style="width:50px;height:46px;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 4px,transparent 4px 8px)"></span>';
+      if (a === b) return `<span style="${wh};border-radius:${rad}px;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 4px,transparent 4px 8px)"></span>`;
       const lv = level(g, a, b), isC = changedThisRound(g, a, b), isM = married(g, a, b);
       const isFocus = ui.cell === `${a}|${b}`;
-      const box = 'position:relative;width:50px;height:46px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(0,0,0,.22);'
+      const box = `position:relative;${wh};padding:0;display:flex;align-items:center;justify-content:center;border-radius:${rad}px;background:rgba(0,0,0,.22);`
         + (isFocus ? 'border:2px solid #ead08a;box-shadow:0 0 0 3px rgba(234,208,138,.25)' : isC ? 'border:1.5px dotted #b9a88a' : 'border:1px solid #3b2a1d');
       return `<button type="button" ${act('ui/set', { cell: `${a}|${b}`, relStage: null })} aria-label="${esc(`${houseName(a)} and ${houseName(b)}: ${LEVELS[lv]}${isM ? ', married' : ''}${isC ? ', changed this round' : ''}, tap for options`)}" style="${box}">`
-        + `<span style="${lv ? shield(lv, 24) : `font:600 16px ${BAR};color:rgba(234,223,200,.28)`}">${lv || '–'}</span>`
-        + (isM ? `<img src="${RING}" alt="" style="position:absolute;right:1px;top:1px;width:16px;height:16px">` : '') + `</button>`;
+        + `<span style="${lv ? shield(lv, compact ? 20 : 24) : `font:600 16px ${BAR};color:rgba(234,223,200,.28)`}">${lv || '–'}</span>`
+        + (isM ? `<img src="${RING}" alt="" style="position:absolute;right:${compact ? 0 : 1}px;top:${compact ? 0 : 1}px;width:${compact ? 12 : 16}px;height:${compact ? 12 : 16}px">` : '') + `</button>`;
     }).join('');
-    return `<img src="${sigil(a)}" alt="${esc(ra.name)}" style="width:40px;height:40px">${cells}<span style="text-align:center;font:600 16px ${BAR};color:${c.friendly >= 3 ? '#ead08a' : '#eadfc8'}">${c.friendly} / 3</span>`;
+    const row = `<img src="${sigil(a)}" alt="${esc(ra.name)}" style="${sig}">${cells}`;
+    if (compact) return row;
+    const c = counts(g, a);
+    return row + `<span style="text-align:center;font:600 16px ${BAR};color:${c.friendly >= 3 ? '#ead08a' : '#eadfc8'}">${c.friendly} / 3</span>`;
   }).join('');
+  const legend = [1, 2, 3].map((l) => `<span style="display:inline-flex;align-items:center;gap:6px"><span style="${shield(l, 18)}">${l}</span>${LEVELS[l]}</span>`).join('');
+  if (compact) {
+    return `<section aria-labelledby="r-matrix" style="flex:none;display:flex;flex-direction:column;gap:6px;max-width:480px;margin:10px 12px 0">
+    <h2 id="r-matrix" style="margin:0;font-size:20px;font-style:italic;font-weight:400;color:#c9a24c">Diplomatic levels</h2>
+    <div role="group" aria-label="Diplomatic levels between all houses" style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;align-items:center">
+      <span></span>${cols}${rows}
+    </div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font:500 13px ${BAR};color:#b9a88a">${legend}<span style="display:inline-flex;align-items:center;gap:6px"><img src="${RING}" alt="" style="width:16px;height:16px">married</span><span>Dotted: changed this round</span></div>
+  </section>`;
+  }
   let pop = '';
   if (ui.cell) {
     const [a, b] = ui.cell.split('|');
@@ -87,11 +106,10 @@ function matrix(g, ui) {
       + `<span aria-hidden="true" style="position:absolute;${arrow};top:${arrowTop}px;width:16px;height:16px;transform:rotate(45deg);background:#e6d4a9"></span>`
       + menuInner(g, a, b, ui) + `</div>`;
   }
-  const legend = [1, 2, 3].map((l) => `<span style="display:inline-flex;align-items:center;gap:6px"><span style="${shield(l, 18)}">${l}</span>${LEVELS[l]}</span>`).join('');
   return `<section aria-labelledby="r-matrix" style="display:flex;flex-direction:column;gap:8px;min-height:0">
     <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><h1 id="r-matrix" style="margin:0;font-size:24px">Diplomatic levels</h1><span style="font:500 15px ${BAR};color:#b9a88a">Tap a cell to raise, lower, break or set a marriage. Each option shows its cost.</span></div>
     <div style="position:relative">
-      <div role="grid" aria-label="Diplomatic levels between all houses" style="display:grid;grid-template-columns:44px repeat(9,50px) 64px;grid-auto-rows:46px;gap:4px;align-items:center">
+      <div role="group" aria-label="Diplomatic levels between all houses" style="display:grid;grid-template-columns:44px repeat(9,50px) 64px;grid-auto-rows:46px;gap:4px;align-items:center">
         <span></span>${cols}<span style="font:600 12px ${BAR};color:#b9a88a;text-align:center;line-height:1.1">friendly of 3</span>${rows}
       </div>${pop}
     </div>
@@ -148,11 +166,12 @@ function phone(g, ui, house) {
   if (ui.cell) {
     const [a, b] = ui.cell.split('|');
     sheet = `<button type="button" ${act('ui/set', { cell: null, relStage: null })} aria-label="Close the options" style="position:fixed;inset:0;border:0;padding:0;background:rgba(10,6,3,.62);z-index:10"></button>
-      <div role="dialog" style="position:fixed;left:0;right:0;bottom:0;box-sizing:border-box;padding:10px 16px 16px;border-radius:18px 18px 0 0;color:#2a2017;background:linear-gradient(180deg,#efe0bb,#dcc796);box-shadow:0 -12px 30px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:8px;z-index:11;max-height:90vh;overflow:auto">
+      <div role="dialog" aria-modal="true" aria-label="${esc(houseName(a))} and ${esc(houseName(b))}" class="k-relsheet" style="position:fixed;left:0;right:0;bottom:0;box-sizing:border-box;padding:10px 16px 16px;border-radius:18px 18px 0 0;color:#2a2017;background:linear-gradient(180deg,#efe0bb,#dcc796);box-shadow:0 -12px 30px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:8px;z-index:11;max-height:90vh;overflow:auto">
       <span aria-hidden="true" style="align-self:center;width:44px;height:5px;border-radius:3px;background:rgba(42,32,23,.3)"></span>${menuInner(g, a, b, ui)}</div>`;
   }
   const ring = g.houses[me].ring;
   return `<main class="k-main k-phone-rel" style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:auto">
+    ${matrix(g, ui, true)}
     <div style="flex:none;padding:10px 12px 6px"><div role="group" aria-label="Whose relations to show" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px">${pick}</div></div>
     <section style="flex:none;margin:0 12px;padding:10px 12px;border-radius:12px;background:#2b1f16;border:1px solid #5a4330;display:flex;align-items:center;gap:12px">
       <img src="${sigil(me)}" alt="" style="width:44px;height:44px"><div style="flex:1;min-width:0"><div style="font-size:20px;font-weight:700;line-height:1.1">${esc(houseName(me))}</div>
@@ -160,7 +179,7 @@ function phone(g, ui, house) {
       <span style="flex:none;display:inline-flex;align-items:center;gap:5px;font:600 13px ${BAR};padding:4px 8px;border-radius:6px;${ring ? 'border:1px solid #7a5d1e;color:#ead08a' : 'border:1px dashed #5a4330;color:#b9a88a'}"><img src="${ring ? RING : RING_USED}" alt="" style="width:20px;height:20px">${ring ? 'Ring' : 'Ring spent'}</span>
     </section>
     <ul aria-label="Levels with the other houses" style="list-style:none;margin:8px 0 0;padding:0 12px;display:flex;flex-direction:column;gap:6px">${list}</ul>
-    <p style="flex:none;margin:6px 16px 8px;font-size:14px;color:#b9a88a">Tap a house for raise, lower, break or marriage. Each option shows its cost; Power is paid at the table.</p>
+    <p style="flex:none;margin:6px 16px 8px;font-size:14px;color:#b9a88a">Tap a cell or a house for raise, lower, break or marriage. Each option shows its cost; Power is paid at the table.</p>
     <div style="padding:0 12px 12px">${sidePanels(g, ui)}</div>
     ${sheet}
   </main>`;

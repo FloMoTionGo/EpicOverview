@@ -125,7 +125,7 @@ Output goes to `web/assets/` plus `manifest.js`. A rerun skips unchanged files.
 
 ### T7 Diplomacy
 **Description:**
-- 9×9 matrix with levels 0–3 (phone: per-house list). Tapping a cell always opens the menu: raise, lower, break, set marriage, each with its cost.
+- 9×9 matrix with levels 0–3 (phone: small matrix above a per-house list). Tapping a cell always opens the menu: raise, lower, break, set marriage, each with its cost.
 - **Blocking checks:** ±1 step per pair per round; at most 3 positive levels, 2 Alliances, 1 Dynasty; never a Dynasty next to an Alliance; the reason is shown instead of the cost.
 - **Alliance transitivity**, with a group raise.
 - **Break:** asks who broke it; back to War with the breaking-cost reminder (3/5/8).

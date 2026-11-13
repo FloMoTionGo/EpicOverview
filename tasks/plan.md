@@ -35,7 +35,7 @@ Its job: everyone sees **what is happening now and what is needed from whom**. T
 | A5 | **Pure JS reducer** (`state + action → state`) for all rules, tested with `node --test`. | Rules stay testable and separate from the UI. |
 | A6 | **Data files:** `factions.json`, `cards.json` (Westeros I–IV plus the cards named in steps), `checklist.json` (English, sourced), `stock.json`. | Content can be fixed without touching code. |
 | A7 | **Assets from `tools/build_assets.py`** (the mock's `make_assets.py`, promoted to an include list). | Same art as the mock. |
-| A8 | **Phones and tablets, one responsive layout.** Tablet (landscape about 1180×820, also portrait) as on the canvas boards; phone (360–430 px wide) as one column with the same 7-tab bar at the bottom. The 9×9 matrix becomes the per-house list on phones. Touch targets at least 48 px. | Requested: everything usable on phone and tablet. No TV layout. |
+| A8 | **Phones and tablets, one responsive layout.** Tablet (landscape about 1180×820, also portrait) as on the canvas boards; phone (360–430 px wide) as one column with the same 7-tab bar at the bottom. The 9×9 matrix becomes the per-house list on phones (since 2026-11-13 phones show a small matrix above the list as well; see `decisions.md`). Touch targets at least 48 px. | Requested: everything usable on phone and tablet. No TV layout. |
 
 ## Screens (as on the canvas, layout A)
 
@@ -50,7 +50,7 @@ Every screen has the same header (round, "Playing as <house>", Undo), the seats 
   - End of round: 1 objectives, 2 victory check.
 - **Top bar on every screen:** round, "Playing as <house>" (tap to change), Undo.
 - **Houses:** 9 cards with − / + for castles, VP, objectives, supply; Small Council with Reassign.
-- **Relations:** 9×9 matrix (phone: list); tapping a cell opens raise / lower / break / set marriage with costs; marriages, hostages, dowries.
+- **Relations:** 9×9 matrix (phone: small matrix above a per-house list); tapping a cell opens raise / lower / break / set marriage with costs; marriages, hostages, dowries.
 - **Westeros:** decks I–IV with shuffle buttons, round target, the three peek abilities.
 - **Loans:** read-only bank and "who owes what".
 - **Market:** limited stock with − / +; supply as a read-only total.

@@ -45,9 +45,17 @@ function render() {
   else if (!store.online) html += '<div class="k-status k-offline" role="status">Connection to the server lost. Changes will not be saved until it is back.</div>';
   const scroller = app.querySelector('.k-body, .k-main');
   const keep = scroller ? scroller.scrollTop : 0;
+  const was = document.activeElement && document.activeElement.closest(REL_MENU) ? document.activeElement.dataset : null;
   app.innerHTML = html;
   const again = app.querySelector('.k-body, .k-main');
   if (again && sameScreen === r) again.scrollTop = keep;
+  // Relations options (tablet popover, phone sheet): focus goes into them and stays on the same button
+  const menu = app.querySelector(REL_MENU);
+  if (menu) {
+    const buttons = [...menu.querySelectorAll('button')];
+    const to = (was && buttons.find((b) => b.dataset.act === was.act && b.dataset.p === was.p)) || buttons.find((b) => b.getAttribute('aria-disabled') !== 'true');
+    if (to) to.focus({ preventScroll: true });
+  }
   sameScreen = r;
   document.body.classList.toggle('k-replaying', Boolean(rp));
   if (!rp) bar.innerHTML = '';
@@ -62,6 +70,7 @@ function render() {
   }
 }
 let sameScreen = null;
+const REL_MENU = '.k-relpop, .k-relsheet';
 const escapeHtml = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 // UI-only actions (never sent to the server)

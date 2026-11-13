@@ -158,8 +158,22 @@ have the old wording; tell me if the canvas should follow):
   `web/assets/fonts/` so it works without internet at the table. Some boards had a broken font rule
   (`font:600 13px font-family:...`), which made the canvas fall back to the serif font there; the app uses the
   intended Barlow Semi Condensed.
-- **DEVIATION** Seats strip: the four numbers per house (castles, VP, obj., supply) size to their labels;
+- **DEVIATION** Seats strip: the numbers per house (castles, VP, supply) size to their labels;
   on the board "castles" and "VP" overlapped.
+- **DEVIATION** (requested 2026-11-13) No Objectives count on the Houses cards and in the seats strip; the boards
+  still show it. The Objectives step (E1) still records each score as VP and in the Log. Only the Thwarted Plans
+  card still uses the count: it names the houses with 2 or more scores recorded in the app, as a hint to check
+  against the cards on the table.
+- **DEVIATION** Seats strip: the loan icons sit in the row of the council seat (10×14 px) instead of over the
+  corner, where they covered the "supply" label.
+- **DEVIATION** (requested 2026-11-13) Phone Relations also shows the 9×9 matrix, above the per-house list of the
+  board. It fills the width (cells about 31 px at 360 px), has no "friendly of 3" column, and a tap opens the same
+  bottom sheet as the list. The cells are knowingly below the 48 px touch target; the sheet names the pair, so a
+  wrong tap shows, and the list stays for its 60 px rows. The phone Relations page has the board's 12 px side
+  margin (the general phone padding came on top before), so matrix, house card and list line up.
+- **DEVIATION** Relations options (tablet popover and phone sheet): the sheet has the pair as its name, and
+  keyboard focus moves into the options when they open and stays on the same button when the screen redraws.
+  The matrix is a labelled group of buttons, not a `grid` (it has no rows or arrow keys).
 - **DEVIATION** Deck IV step: "A Calculated Risk" sits under the bid total instead of under the card, so nothing
   is cut off at 1180×820 (the board clips it too, invisibly).
 - **DEVIATION** Relations: "Add a hostage" is a small **Add** button in the Hostages header (the full-width button

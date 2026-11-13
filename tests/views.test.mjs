@@ -120,6 +120,44 @@ test('temporary test tab: every Westeros card on its Deck step, hidden without ?
   }
 });
 
+test('phone Relations shows the matrix with the bottom sheet; no Objectives count on Houses or in the seats strip', async () => {
+  const { exampleGame } = await import('../web/js/core/model.js');
+  const { renderRelations } = await import('../web/js/views/relations.js');
+  const { renderHouses } = await import('../web/js/views/houses.js');
+  const g = exampleGame({ cards });
+  const count = (html, re) => (html.match(re) || []).length;
+  for (const ui of [{}, { cell: 'lannister|tyrell' }]) {
+    const phone = clean(renderRelations({ ...base(true), game: g, ui }), 'phone relations');
+    assert.equal(count(phone, / id="r-matrix"/g), 1);
+    assert.equal(count(phone, /, tap for options"/g), 72);               // 81 cells without the diagonal
+    assert.doesNotMatch(phone, /k-relpop|friendly of 3/);                // the tablet popover and column stay away
+    assert.equal(count(phone, /role="dialog" aria-modal="true" aria-label="Lannister and Tyrell" class="k-relsheet"/g), ui.cell ? 1 : 0);
+    assert.equal(count(phone, /role="dialog"/g), ui.cell ? 1 : 0);
+    assert.doesNotMatch(phone, /role="grid"/);
+    assert.match(phone, /Levels with the other houses/);                 // the per-house list is still there
+  }
+  const tablet = clean(renderRelations({ ...base(false), game: g, ui: { cell: 'lannister|tyrell' } }), 'tablet relations');
+  assert.match(tablet, /k-relpop/);
+  assert.match(tablet, /friendly of 3/);
+  for (const narrow of [false, true]) {
+    const houses = clean(renderHouses({ ...base(narrow), game: g }), 'houses');
+    assert.doesNotMatch(houses, /Objectives|obj\./);
+    assert.equal(count(houses, /&quot;field&quot;:&quot;supply&quot;/g), 18);  // − and + for nine houses
+    assert.doesNotMatch(clean(renderRound({ ...base(narrow), house: 'greyjoy', game: g }), 'round').split('class="k-seats"')[1] || '', /obj\./);
+  }
+});
+
+test('Thwarted Plans names the houses with 2 or more Objectives scored in the app', async () => {
+  const { exampleGame } = await import('../web/js/core/model.js');
+  const base0 = exampleGame({ cards });
+  const card = cards.find((c) => c.name === 'Thwarted Plans');
+  const at = (houses) => clean(renderRound({ ...base(false), house: 'greyjoy', game: { ...base0, step: 'W3', houses, westeros: { ...base0.westeros, revealed: { ...base0.westeros.revealed, [card.deck]: card.id } } } }), 'Thwarted Plans');
+  const set = (n) => Object.fromEntries(Object.entries(base0.houses).map(([h, x]) => [h, { ...x, obj: n[h] || 0 }]));
+  assert.match(at(set({})), /Deck I: Thwarted Plans/);
+  assert.match(at(set({ lannister: 1 })), /<strong>Scored in the app:<\/strong> No house has 2 or more\. Check the scored cards on the table\./);
+  assert.match(at(set({ lannister: 2, tyrell: 1, greyjoy: 3 })), /<strong>Scored in the app:<\/strong> 2 or more: Lannister, Greyjoy\. Check/);
+});
+
 test('Round tab: no button in a step card only goes to the next step or opens another tab', async () => {
   const { exampleGame } = await import('../web/js/core/model.js');
   const g = exampleGame({ cards });
