@@ -12,6 +12,8 @@ primary_region = "fra"
 [env]
   # The GitHub Pages copy of web/ calls this server from another origin.
   EPIC_ALLOW_ORIGINS = "https://flomotiongo.github.io"
+  # Log and replay times in the table's time zone (the machine runs on UTC)
+  TZ = "Europe/Berlin"
 
 [http_service]
   internal_port = 8080

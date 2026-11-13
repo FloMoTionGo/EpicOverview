@@ -77,7 +77,7 @@ export function renderGames(ctx) {
   const row = (meta, id, current) => `<li style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 4px;border-top:1px solid #4a3626">
       ${meta.winner ? `<img src="${sigil(meta.winner)}" alt="" style="width:40px;height:40px;flex:none">` : '<span aria-hidden="true" style="width:40px;flex:none"></span>'}
       <span style="flex:1;min-width:200px;line-height:1.2"><span style="display:block;font-size:19px;font-weight:600">${esc(current ? 'This game' : gameTitle(meta))}</span>
-        <span style="font:500 14px ${BAR};color:#b9a88a">${esc(status(meta))} · ${meta.changes} changes · started ${esc(when(meta.started))}</span></span>
+        <span style="font:500 14px ${BAR};color:#b9a88a">${esc(status(meta))} · ${meta.changes} ${meta.changes === 1 ? 'change' : 'changes'} · started ${esc(when(meta.started))}</span></span>
       <span style="display:flex;gap:8px">
         <button type="button" ${act('replay/open', { id, at: 0 })} style="${b};border:0;background:#c9a24c;color:#211710">Replay</button>
         <button type="button" ${act('replay/open', { id, at: 'end', view: 'summary' })} style="${b};border:1px solid #5a4330;background:#3b2a1d;color:#eadfc8">Round summary</button>
